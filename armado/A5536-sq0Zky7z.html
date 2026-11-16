@@ -211,11 +211,11 @@ function resumen(){
   if(nv.length){t+='\n*Códigos de barras nuevos (cargar en Odoo):*\n';nv.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:''};t+=`• ${e} → ${c} ${l.name}\n`})}
   return t.trim();
 }
-function renderF(){
+function renderF(){setTimeout(prepFotos,0);
   const nf=S.ents.filter(e=>e.foto).length+Object.keys(S.pal).reduce((a,p)=>a+palKeys(p).length,0);
   $('vF').innerHTML=`<div class="card"><div class="eb" style="margin-bottom:6px">Resumen para WhatsApp</div><pre style="white-space:pre-wrap;font:13px/1.4 system-ui;margin:0">${esc(resumen())}</pre></div>
   <button class="btn pri" id="bEnv" style="padding:14px">📤 Enviar resumen por WhatsApp</button>
-  <button class="btn" id="bFot" style="padding:14px" ${nf?'':'disabled'}>🖼️ Enviar fotos (${nf})</button>
+  <div class="eb" style="margin-top:6px">Fotos (${nf})</div><div id="fotBox" class="fin"><div class="mu">Preparando fotos…</div></div>
   <button class="btn" id="bCop">Copiar resumen</button>
   <button class="btn dan" id="bRes" style="margin-top:18px">Borrar todo y empezar de nuevo</button>
   <div class="mu">Lo cargado queda guardado en este celular aunque cierres la página.</div>`;
@@ -366,13 +366,28 @@ async function share(){
   if(navigator.share){try{await navigator.share({text:t});return}catch(e){if(e&&e.name==='AbortError')return}}
   location.href='https://wa.me/?text='+encodeURIComponent(t);
 }
-async function shareFotos(){
-  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const files=[];
-  for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)files.push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
-  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)files.push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
-  if(!files.length){toast('No hay fotos');return}
-  if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:'Fotos armado '+n})}catch(e){}}
-  else toast('Este celular no deja compartir fotos desde la página. Mandalas desde la galería.',4000);
+let FOT={};
+async function prepFotos(){
+  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const G={};
+  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)(G['Pallet '+p]=G['Pallet '+p]||[]).push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
+  for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)(G['Productos']=G['Productos']||[]).push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
+  // lotes de hasta 4 fotos (WhatsApp/Android fallan con muchas juntas)
+  FOT={};for(const k in G){const L2=G[k];for(let i=0;i<L2.length;i+=4){const nm=L2.length>4?`${k} (${i/4+1})`:k;FOT[nm]=L2.slice(i,i+4)}}
+  const box=$('fotBox');if(!box)return;
+  const ks=Object.keys(FOT);
+  box.innerHTML=ks.length?ks.map(k=>`<button class="btn" data-fot="${esc(k)}" style="padding:12px">🖼️ Enviar fotos ${esc(k)} (${FOT[k].length})</button>`).join('')+`<button class="btn" data-a="bajarfotos">⬇️ Guardar todas las fotos en el celular</button><div class="mu">Mandá un botón a la vez. Si WhatsApp no aparece, usá "Guardar todas" y mandalas desde la galería.</div>`:'<div class="mu">No hay fotos para enviar.</div>';
+}
+async function shareFotos(k){
+  const files=FOT[k];if(!files||!files.length){toast('No hay fotos');return}
+  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join(' ');
+  if(!(navigator.canShare&&navigator.canShare({files}))){toast('Este celular no deja compartir fotos desde la página. Usá "Guardar todas las fotos".',4500);return}
+  try{await navigator.share({files,title:'Armado '+n+' · '+k})}
+  catch(e){if(e&&e.name==='AbortError')return;toast('No se pudo compartir ('+(e&&e.name||e)+'). Probá "Guardar todas las fotos".',5000)}
+}
+function bajarFotos(){
+  let i=0;const all=Object.values(FOT).flat();if(!all.length){toast('No hay fotos');return}
+  all.forEach((f,j)=>setTimeout(()=>{const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)},j*400));
+  toast('Guardando '+all.length+' fotos en Descargas…',4000);
 }
 
 /* ---- eventos ---- */
@@ -396,12 +411,13 @@ document.addEventListener('click',async e=>{
     case 'newpal':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;F.pallet='P'+n;showQ();break}
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
     case 'save':saveE();break;
+    case 'bajarfotos':bajarFotos();break;
     case 'etq':$('camEtq').value='';$('camEtq').click();break;
     case 'lista':pickList();break;
     case 'asignar':pickList(b.dataset.ean);break;
   }
   if(b.id==='bEnv')share();
-  if(b.id==='bFot')shareFotos();
+  if(b.dataset.fot){shareFotos(b.dataset.fot);return}
   if(b.id==='bCop'){try{await navigator.clipboard.writeText(resumen());toast('Copiado')}catch(x){toast('No se pudo copiar')}}
   if(b.id==='bRes'){if(b.dataset.sure){for(const x of S.ents)if(x.foto)fDel(x.id);for(const p of Object.keys(S.pal))palKeys(p).forEach(fDel);S.ents=[];S.pal={};S.nuevos={};S.last=null;save();render();renderF();toast('Borrado todo')}else{b.dataset.sure=1;b.textContent='¿Seguro? Se borra todo lo cargado. Tocá de nuevo'}}
 });
