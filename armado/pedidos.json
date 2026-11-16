@@ -9,15 +9,6 @@
   "creado": "2026-11-16T19:12:19.711228+00:00"
  },
  {
-  "id": "A5534-Y4BKnFLa",
-  "titulo": "Factura A5534",
-  "cliente": "ALFACOR INTERNATIONAL SA",
-  "entrega": "LIBERTY DUTY FREE",
-  "lineas": 23,
-  "botellas": 1752,
-  "creado": "2026-11-16T19:23:15.303582+00:00"
- },
- {
   "id": "A5538-YcbADDwO",
   "titulo": "Factura A5538",
   "cliente": "CASA AMERICA S.A.",
@@ -25,5 +16,14 @@
   "lineas": 18,
   "botellas": 792,
   "creado": "2026-11-16T19:29:29.257386+00:00"
+ },
+ {
+  "id": "A5534-Y4BKnFLa",
+  "titulo": "Factura A5534",
+  "cliente": "ALFACOR INTERNATIONAL SA",
+  "entrega": "LIBERTY DUTY FREE",
+  "lineas": 23,
+  "botellas": 1752,
+  "creado": "2026-11-16T19:29:40.438648+00:00"
  }
 ]
