@@ -137,7 +137,7 @@ try{const s=JSON.parse(lsGet(KEY)||'null');if(s)S=Object.assign(S,s)}catch(e){}
 if(!S.op)S.op=lsGet('arm_op')||'';
 if(!S.nuevos)S.nuevos={};
 for(const k in S.pal){if(S.pal[k]===true)S.pal[k]=['pal_'+k]}
-const CARAS=['Frente','Derecha','Atrás','Izquierda'];
+const CARAS=['Cara 1','Cara 2','Cara 3','Cara 4'];
 const palKeys=p=>(S.pal[p]||[]).filter(Boolean);
 function save(){lsSet(KEY,JSON.stringify(S))}
 
@@ -368,7 +368,7 @@ async function share(){
 async function shareFotos(){
   const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const files=[];
   for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)files.push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
-  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)files.push(new File([b],`${n}_${p}_${CARAS[i]}.jpg`,{type:'image/jpeg'}))}}
+  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)files.push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
   if(!files.length){toast('No hay fotos');return}
   if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,text:'Fotos armado '+n})}catch(e){}}
   else toast('Este celular no deja compartir fotos desde la página. Mandalas desde la galería.',4000);
