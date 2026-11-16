@@ -371,8 +371,11 @@ async function prepFotos(){
   const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const G={};
   for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)(G['Pallet '+p]=G['Pallet '+p]||[]).push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
   for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)(G['Productos']=G['Productos']||[]).push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
-  // lotes de hasta 4 fotos (WhatsApp/Android fallan con muchas juntas)
-  FOT={};for(const k in G){const L2=G[k];for(let i=0;i<L2.length;i+=4){const nm=L2.length>4?`${k} (${i/4+1})`:k;FOT[nm]=L2.slice(i,i+4)}}
+  // lotes de hasta LOTE fotos, juntando pallets (16/11: con 4 anduvo, probamos más)
+  const LOTE=8;FOT={};
+  const pal=Object.keys(G).filter(k=>k.startsWith('Pallet ')).flatMap(k=>G[k].map(f=>[k.slice(7),f]));
+  for(let i=0;i<pal.length;i+=LOTE){const ch=pal.slice(i,i+LOTE),ps=[...new Set(ch.map(x=>x[0]))];FOT['Pallets '+ps.join('-')]=ch.map(x=>x[1])}
+  const pr=G['Productos']||[];for(let i=0;i<pr.length;i+=LOTE)FOT[pr.length>LOTE?`Productos (${i/LOTE+1})`:'Productos']=pr.slice(i,i+LOTE);
   const box=$('fotBox');if(!box)return;
   const ks=Object.keys(FOT);
   box.innerHTML=ks.length?ks.map(k=>`<button class="btn" data-fot="${esc(k)}" style="padding:12px">🖼️ Enviar fotos ${esc(k)} (${FOT[k].length})</button>`).join('')+`<button class="btn" data-a="bajarfotos">⬇️ Guardar todas las fotos en el celular</button><div class="mu">Mandá un botón a la vez. Si WhatsApp no aparece, usá "Guardar todas" y mandalas desde la galería.</div>`:'<div class="mu">No hay fotos para enviar.</div>';
