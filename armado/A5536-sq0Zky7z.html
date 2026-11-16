@@ -211,12 +211,12 @@ function resumen(){
   if(nv.length){t+='\n*Códigos de barras nuevos (cargar en Odoo):*\n';nv.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:''};t+=`• ${e} → ${c} ${l.name}\n`})}
   return t.trim();
 }
-function renderF(){ZIPF=null;setTimeout(()=>{prepFotos();armarZip().catch(()=>{})},0);
+function renderF(){ZIPF=null;setTimeout(()=>{armarZip().catch(()=>{})},0);
   const nf=S.ents.filter(e=>e.foto).length+Object.keys(S.pal).reduce((a,p)=>a+palKeys(p).length,0);
   $('vF').innerHTML=`<div class="card"><div class="eb" style="margin-bottom:6px">Resumen para WhatsApp</div><pre style="white-space:pre-wrap;font:13px/1.4 system-ui;margin:0">${esc(resumen())}</pre></div>
   <button class="btn pri" id="bEnv" style="padding:14px">📤 Enviar resumen por WhatsApp</button>
-  <div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Respaldo (ZIP con todas las fotos + resumen)</div><input id="zipNom" value="${esc(nomResp())}" style="border:1px solid var(--ln);border-radius:8px;padding:10px;font-weight:700"><button class="btn pri" data-a="subir" style="padding:14px">☁️ Subir respaldo</button>${S.subido?`<div class="alert ok">Subido: ${esc(S.subido.nom)} · ${new Date(S.subido.at).toTimeString().slice(0,5)}</div>`:''}<div class="mu">Sube fotos y resumen directo a la pestaña "Armados" de la página del grupo. Sin WhatsApp.</div><button class="btn" data-a="zip">📦 Plan B: mandar ZIP</button></div>
-  <div class="eb" style="margin-top:6px">Fotos sueltas (${nf})</div><div id="fotBox" class="fin"><div class="mu">Preparando fotos…</div></div>
+  <div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Respaldo (ZIP con todas las fotos + resumen)</div><input id="zipNom" value="${esc(nomResp())}" style="border:1px solid var(--ln);border-radius:8px;padding:10px;font-weight:700"><button class="btn pri" data-a="subir" style="padding:14px">☁️ Subir respaldo</button>${S.subido?`<div class="alert ok">Subido: ${esc(S.subido.nom)} · ${new Date(S.subido.at).toTimeString().slice(0,5)}</div>`:''}<div class="mu">Sube fotos y resumen directo a la pestaña "Armados" de la página del grupo. Sin WhatsApp.</div><button class="btn" data-a="zip" style="font-size:13px;padding:8px 12px;align-self:flex-start">📦 Plan B: mandar ZIP (solo si falla la subida)</button></div>
+
   <button class="btn" id="bCop">Copiar resumen</button>
   <button class="btn dan" id="bRes" style="margin-top:18px">Borrar todo y empezar de nuevo</button>
   <div class="mu">Lo cargado queda guardado en este celular aunque cierres la página.</div>`;
