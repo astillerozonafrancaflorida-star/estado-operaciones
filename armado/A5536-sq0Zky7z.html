@@ -91,6 +91,7 @@ td.r,th.r{text-align:right}
     <h1 id="tit"></h1>
     <div class="mu" id="sub"></div>
   </header>
+  <div id="remBox" hidden></div>
   <div class="card who"><label for="op" style="font-weight:700">Arma:</label><input id="op" placeholder="Tu nombre" autocomplete="name"></div>
   <section class="card prog">
     <div><div class="n" id="pLin">–</div><div class="l">líneas OK</div></div>
@@ -202,7 +203,7 @@ function resumen(){
   const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
   const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
   const d=new Date(),z=n=>String(n).padStart(2,'0');const f=`${z(d.getDate())}/${z(d.getMonth()+1)} ${z(d.getHours())}:${z(d.getMinutes())}`;
-  let t=`*ARMADO ${n} — ${D.entrega||D.cliente}*\nArmó: ${S.op||'(sin nombre)'} · ${f}\n`;
+  let t=`*ARMADO ${n} — ${D.entrega||D.cliente}*\nArmó: ${[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y ')||'(sin nombre)'} · ${f}\n`;
   t+=(cnt.ok===L.length?'✅ Completo: ':'⚠️ ')+`${cnt.ok}/${L.length} líneas OK · ${fmt(ctl)}/${fmt(tot)} botellas\n`;
   const dif=L.filter(l=>st(l)!=='ok');
   if(dif.length){t+='\n*Diferencias:*\n';dif.forEach(l=>{const s=sumC(l.code);t+=`• ${l.code} ${l.name}: pedido ${fmt(l.qty)}, armado ${fmt(s)} → ${s===0?'NO ARMADO':s<l.qty?'FALTAN '+fmt(l.qty-s):'SOBRAN '+fmt(s-l.qty)}\n`})}
@@ -214,10 +215,11 @@ function resumen(){
   if(cn.length){t+='\n*Códigos de CAJA nuevos (cargar en Odoo):*\n';cn.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:'',upc:''};t+=`• ${e} → ${c} ${l.name} (caja x${l.upc})\n`})}
   return t.trim();
 }
-function renderF(){ZIPF=null;setTimeout(()=>{armarZip().catch(()=>{})},0);
+function renderF(){ZIPF=null;if(!renderF._v){renderF._v=1;setTimeout(()=>{verRemoto().finally(()=>renderF._v=0)},0)}setTimeout(()=>{armarZip().catch(()=>{})},0);
   const nf=S.ents.filter(e=>e.foto).length+Object.keys(S.pal).reduce((a,p)=>a+palKeys(p).length,0);
   $('vF').innerHTML=`<div class="card"><div class="eb" style="margin-bottom:6px">Resumen para WhatsApp</div><pre style="white-space:pre-wrap;font:13px/1.4 system-ui;margin:0">${esc(resumen())}</pre></div>
   <button class="btn pri" id="bEnv" style="padding:14px">📤 Enviar resumen por WhatsApp</button>
+  ${S.remSubido&&!S.subido?`<div class="alert ok" style="display:flex;flex-direction:column;gap:8px">✅ Este pedido ya lo cerró <b>${esc(S.remSubido.por||'otra persona')}</b> como <b>${esc(S.remSubido.nom)}</b>.${S.fotosEnv?`<span>Tus fotos ya se enviaron (${S.fotosEnv.n}).</span>`:`<span>Si sacaste fotos en este celular, mandalas para que queden en el mismo respaldo:</span><button class="btn pri" data-a="misfotos" style="padding:12px">☁️ Enviar mis fotos</button>`}</div>`:''}
   <div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Respaldo (ZIP con todas las fotos + resumen)</div><input id="zipNom" value="${esc(nomResp())}" style="border:1px solid var(--ln);border-radius:8px;padding:10px;font-weight:700"><button class="btn pri" data-a="subir" style="padding:14px">☁️ Subir respaldo</button>${S.subido?`<div class="alert ok">Subido: ${esc(S.subido.nom)} · ${new Date(S.subido.at).toTimeString().slice(0,5)}</div>`:''}<div class="mu">Sube fotos y resumen directo a la pestaña "Armados" de la página del grupo. Sin WhatsApp.</div><button class="btn" data-a="zip" style="font-size:13px;padding:8px 12px;align-self:flex-start">📦 Plan B: mandar ZIP (solo si falla la subida)</button></div>
 
   <button class="btn" id="bCop">Copiar resumen</button>
@@ -260,7 +262,7 @@ async function saveE(){
   const l=L.find(x=>x.code===F.code),tot=F.cajas*l.upc+F.sueltas;if(!tot)return;
   const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   if(F.foto){try{await fPut(id,F.foto)}catch(e){toast('No se pudo guardar la foto')}}
-  S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto});
+  S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto,op:S.op});
   S.last=F.pallet;save();close();render();pushProg();
   const s=st(l);toast(s==='ok'?'✅ '+l.code+' completo':s==='par'?'Guardado · faltan '+fmt(l.qty-sumC(l.code)):'⚠️ Sobran '+fmt(sumC(l.code)-l.qty)+' de '+l.code);
 }
@@ -375,29 +377,43 @@ function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<
 async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
 function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
   Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
-  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},cajasN:S.cajasN||{},subido:S.subido||null}}
-let _pv=null;
+  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},cajasN:S.cajasN||{},subido:S.subido||S.remSubido||null,ents:S.ents.map(e=>({id:e.id,code:e.code,cajas:e.cajas,sueltas:e.sueltas,total:e.total,pallet:e.pallet,at:e.at,via:e.via,op:e.op||S.op,foto:!!e.foto}))}}
+let _pv=null,REM=null;
+async function verRemoto(){try{const r=await fetch(API+'/progreso/'+encodeURIComponent(D.id),{cache:'no-store'});REM=await r.json()}catch(e){REM=null}
+  if(!REM)return;if(REM.subido&&(!S.subido||S.subido.nom!==REM.subido.nom)){S.remSubido=REM.subido;save()}
+  const otros=(REM.ents||[]).filter(e=>!S.ents.some(x=>x.id===e.id));
+  const box=$('remBox');if(!box)return;
+  if(otros.length&&(REM.recibido||0)>(S.syncAt||0)){const quien=[...new Set(otros.map(e=>e.op).filter(Boolean))].join(', ')||REM.op||'otra persona';
+    box.innerHTML=`<div class="alert wa" style="display:flex;flex-direction:column;gap:8px">🤝 <b>${esc(quien)}</b> ya cargó ${otros.length} registro${otros.length>1?'s':''} en este pedido desde otro celular.<button class="btn pri" data-a="traer" style="padding:12px">Continuar desde donde quedó</button></div>`;box.hidden=false}
+  else box.hidden=true;
+  if(tab==='F'&&!renderF._v)renderF();}
+function traerRemoto(){if(!REM)return;const mios={};S.ents.forEach(e=>mios[e.id]=e);
+  (REM.ents||[]).forEach(e=>{if(!mios[e.id])S.ents.push({...e,foto:false,remota:true})});
+  Object.assign(S.nuevos,REM.nuevos||{});S.cajasN=Object.assign({},REM.cajasN||{},S.cajasN||{});
+  S.syncAt=REM.recibido||Date.now();save();$('remBox').hidden=true;render();pushProg();toast('Listo: seguís desde donde quedó',3000)}
 let _pinAsk=false;
-function pushProg(){if(!getPin()&&!_pinAsk){_pinAsk=true;setTimeout(()=>pedirPin().then(pushProg),800);return}clearTimeout(_pv);_pv=setTimeout(async()=>{if(!getPin())return;try{await api('/progreso/'+encodeURIComponent(D.id),{estado:estadoVivo()});S.vivoOk=Date.now()}catch(e){if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo en Terminar',4000)}},1500)}
+function pushProg(){if(!getPin()&&!_pinAsk){_pinAsk=true;setTimeout(()=>pedirPin().then(pushProg),800);return}clearTimeout(_pv);_pv=setTimeout(async()=>{if(!getPin())return;await verRemoto();if(REM&&(REM.ents||[]).some(e=>!S.ents.some(x=>x.id===e.id))&&(REM.recibido||0)>(S.syncAt||0)){toast('Hay registros de otra persona: tocá "Continuar desde donde quedó" arriba',4500);return}try{await api('/progreso/'+encodeURIComponent(D.id),{estado:estadoVivo()});S.vivoOk=Date.now()}catch(e){if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo en Terminar',4000)}},1500)}
 const b64blob=b=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ko;r.readAsDataURL(b)});
 const b64txt=t=>b64blob(new Blob([t],{type:'text/plain'}));
-async function subirRespaldo(){
+async function subirRespaldo(soloFotos){
   if(!S.op){toast('Poné tu nombre arriba antes de subir');$('op').focus();return}
   if(!getPin())await pedirPin();
-  const nom=(($('zipNom')||{}).value||nomResp()).trim().toUpperCase();
+  const nom=(S.remSubido&&S.remSubido.nom)||(S.subido&&S.subido.nom)||(($('zipNom')||{}).value||nomResp()).trim().toUpperCase();
   const items=[];
   for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++)if(arr[i])items.push([`${p}_cara${i+1}.jpg`,arr[i]])}
-  for(const e of S.ents.filter(e=>e.foto))items.push([`producto_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,e.id]);
-  const tot=items.length+3;let n=0;
+  for(const e of S.ents.filter(e=>e.foto&&!e.remota))items.push([`producto_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,e.id]);
+  if(soloFotos&&!items.length){toast('No tenés fotos en este celular para enviar');return}
+  const tot=items.length+(soloFotos?0:3);let n=0;
   sheet(hdr('Subiendo respaldo')+`<div style="font-weight:800">${esc(nom)}</div><div class="pbar"><i id="upb"></i></div><div class="mu" id="upt">Preparando…</div><div class="mu">No cierres la página hasta que termine.</div>`);
   const prog=t=>{n++;const b=$('upb');if(b)b.style.width=Math.round(n/tot*100)+'%';const x=$('upt');if(x)x.textContent=`${n}/${tot} · ${t}`};
   try{
     for(const [nm,k] of items){const b=await fGet(k);if(!b){prog('falta '+nm);continue}let ok=false,err;for(let t=0;t<3&&!ok;t++){try{await api('/foto',{carpeta:nom,nombre:nm,b64:await b64blob(b)});ok=true}catch(e){err=e;if(e.message==='PIN')throw e;await new Promise(r=>setTimeout(r,1500))}}if(!ok)throw err;prog(nm)}
+    if(soloFotos){S.fotosEnv={nom,at:Date.now(),n:items.length};save();sheet(hdr('Fotos enviadas ✅')+`<div class="alert ok">Se sumaron ${items.length} fotos tuyas a <b>${esc(nom)}</b>.</div><button class="btn" data-a="close">Cerrar</button>`);renderF();return}
     await api('/foto',{carpeta:nom,nombre:'resumen.txt',b64:await b64txt(resumen())});prog('resumen');
-    const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:S.op,fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,cajasN:S.cajasN,fotos:items.map(x=>x[0])};
+    const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y '),fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,cajasN:S.cajasN,fotos:items.map(x=>x[0])};
     await api('/foto',{carpeta:nom,nombre:'datos.json',b64:await b64txt(JSON.stringify(dat,null,1))});prog('datos');
     await api('/listo',{carpeta:nom});prog('listo');
-    S.subido={nom,at:Date.now()};save();pushProg();
+    S.subido={nom,at:Date.now(),por:S.op};save();pushProg();
     sheet(hdr('Respaldo subido ✅')+`<div class="alert ok">Se subió <b>${esc(nom)}</b>: ${items.length} fotos y el resumen. En unos minutos aparece en la pestaña <b>Armados</b> de la página del grupo.</div><button class="btn" data-a="close">Cerrar</button>`);
     renderF();
   }catch(e){
@@ -498,6 +514,8 @@ document.addEventListener('click',async e=>{
     case 'bajarfotos':bajarFotos();break;
     case 'zip':enviarZip();break;
     case 'subir':subirRespaldo();break;
+    case 'traer':traerRemoto();break;
+    case 'misfotos':subirRespaldo(true);break;
     case 'etq':$('camEtq').value='';$('camEtq').click();break;
     case 'lista':pickList();break;
     case 'asignar':pickList(b.dataset.ean);break;
@@ -526,7 +544,8 @@ $('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim
 function setTab(t){tab=t;[['L','tL','vL'],['P','tP','vP'],['F','tF','vF']].forEach(([k,b,v])=>{$(b).setAttribute('aria-selected',k===t);$(v).hidden=k!==t});render()}
 $('tL').addEventListener('click',()=>setTab('L'));$('tP').addEventListener('click',()=>setTab('P'));$('tF').addEventListener('click',()=>setTab('F'));
 render();
-if(getPin())pushProg();
+verRemoto();setInterval(verRemoto,30000);
+if(getPin()&&S.ents.length)pushProg();
 </script>
 </body>
 </html>
