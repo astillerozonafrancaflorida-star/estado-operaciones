@@ -366,25 +366,29 @@ async function share(){
   if(navigator.share){try{await navigator.share({text:t});return}catch(e){if(e&&e.name==='AbortError')return}}
   location.href='https://wa.me/?text='+encodeURIComponent(t);
 }
-let FOT={};
+let FOT={},FOTK=[],FOTI=0;
+function updSeq(){const b=$('bFotSeq');if(!b)return;const n=FOTK.length;if(FOTI>=n){b.textContent='✅ Fotos enviadas · volver a enviar';$('fotEst').textContent='';return}const k=FOTK[FOTI];b.textContent=n>1?`🖼️ Enviar fotos · parte ${FOTI+1} de ${n} (${FOT[k].length})`:`🖼️ Enviar fotos (${FOT[k].length})`;$('fotEst').textContent=n>1?'Parte '+(FOTI+1)+': '+k:''}
 async function prepFotos(){
   const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const G={};
   for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)(G['Pallet '+p]=G['Pallet '+p]||[]).push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
   for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)(G['Productos']=G['Productos']||[]).push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
   // lotes de hasta LOTE fotos, juntando pallets (16/11: con 4 anduvo, probamos más)
-  const LOTE=20;FOT={};
+  const LOTE=10;FOT={};
   const pal=Object.keys(G).filter(k=>k.startsWith('Pallet ')).flatMap(k=>G[k].map(f=>[k.slice(7),f]));
   for(let i=0;i<pal.length;i+=LOTE){const ch=pal.slice(i,i+LOTE),ps=[...new Set(ch.map(x=>x[0]))];FOT['Pallets '+ps.join('-')]=ch.map(x=>x[1])}
   const pr=G['Productos']||[];for(let i=0;i<pr.length;i+=LOTE)FOT[pr.length>LOTE?`Productos (${i/LOTE+1})`:'Productos']=pr.slice(i,i+LOTE);
   const box=$('fotBox');if(!box)return;
   const ks=Object.keys(FOT);
-  box.innerHTML=ks.length?ks.map(k=>`<button class="btn" data-fot="${esc(k)}" style="padding:12px">🖼️ Enviar fotos ${esc(k)} (${FOT[k].length})</button>`).join('')+`<button class="btn" data-a="bajarfotos">⬇️ Guardar todas las fotos en el celular</button><div class="mu">Mandá un botón a la vez. Si WhatsApp no aparece, usá "Guardar todas" y mandalas desde la galería.</div>`:'<div class="mu">No hay fotos para enviar.</div>';
+  FOTK=ks;if(FOTI>=ks.length)FOTI=0;
+  const tot=ks.reduce((a,k)=>a+FOT[k].length,0);
+  box.innerHTML=ks.length?`<button class="btn pri" id="bFotSeq" style="padding:14px"></button><div class="mu" id="fotEst"></div><button class="btn" data-a="bajarfotos">⬇️ Guardar todas las fotos en el celular</button><div class="mu">${tot} fotos en ${ks.length} parte${ks.length>1?'s':''}. Tocá el botón, mandá a WhatsApp, volvé y tocá de nuevo para la parte siguiente.</div>`:'<div class="mu">No hay fotos para enviar.</div>';
+  updSeq();
 }
 async function shareFotos(k){
   const files=FOT[k];if(!files||!files.length){toast('No hay fotos');return}
   const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join(' ');
   if(!(navigator.canShare&&navigator.canShare({files}))){toast('Este celular no deja compartir fotos desde la página. Usá "Guardar todas las fotos".',4500);return}
-  try{await navigator.share({files,title:'Armado '+n+' · '+k})}
+  try{await navigator.share({files,title:'Armado '+n+' · '+k});return true}
   catch(e){if(e&&e.name==='AbortError')return;toast('No se pudo compartir ('+(e&&e.name||e)+'). Probá "Guardar todas las fotos".',5000)}
 }
 function bajarFotos(){
@@ -421,6 +425,7 @@ document.addEventListener('click',async e=>{
   }
   if(b.id==='bEnv')share();
   if(b.dataset.fot){shareFotos(b.dataset.fot);return}
+  if(b.id==='bFotSeq'){if(FOTI>=FOTK.length)FOTI=0;const ok=await shareFotos(FOTK[FOTI]);if(ok){FOTI++;updSeq();toast(FOTI<FOTK.length?'Parte enviada. Tocá de nuevo para la siguiente.':'✅ Todas las fotos enviadas',3500)}return}
   if(b.id==='bCop'){try{await navigator.clipboard.writeText(resumen());toast('Copiado')}catch(x){toast('No se pudo copiar')}}
   if(b.id==='bRes'){if(b.dataset.sure){for(const x of S.ents)if(x.foto)fDel(x.id);for(const p of Object.keys(S.pal))palKeys(p).forEach(fDel);S.ents=[];S.pal={};S.nuevos={};S.last=null;save();render();renderF();toast('Borrado todo')}else{b.dataset.sure=1;b.textContent='¿Seguro? Se borra todo lo cargado. Tocá de nuevo'}}
 });
