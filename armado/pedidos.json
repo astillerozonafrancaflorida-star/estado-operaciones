@@ -1,14 +1,5 @@
 [
  {
-  "id": "A5534-Y4BKnFLa",
-  "titulo": "Factura A5534",
-  "cliente": "ALFACOR INTERNATIONAL SA",
-  "entrega": "LIBERTY DUTY FREE",
-  "lineas": 23,
-  "botellas": 1752,
-  "creado": "2026-11-16T19:42:48.745948+00:00"
- },
- {
   "id": "A5535-A5539-sMfUODlO",
   "titulo": "Facturas A5535 · A5539",
   "cliente": "PROMEDICO S.A.",
@@ -34,5 +25,14 @@
   "lineas": 18,
   "botellas": 792,
   "creado": "2026-11-16T20:56:44.621185+00:00"
+ },
+ {
+  "id": "A5534-Y4BKnFLa",
+  "titulo": "Factura A5534",
+  "cliente": "ALFACOR INTERNATIONAL SA",
+  "entrega": "LIBERTY DUTY FREE",
+  "lineas": 23,
+  "botellas": 1752,
+  "creado": "2026-11-16T20:57:00.328710+00:00"
  }
 ]
