@@ -183,7 +183,7 @@ function render(){
   const show=L.filter(l=>{const s=st(l);return flt==='todas'||(flt==='pen'&&s==='pen')||(flt==='ok'&&s==='ok')||(flt==='dif'&&(s==='par'||s==='exc'))});
   $('list').innerHTML=show.length?show.map(l=>{const s=st(l),sm=sumC(l.code),pl=[...new Set(S.ents.filter(e=>e.code===l.code).map(e=>e.pallet))].join(', ');
     return `<button class="ln ${s}" data-code="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div>
-    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}</div></div>
+    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}</div></div>
     <div class="q">${fmt(sm)}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span><small class="${ST[s][1]}">${ST[s][0]}${s==='par'?' '+fmt(l.qty-sm):s==='exc'?' '+fmt(sm-l.qty):''}</small></div></button>`}).join(''):'<div class="empty">No hay líneas en este filtro.</div>';
   if(tab==='P')renderP();if(tab==='F')renderF();
 }
@@ -229,14 +229,17 @@ function renderF(){ZIPF=null;if(!renderF._v){renderF._v=1;setTimeout(()=>{verRem
 
 /* ---- hoja de cantidad ---- */
 let F=null;
-function close(){F=null;$('root').innerHTML=''}
+function close(){F=null;if(S.openCode){S.openCode=null;save()}$('root').innerHTML='';if(typeof render==='function'&&$('list'))render()}
 function sheet(h){$('root').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true">${h}</div></div>`;$('scrim').addEventListener('click',e=>{if(e.target.id==='scrim')close()})}
 const hdr=t=>`<div class="sh"><h2>${t}</h2><button class="x" data-a="close" aria-label="Cerrar">×</button></div>`;
 function openLine(code,via,aviso,cajas0){
   const l=L.find(x=>x.code===code);if(!l)return;
   const falta=Math.max(0,l.qty-sumC(code));
   const pals=pallets();const p=S.last&&pals.includes(S.last)?S.last:(pals[pals.length-1]||'P1');
+  const d=(S.drafts||{})[code];
   F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:p,foto:null,aviso};
+  if(d){F.cajas=(d.cajas||0)+(via==='caja'&&cajas0&&d.cajas?cajas0:0)||F.cajas;F.sueltas=d.sueltas||0;if(d.pallet)F.pallet=d.pallet;if(via==='lista'&&d.via)F.via=d.via;
+    if(d.foto)fGet('d_'+code).then(b=>{if(b&&F&&F.code===code&&!F.foto){F.foto=b;showQ()}})}
   showQ();
 }
 function showQ(){
@@ -253,17 +256,21 @@ function showQ(){
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
   ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Escanear otro código de caja':'Escanear código de la CAJA'}</button>${tieneCaja(l)?`<div class="alert ok">📦 Código de caja: <b class="mono">${codsCaja(l).map(esc).join(' · ')}</b></div>`:''}`:''}
   <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>Guardar ${fmt(tot)} en ${esc(F.pallet)}</button>
+  ${tot||F.foto?'<div class="mu" style="text-align:center">✏️ Lo que vas cargando queda guardado aunque cierres o cambies de producto. Tocá Guardar cuando esté completo.</div>':''}
   ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
-  hydrate();
+  hydrate();dsave();
   const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('input',()=>{F[k]=Math.max(0,parseInt(i.value)||0);upd()})};bind('qc','cajas');bind('qs','sueltas');
 }
-function upd(){const l=L.find(x=>x.code===F.code),t=F.cajas*l.upc+F.sueltas;$('qtot').textContent=fmt(t);const b=$('bSave');b.disabled=!t;b.textContent='Guardar '+fmt(t)+' en '+F.pallet}
+function dsave(){if(!F)return;S.drafts=S.drafts||{};const d=S.drafts[F.code]||{};
+  if(!F.cajas&&!F.sueltas&&!F.foto&&!d.foto){delete S.drafts[F.code]}else S.drafts[F.code]={cajas:F.cajas,sueltas:F.sueltas,pallet:F.pallet,via:F.via,foto:!!F.foto||!!d.foto,at:Date.now()};
+  S.openCode=F.code;save()}
+function upd(){dsave();const l=L.find(x=>x.code===F.code),t=F.cajas*l.upc+F.sueltas;$('qtot').textContent=fmt(t);const b=$('bSave');b.disabled=!t;b.textContent='Guardar '+fmt(t)+' en '+F.pallet}
 async function saveE(){
   const l=L.find(x=>x.code===F.code),tot=F.cajas*l.upc+F.sueltas;if(!tot)return;
   const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   if(F.foto){try{await fPut(id,F.foto)}catch(e){toast('No se pudo guardar la foto')}}
   S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto,op:S.op});
-  S.last=F.pallet;save();close();render();pushProg();
+  S.last=F.pallet;if(S.drafts){delete S.drafts[F.code]}fDel('d_'+F.code);save();close();render();pushProg();
   const s=st(l);toast(s==='ok'?'✅ '+l.code+' completo':s==='par'?'Guardado · faltan '+fmt(l.qty-sumC(l.code)):'⚠️ Sobran '+fmt(sumC(l.code)-l.qty)+' de '+l.code);
 }
 
@@ -300,7 +307,7 @@ function asignarCaja(c,code){if(!c){toast('Código vacío');return}const l=L.fin
   const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
   if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
   if(l&&l.eans.includes(c)){toast('Ese es el código de la BOTELLA, no de la caja. Escaneá el de la caja.',4500);openLine(code,'lista');return}
-  S.cajasN[c]=code;save();render();pushProg();toast('📦 Código de caja '+c+' guardado para '+code+'. La próxima caja la toma sola.',4000);openLine(code,'caja',null,1)}
+  S.cajasN[c]=code;save();render();pushProg();toast('📦 Código de caja '+c+' guardado para '+code+'. La próxima caja la toma sola.',4000);openLine(code,'caja',null,((S.drafts||{})[code]||{}).cajas?0:1)}
 function onCode(raw,via){
   const c=norm(raw);if(!c){toast('Código vacío');return}
   const cat=(CAT.map[c]||[]).map(x=>x[0]);
@@ -531,7 +538,7 @@ document.addEventListener('click',async e=>{
 });
 $('cam').addEventListener('change',async e=>{
   const f=e.target.files[0];if(!f)return;const b=await prep(f);
-  if(camFor==='line'&&F){F.foto=b;showQ()}
+  if(camFor==='line'&&F){F.foto=b;try{await fPut('d_'+F.code,b)}catch(e){}showQ()}
   else if(camFor&&camFor.startsWith('pal:')){const [p,ci]=camFor.slice(4).split('|');const i=+ci||0;const k='pal_'+p+'_'+i+'_'+Date.now().toString(36);
     try{await fPut(k,b);const arr=S.pal[p]||[];if(arr[i])fDel(arr[i]);arr[i]=k;S.pal[p]=arr;save();renderP();pushProg();toast(p+': '+CARAS[i]+' guardada ('+palKeys(p).length+'/4)')}catch(x){toast('No se pudo guardar la foto')}}
   camFor=null;
@@ -545,6 +552,7 @@ $('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim
 function setTab(t){tab=t;[['L','tL','vL'],['P','tP','vP'],['F','tF','vF']].forEach(([k,b,v])=>{$(b).setAttribute('aria-selected',k===t);$(v).hidden=k!==t});render()}
 $('tL').addEventListener('click',()=>setTab('L'));$('tP').addEventListener('click',()=>setTab('P'));$('tF').addEventListener('click',()=>setTab('F'));
 render();
+if(S.openCode&&L.find(l=>l.code===S.openCode))setTimeout(()=>openLine(S.openCode,'lista'),300);
 verRemoto();setInterval(verRemoto,30000);
 if(getPin()&&S.ents.length)pushProg();
 </script>
