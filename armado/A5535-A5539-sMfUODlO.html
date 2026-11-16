@@ -128,9 +128,10 @@ const KEY='arm_'+D.id;
 function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2600)}
 function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
 function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
-let S={ents:[],pal:{},last:null,op:''};
+let S={ents:[],pal:{},last:null,op:'',nuevos:{}};
 try{const s=JSON.parse(lsGet(KEY)||'null');if(s)S=Object.assign(S,s)}catch(e){}
 if(!S.op)S.op=lsGet('arm_op')||'';
+if(!S.nuevos)S.nuevos={};
 function save(){lsSet(KEY,JSON.stringify(S))}
 
 /* ---- fotos en IndexedDB ---- */
@@ -199,6 +200,8 @@ function resumen(){
   if(dif.length){t+='\n*Diferencias:*\n';dif.forEach(l=>{const s=sumC(l.code);t+=`• ${l.code} ${l.name}: pedido ${fmt(l.qty)}, armado ${fmt(s)} → ${s===0?'NO ARMADO':s<l.qty?'FALTAN '+fmt(l.qty-s):'SOBRAN '+fmt(s-l.qty)}\n`})}
   const P=pallets();
   if(P.length){t+='\n*Pallets:*\n';P.forEach(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});t+=`*${p}:* `+Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{upc:1};return `${c} (${cj(l,R[c])})`}).join(' · ')+'\n'})}
+  const nv=Object.entries(S.nuevos||{});
+  if(nv.length){t+='\n*Códigos de barras nuevos (cargar en Odoo):*\n';nv.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:''};t+=`• ${e} → ${c} ${l.name}\n`})}
   return t.trim();
 }
 function renderF(){
@@ -279,14 +282,14 @@ function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catc
 function onCode(raw,via){
   const c=norm(raw);if(!c){toast('Código vacío');return}
   const cat=(CAT.map[c]||[]).map(x=>x[0]);
-  const hit=L.filter(l=>l.eans.includes(c)||cat.includes(l.code)||l.code===String(raw).trim());
+  const hit=L.filter(l=>l.eans.includes(c)||cat.includes(l.code)||S.nuevos[c]===l.code||l.code===String(raw).trim());
   if(hit.length===1){openLine(hit[0].code,via);return}
   if(hit.length>1){sheet(hdr('¿Cuál es?')+`<div class="alert wa">Este código corresponde a ${hit.length} productos del pedido. Fijate la añada o el estuche.</div>`+hit.map(l=>`<button class="ln" data-pick="${esc(l.code)}" data-via="${via}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span><span class="loc">${esc(l.loc)}</span></div></div><div class="q">${fmt(l.qty)}</div></button>`).join(''));return}
   const nombres=(CAT.map[c]||[]).map(x=>`[${x[0]}] ${x[1]}`);
   const herm=(CAT.hermanos[c]||[]).map(x=>x[0]).filter(k=>L.some(l=>l.code===k));
   sheet(hdr('No está en el pedido')+`<div class="alert bad">⛔ ${nombres.length?'Escaneaste:<br>'+nombres.map(esc).join('<br>'):'Código <span class="mono">'+esc(c)+'</span> no reconocido.'}<br><br>Ese producto NO va en este pedido.</div>`+
    (herm.length?`<div class="alert wa">Ojo: el pedido lleva ${herm.map(k=>{const l=L.find(x=>x.code===k);return '<b>['+k+'] '+esc(l.name)+'</b>'}).join(', ')}. ¿Es otra añada o presentación?</div>`:'')+
-   `<button class="btn pri" data-a="scan">Escanear otro</button><button class="btn" data-a="close">Cerrar</button>`);
+   `<button class="btn" data-a="asignar" data-ean="${esc(c)}" style="padding:13px">🔗 Es un producto del pedido con otro código → elegir cuál</button><button class="btn pri" data-a="scan">Escanear otro</button><button class="btn" data-a="close">Cerrar</button>`);
 }
 
 
@@ -342,9 +345,9 @@ async function onEtq(file){
 let lastEtq=null;
 
 /* ---- lista para elegir ---- */
-function pickList(){
-  sheet(hdr('Elegí el producto')+`<input id="bq" placeholder="Buscar por nombre o código" style="border:1px solid var(--ln);border-radius:10px;padding:12px;background:var(--sf)"><div class="list" id="pl"></div>`);
-  const draw=()=>{const q=($('bq').value||'').toLowerCase();$('pl').innerHTML=L.filter(l=>!q||l.name.toLowerCase().includes(q)||l.code.includes(q)).map(l=>{const s=st(l);return `<button class="ln ${s}" data-pick="${esc(l.code)}" data-via="lista"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span></div></div><div class="q">${fmt(sumC(l.code))}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span></div></button>`}).join('')};
+function pickList(ean){
+  sheet(hdr(ean?'¿De qué producto es el código '+esc(ean)+'?':'Elegí el producto')+`<input id="bq" placeholder="Buscar por nombre o código" style="border:1px solid var(--ln);border-radius:10px;padding:12px;background:var(--sf)"><div class="list" id="pl"></div>`);
+  const draw=()=>{const q=($('bq').value||'').toLowerCase();$('pl').innerHTML=L.filter(l=>!q||l.name.toLowerCase().includes(q)||l.code.includes(q)).map(l=>{const s=st(l);return `<button class="ln ${s}" data-pick="${esc(l.code)}" data-via="${ean?'codigo':'lista'}"${ean?` data-ean="${esc(ean)}"`:''}><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span></div></div><div class="q">${fmt(sumC(l.code))}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span></div></button>`}).join('')};
   $('bq').addEventListener('input',draw);draw();
 }
 
@@ -369,6 +372,7 @@ let camFor=null;
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.f){flt=b.dataset.f;document.querySelectorAll('#flt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render();return}
+  if(b.dataset.pick&&b.dataset.ean){S.nuevos[b.dataset.ean]=b.dataset.pick;save();toast('Código '+b.dataset.ean+' asignado a '+b.dataset.pick+'. La próxima vez lo toma solo.',3500)}
   if(b.dataset.pick){openLine(b.dataset.pick,b.dataset.via);if(b.dataset.foto&&lastEtq&&F){F.foto=lastEtq;showQ()}return}
   if(b.classList.contains('ln')&&b.dataset.code){openLine(b.dataset.code,'lista');return}
   if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));showQ();return}
@@ -386,11 +390,12 @@ document.addEventListener('click',async e=>{
     case 'save':saveE();break;
     case 'etq':$('camEtq').value='';$('camEtq').click();break;
     case 'lista':pickList();break;
+    case 'asignar':pickList(b.dataset.ean);break;
   }
   if(b.id==='bEnv')share();
   if(b.id==='bFot')shareFotos();
   if(b.id==='bCop'){try{await navigator.clipboard.writeText(resumen());toast('Copiado')}catch(x){toast('No se pudo copiar')}}
-  if(b.id==='bRes'){if(b.dataset.sure){for(const x of S.ents)if(x.foto)fDel(x.id);for(const p of Object.keys(S.pal))fDel('pal_'+p);S.ents=[];S.pal={};S.last=null;save();render();renderF();toast('Borrado todo')}else{b.dataset.sure=1;b.textContent='¿Seguro? Se borra todo lo cargado. Tocá de nuevo'}}
+  if(b.id==='bRes'){if(b.dataset.sure){for(const x of S.ents)if(x.foto)fDel(x.id);for(const p of Object.keys(S.pal))fDel('pal_'+p);S.ents=[];S.pal={};S.nuevos={};S.last=null;save();render();renderF();toast('Borrado todo')}else{b.dataset.sure=1;b.textContent='¿Seguro? Se borra todo lo cargado. Tocá de nuevo'}}
 });
 $('cam').addEventListener('change',async e=>{
   const f=e.target.files[0];if(!f)return;const b=await prep(f);
@@ -399,7 +404,7 @@ $('cam').addEventListener('change',async e=>{
   camFor=null;
 });
 $('bScan').addEventListener('click',startScan);
-$('bLista').addEventListener('click',pickList);
+$('bLista').addEventListener('click',()=>pickList());
 $('bEtq').addEventListener('click',()=>{$('camEtq').value='';$('camEtq').click();tess().catch(()=>{})});
 $('camEtq').addEventListener('change',e=>onEtq(e.target.files[0]));
 $('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim();lsSet('arm_op',S.op);save()});
