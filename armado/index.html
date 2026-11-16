@@ -1,1 +1,74 @@
-<!doctype html><meta charset=utf-8><meta name=robots content=noindex><title>Armado</title><p style="font:16px system-ui;padding:20px">Abrí el link del pedido que te pasaron.</p>
+<!doctype html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex">
+<title>Tablero de armado</title>
+<style>
+*{box-sizing:border-box}[hidden]{display:none!important}
+body{margin:0;font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:#F2F3EF;color:#1A211D}
+header{background:#1F3864;color:#fff;padding:12px 16px;position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+h1{margin:0;font-size:19px}.sub{font-size:12px;opacity:.85}
+.who{display:flex;gap:6px;align-items:center}.who input{border:0;border-radius:8px;padding:8px 10px;width:150px;font:inherit}
+main{padding:14px 16px 40px;max-width:1200px;margin:auto}
+.kan{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;align-items:start}
+.col{background:#fff;border:1px solid #D9DDD6;border-radius:12px;padding:8px}
+.colh{color:#fff;font-weight:800;text-align:center;border-radius:8px;padding:7px;margin-bottom:8px}.colh small{font-weight:400;opacity:.85}
+.card{border:1px solid #D9DDD6;border-left:6px solid #D9DDD6;border-radius:10px;padding:10px 12px;margin-bottom:8px;background:#fff}
+.card.cur{border-left-color:#E0B400;background:#FFFBEA}.card.fin{border-left-color:#2F7A3F;background:#E9F6EC}
+.card b{display:block;font-size:15px}.mu{color:#5E6862;font-size:13px}
+.bar{height:7px;border-radius:4px;background:#E4E7EC;overflow:hidden;margin:6px 0}.bar i{display:block;height:100%;background:#2F7A3F}
+.btns{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px}
+.btn{border:1px solid #D9DDD6;background:#fff;border-radius:9px;padding:8px 12px;font:inherit;font-weight:700;text-decoration:none;color:inherit;cursor:pointer}
+.btn.pri{background:#7A1F3D;color:#fff;border-color:#7A1F3D}.btn.sm{padding:5px 9px;font-size:13px;font-weight:600}
+.yo{display:inline-block;background:#7A1F3D;color:#fff;border-radius:999px;padding:1px 8px;font-size:12px;font-weight:700;margin-left:4px}
+.empty{text-align:center;color:#5E6862;padding:14px}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:24px;background:#1A211D;color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;z-index:20;max-width:90vw;text-align:center}
+@media (max-width:760px){.kan{grid-template-columns:1fr}}
+</style></head><body>
+<header><div><h1>Tablero de armado</h1><div class="sub" id="upd">Cargando…</div></div>
+<div class="who"><label for="op">Soy:</label><input id="op" placeholder="Tu nombre"></div></header>
+<main><div class="kan">
+<section class="col"><div class="colh" style="background:#F28C38">PENDIENTE <small id="n0"></small></div><div id="c0"></div></section>
+<section class="col"><div class="colh" style="background:#E0B400">EN ARMADO <small id="n1"></small></div><div id="c1"></div></section>
+<section class="col"><div class="colh" style="background:#22A867">ARMADO <small id="n2"></small></div><div id="c2"></div></section>
+</div></main><div class="toast" id="toast" hidden></div>
+<script>
+const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('es-UY');
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||3000)}
+let P=[],E={};
+$('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
+async function pin(){let p=ls('arm_pin');if(!p){p=(prompt('PIN del depósito (se pide una sola vez en este celular):')||'').trim();if(p)ls('arm_pin',p)}return p}
+async function post(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){ls('arm_pin','');throw new Error('PIN incorrecto')}return {ok:r.ok,status:r.status,j}}
+function estado(p){const e=E[p.id]||{},g=e.prog;if(g&&(g.subido||(g.n&&g.ok===g.n)))return 2;if(e.tomado||(g&&g.s>0))return 1;return 0}
+function ago(t){if(!t)return'';const m=Math.round((Date.now()-t)/60000);return m<1?'recién':m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`}
+function render(){
+  const yo=($('op').value||'').trim().toLowerCase();const C=[[],[],[]];
+  P.forEach(p=>{const s=estado(p),e=E[p.id]||{};if(s===2&&e.prog&&e.prog.recibido&&Date.now()-e.prog.recibido>3*86400000)return;C[s].push(p)});
+  C.forEach((L,i)=>{$('n'+i).textContent=L.length;$('c'+i).innerHTML=L.length?L.map(p=>{const e=E[p.id]||{},g=e.prog,t=e.tomado,mio=t&&t.quien.toLowerCase()===yo;
+    const pct=g&&g.q?Math.round(g.s/g.q*100):0;
+    return `<div class="card ${i===1?'cur':i===2?'fin':''}"><b>${esc(p.titulo)}</b><div class="mu">${esc(p.entrega||p.cliente)} · ${p.lineas} líneas · ${fmt(p.botellas)} bot.</div>
+    ${t?`<div class="mu">Tomado por <b style="display:inline">${esc(t.quien)}</b>${mio?'<span class="yo">vos</span>':''} · ${ago(t.at)}</div>`:''}
+    ${g?`<div class="bar"><i style="width:${pct}%"></i></div><div class="mu">${g.ok}/${g.n} líneas OK · ${fmt(g.s)}/${fmt(g.q)} bot. · ${ago(g.recibido)}${g.subido?' · ☁️ respaldo subido':''}</div>`:''}
+    <div class="btns">${i===0?`<button class="btn pri" data-tomar="${esc(p.id)}">Tomar</button>`:i===1&&(!t||mio)?`<a class="btn pri" href="${esc(p.id)}.html">Continuar</a>`:''}
+    ${i===1&&t&&!mio?`<button class="btn sm" data-tomar="${esc(p.id)}" data-forzar="1">Tomar igual</button>`:''}
+    <a class="btn sm" href="vivo.html?p=${encodeURIComponent(p.id)}">Ver en vivo</a>${i===1&&mio?`<button class="btn sm" data-soltar="${esc(p.id)}">Soltar</button>`:''}</div></div>`}).join(''):'<div class="empty">—</div>'});
+}
+async function cargar(){
+  try{P=await (await fetch('pedidos.json?t='+Date.now(),{cache:'no-store'})).json();P.sort((a,b)=>(b.creado||'').localeCompare(a.creado||''))}catch(e){P=[]}
+  if(P.length){try{E=await (await fetch(API+'/tablero?ids='+P.map(p=>encodeURIComponent(p.id)).join(','),{cache:'no-store'})).json();$('upd').textContent='Se actualiza solo cada 10 segundos · '+new Date().toTimeString().slice(0,5)}catch(e){$('upd').textContent='Sin conexión con el intermediario. Reintentando…'}}
+  else $('upd').textContent='No hay pedidos cargados.';
+  render();
+}
+document.addEventListener('click',async ev=>{const b=ev.target.closest('button');if(!b)return;
+  const yo=($('op').value||'').trim();
+  if(b.dataset.tomar){if(!yo){toast('Poné tu nombre arriba ("Soy:")');$('op').focus();return}
+    if(b.dataset.forzar&&!confirm('Este pedido lo tiene otra persona. ¿Tomarlo igual?'))return;
+    try{const r=await post('/tomar/'+encodeURIComponent(b.dataset.tomar),{quien:yo,forzar:!!b.dataset.forzar});
+      if(r.status===409){toast('Ya lo tomó '+r.j.tomado.quien);await cargar();return}
+      if(!r.ok){toast('Error: '+(r.j.error||r.status));return}
+      location.href=b.dataset.tomar+'.html'}catch(e){toast(e.message)}}
+  if(b.dataset.soltar){if(!confirm('¿Soltar este pedido para que lo tome otro?'))return;try{await post('/soltar/'+encodeURIComponent(b.dataset.soltar),{});await cargar()}catch(e){toast(e.message)}}
+});
+cargar();setInterval(cargar,10000);
+</script></body></html>

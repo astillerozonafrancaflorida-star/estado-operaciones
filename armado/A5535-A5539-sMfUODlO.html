@@ -362,7 +362,7 @@ function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<
 async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
 function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
   Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
-  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{}}}
+  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},subido:S.subido||null}}
 let _pv=null;
 let _pinAsk=false;
 function pushProg(){if(!getPin()&&!_pinAsk){_pinAsk=true;setTimeout(()=>pedirPin().then(pushProg),800);return}clearTimeout(_pv);_pv=setTimeout(async()=>{if(!getPin())return;try{await api('/progreso/'+encodeURIComponent(D.id),{estado:estadoVivo()});S.vivoOk=Date.now()}catch(e){if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo en Terminar',4000)}},1500)}
@@ -384,7 +384,7 @@ async function subirRespaldo(){
     const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:S.op,fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,fotos:items.map(x=>x[0])};
     await api('/foto',{carpeta:nom,nombre:'datos.json',b64:await b64txt(JSON.stringify(dat,null,1))});prog('datos');
     await api('/listo',{carpeta:nom});prog('listo');
-    S.subido={nom,at:Date.now()};save();
+    S.subido={nom,at:Date.now()};save();pushProg();
     sheet(hdr('Respaldo subido ✅')+`<div class="alert ok">Se subió <b>${esc(nom)}</b>: ${items.length} fotos y el resumen. En unos minutos aparece en la pestaña <b>Armados</b> de la página del grupo.</div><button class="btn" data-a="close">Cerrar</button>`);
     renderF();
   }catch(e){
