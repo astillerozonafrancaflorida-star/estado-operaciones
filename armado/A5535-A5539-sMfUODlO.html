@@ -290,7 +290,8 @@ function onCode(raw,via){
   const c=norm(raw);if(!c){toast('Código vacío');return}
   const cat=(CAT.map[c]||[]).map(x=>x[0]);
   const hit=L.filter(l=>l.eans.includes(c)||cat.includes(l.code)||S.nuevos[c]===l.code||l.code===String(raw).trim());
-  if(hit.length===1){openLine(hit[0].code,via);return}
+  if(hit.length===1){const otros=(CAT.map[c]||[]).filter(x=>x[0]!==hit[0].code&&!L.some(l=>l.code===x[0]));
+    openLine(hit[0].code,via,otros.length?'⚠️ Ojo: este código también es de '+otros.map(x=>'<b>['+esc(x[0])+'] '+esc(x[1])+'</b>').join(', ')+', que NO va en este pedido. Confirmá que la botella sea la correcta (añada / estuche) antes de cargar.':null);return}
   if(hit.length>1){sheet(hdr('¿Cuál es?')+`<div class="alert wa">Este código corresponde a ${hit.length} productos del pedido. Fijate la añada o el estuche.</div>`+hit.map(l=>`<button class="ln" data-pick="${esc(l.code)}" data-via="${via}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span><span class="loc">${esc(l.loc)}</span></div></div><div class="q">${fmt(l.qty)}</div></button>`).join(''));return}
   const nombres=(CAT.map[c]||[]).map(x=>`[${x[0]}] ${x[1]}`);
   const herm=(CAT.hermanos[c]||[]).map(x=>x[0]).filter(k=>L.some(l=>l.code===k));
