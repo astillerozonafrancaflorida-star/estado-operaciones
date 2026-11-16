@@ -73,7 +73,7 @@ function setModo(m){modo=m;$('mR').setAttribute('aria-pressed',m==='R');$('mL').
 $('mR').onclick=()=>setModo('R');$('mL').onclick=()=>setModo('L');
 const norm=c=>String(c||'').replace(/\D/g,'').replace(/^0+/,'');
 // ubicaciones del producto: "28-A (120); P11 117-3; SIN UBICACIÓN (6)" (las notas [..] se ignoran)
-function locs(p){return (p.l||'').replace(/\[[^\]]*\]/g,'').split(/[;,]/).map(t=>t.trim()).filter(Boolean).map(t=>{const m=t.match(/^(.*?)\s*\((\d+)[^)]*\)\s*$/);return m?{u:m[1].trim(),q:+m[2]}:{u:t,q:null}})}
+function locs(p){return (p.l||'').replace(/\[[^\]]*\]/g,'').split(/[;,]/).map(t=>t.trim()).filter(Boolean).map(t=>{const m=t.match(/^(.*?)\s*\((\d+)(?![\d-])[^)]*\)\s*$/);return m?{u:m[1].trim(),q:+m[2]}:{u:t,q:null}})}
 // normalizar lo que escriben: "2a"→"2-A", "28 1"→"28-1", "117-3"→"P11 117-3", "cam 4"→"CAM 4"
 function nUb(t){let l=String(t||'').trim().toUpperCase().replace(/\s*-\s*/g,'-').replace(/\b0+(\d)/g,'$1');
   if(!l)return '';if(/^SIN UBIC/.test(l.replace('Ó','O')))return 'SIN UBICACIÓN';
