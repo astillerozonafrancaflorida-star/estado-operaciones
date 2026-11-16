@@ -48,7 +48,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
   </header>
   <div class="card who"><label for="op" style="font-weight:700">Soy:</label><input id="op" placeholder="Tu nombre"></div>
   <div class="modo"><button id="mR" aria-pressed="true">↔️ Reubicar<br><span class="mu" style="font-weight:400">de un lugar a otro</span></button><button id="mL" aria-pressed="false">📥 Ubicar lo que llega<br><span class="mu" style="font-weight:400">contenedor / sin ubicación</span></button></div>
-  <div class="eb">Movimientos de hoy en este celular</div>
+  <div class="eb" style="display:flex;justify-content:space-between"><span>Últimos 5 movimientos de este celular</span><button id="verT" style="border:0;background:none;color:var(--ac);font:inherit;font-weight:700">Ver todos</button></div>
   <div id="hoy" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
 <div class="dock"><button class="big" id="bScan">▥ Código</button><button class="big sec" id="bBus">Buscar producto</button></div>
@@ -63,9 +63,10 @@ const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorag
 function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2800)}
 const M=window.MOV||{productos:[],ubicaciones:[]};const P=M.productos,UB=M.ubicaciones;
 $('act').textContent='Ubicaciones según Odoo al '+(M.actualizado||'—');
-const hoyKey='mov_'+new Date().toISOString().slice(0,10);
-let H=[];try{H=JSON.parse(ls(hoyKey)||'[]')}catch(e){}
-const saveH=()=>ls(hoyKey,JSON.stringify(H));
+let H=[];try{H=JSON.parse(ls('mov_hist')||'[]')}catch(e){}
+try{for(let i=0;i<localStorage.length;i++){const k=localStorage.key(i);if(/^mov_\d{4}-/.test(k)){JSON.parse(localStorage.getItem(k)||'[]').forEach(m=>{if(!H.some(x=>x.id===m.id))H.push(m)})}}H.sort((a,b)=>b.at<a.at?-1:1)}catch(e){}
+const saveH=()=>{H=H.slice(0,100);ls('mov_hist',JSON.stringify(H))};saveH();
+let verTodos=false;
 let modo='R';
 $('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
 function setModo(m){modo=m;$('mR').setAttribute('aria-pressed',m==='R');$('mL').setAttribute('aria-pressed',m==='L')}
@@ -125,7 +126,13 @@ async function enviar(){if(enviando)return;enviando=true;try{for(const m of H.fi
     const {env,...mv}=m;const b64=btoa(unescape(encodeURIComponent(JSON.stringify(mv))));
     const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'MOVIMIENTOS-'+mv.at.slice(0,10),nombre:mv.id+'.json',b64})});
     if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;m.env=true;saveH();render()}}catch(e){}finally{enviando=false}}
-function render(){$('hoy').innerHTML=H.length?H.map(m=>`<div class="it ${m.env?'':'pend'}"><div><b>${esc(m.code)} ${esc(m.nombre)}</b><div class="mu">${fmt(m.cant)} unid. · <span class="loc">${esc(m.desde)}</span> → <span class="loc">${esc(m.hacia)}</span> · ${new Date(m.at).toTimeString().slice(0,5)}</div></div><div class="mu" style="text-align:right">${m.env?'✔ enviado':'⏳ pendiente'}</div></div>`).join(''):'<div class="mu">Todavía no hay movimientos hoy.</div>'}
+function render(){const L=verTodos?H:H.slice(0,5);$('verT').hidden=H.length<=5;$('verT').textContent=verTodos?'Ver solo 5':'Ver todos ('+H.length+')';
+  $('hoy').innerHTML=L.length?L.map((m,i)=>{const d=new Date(m.at),hoy=d.toDateString()===new Date().toDateString();
+    const cant=m.upc>1&&m.cajas?`${m.cajas} caja${m.cajas>1?'s':''} x${m.upc}${m.sueltas?' + '+m.sueltas+' sueltas':''} = ${fmt(m.cant)} unid.`:`${fmt(m.cant)} unid.`;
+    return `<div class="it ${m.env?'':'pend'}"><div style="flex:1"><div class="mu">${i===0&&!verTodos?'<b style="color:var(--ac)">ÚLTIMO · </b>':''}${hoy?'hoy':d.toLocaleDateString('es-UY',{day:'2-digit',month:'2-digit'})} ${d.toTimeString().slice(0,5)} · ${esc(m.quien||'')}</div>
+      <b>${esc(m.code)} ${esc(m.nombre)}</b><div>${cant}</div><div style="margin-top:4px"><span class="loc">${esc(m.desde)}</span> → <span class="loc">${esc(m.hacia)}</span></div></div>
+      <div class="mu" style="text-align:right;white-space:nowrap">${m.env?'✔ enviado':'⏳ pendiente'}</div></div>`}).join(''):'<div class="mu">Todavía no hay movimientos en este celular.</div>'}
+$('verT').onclick=()=>{verTodos=!verTodos;render()};
 render();enviar();setInterval(enviar,20000);
 
 /* ---- buscar / escanear ---- */
