@@ -43,7 +43,7 @@ h2{font-size:19px;margin:0}
 .s-ok{color:var(--ok)}.s-par{color:var(--wa)}.s-exc{color:var(--bad)}.s-pen{color:var(--mu)}
 .empty{border:1px dashed var(--ln);border-radius:12px;padding:20px;text-align:center;color:var(--mu);background:var(--sf)}
 .dock{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
-.big{flex:1;max-width:260px;border:0;border-radius:14px;padding:15px 10px;font-weight:800;font-size:16px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.big{flex:1;max-width:220px;padding-left:6px;padding-right:6px;border:0;border-radius:14px;padding:15px 10px;font-weight:800;font-size:16px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
 .big.sec{background:var(--sf);color:var(--fg);border:2px solid var(--fg);box-shadow:none}
 .big svg{width:22px;height:22px}
 .btn{border:1px solid var(--ln);background:var(--sf);border-radius:10px;padding:10px 14px;font-weight:700}
@@ -75,6 +75,9 @@ td.r,th.r{text-align:right}
 #scan .msg{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;right:14px;color:#fff;text-align:center;font-weight:700;text-shadow:0 1px 3px #000}
 .toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:40;font-weight:700;max-width:90vw;text-align:center}
 .fin{display:flex;flex-direction:column;gap:8px}
+.ocrimg{width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:#000}
+.pbar{height:8px;border-radius:4px;background:var(--ln);overflow:hidden}.pbar i{display:block;height:100%;background:var(--ac);width:0;transition:width .2s}
+.ocrtxt{font:12px/1.3 ui-monospace,Menlo,monospace;color:var(--mu);white-space:pre-wrap;max-height:90px;overflow:auto;background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:6px}
 </style>
 </head>
 <body>
@@ -108,8 +111,9 @@ td.r,th.r{text-align:right}
   <section id="vP" class="list" hidden></section>
   <section id="vF" class="fin" hidden></section>
 </div>
-<div class="dock"><button class="big" id="bScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14"/></svg>Escanear</button><button class="big sec" id="bLista">Elegir de la lista</button></div>
+<div class="dock"><button class="big" id="bScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14"/></svg>Código</button><button class="big" id="bEtq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.4-2h6.8l1.4 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg>Etiqueta</button><button class="big sec" id="bLista">Lista</button></div>
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="camEtq" accept="image/*" capture="environment" hidden>
 <div id="root"></div>
 <div id="toast" class="toast" hidden></div>
 
@@ -232,7 +236,7 @@ function showQ(){
   <div><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
   <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>Guardar ${fmt(tot)} en ${esc(F.pallet)}</button>
-  ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
+  ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
   hydrate();
   const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('input',()=>{F[k]=Math.max(0,parseInt(i.value)||0);upd()})};bind('qc','cajas');bind('qs','sueltas');
 }
@@ -285,6 +289,58 @@ function onCode(raw,via){
    `<button class="btn pri" data-a="scan">Escanear otro</button><button class="btn" data-a="close">Cerrar</button>`);
 }
 
+
+/* ---- lectura de etiqueta (OCR en el celular) ---- */
+const SW=new Set('VINO VINHO WINE ESPUMANTE LICOR WHISKY WHISKEY GIN RON VODKA TEQUILA CHAMPAGNE CERVEZA LATA BOTELLA CON SIN ESTUCHE CAJA DE DEL LA LE LES EL LOS LAS DI DA DO DU ET Y AND THE ML LT CL CC'.split(' '));
+const deacc=t=>t.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+const toks=t=>deacc(t).replace(/[^A-Z0-9]+/g,' ').split(' ').filter(w=>w.length>=3&&!SW.has(w)&&!/^\d+$/.test(w));
+function lev(a,b){if(Math.abs(a.length-b.length)>2)return 9;const m=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=m[0];m[0]=i;for(let j=1;j<=b.length;j++){const t=m[j];m[j]=Math.min(m[j]+1,m[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return m[b.length]}
+function near(w,set){if(set.has(w))return 1;let best=0;for(const o of set){if(w.length>=5&&o.length>=4){const d=lev(w,o);if(d===1)best=Math.max(best,.8);else if(d===2&&w.length>=7)best=Math.max(best,.5)}if(w.length>=6&&o.length>=4&&(w.includes(o)||o.includes(w)))best=Math.max(best,.6)}return best}
+function rank(text){
+  const ot=new Set(toks(text)),yrs=(deacc(text).match(/\b(19[5-9]\d|20[0-4]\d)\b/g)||[]);
+  const df={};L.forEach(l=>new Set(toks(l.name)).forEach(w=>df[w]=(df[w]||0)+1));
+  return L.map(l=>{const ws=[...new Set(toks(l.name))];let tw=0,hw=0;
+    ws.forEach(w=>{const wt=Math.min(w.length,8)/(df[w]||1);tw+=wt;hw+=wt*near(w,ot)});
+    let sc=tw?hw/tw:0;const y=(l.name.match(/\b(19|20)\d{2}\b/)||[])[0];
+    if(y&&yrs.length)sc+=yrs.includes(y)?.15:-.2;
+    return {l,sc:Math.max(0,Math.min(1,sc))}}).sort((a,b)=>b.sc-a.sc);
+}
+let TW=null;
+async function tess(){
+  if(TW)return TW;
+  await new Promise((ok,ko)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='tess/tesseract.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
+  TW=Tesseract.createWorker('eng',1,{workerPath:new URL('tess/worker.min.js',location.href).href,corePath:new URL('tess/',location.href).href,langPath:new URL('tess/',location.href).href,gzip:true,
+    logger:m=>{const b=document.querySelector('#obar i'),t=$('ostat');if(!b)return;const pr=Math.round((m.progress||0)*100);
+      if(m.status==='recognizing text'){b.style.width=pr+'%';t&&(t.textContent='Leyendo etiqueta… '+pr+'%')}else{t&&(t.textContent=m.status.startsWith('load')||m.status.startsWith('init')?'Preparando lector (la primera vez tarda un poco)…':'Procesando…')}}})
+   .then(async w=>{await w.setParameters({tessedit_pageseg_mode:'11'});return w}).catch(e=>{TW=null;throw e});
+  return TW;
+}
+async function ocrPrep(blob){
+  const u=URL.createObjectURL(blob);
+  try{const i=await new Promise((ok,ko)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=ko;im.src=u});
+    const k=Math.min(1,1600/Math.max(i.naturalWidth,i.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(i.naturalWidth*k);c.height=Math.round(i.naturalHeight*k);
+    const x=c.getContext('2d');x.filter='grayscale(1) contrast(1.4)';x.drawImage(i,0,0,c.width,c.height);return c}finally{URL.revokeObjectURL(u)}
+}
+async function onEtq(file){
+  if(!file)return;const b=await prep(file),u=URL.createObjectURL(b);
+  sheet(hdr('Etiqueta')+`<img class="ocrimg" src="${u}" alt="Tu foto"><div class="pbar" id="obar"><i></i></div><div class="mu" id="ostat">Preparando lector…</div>`);
+  let text='';
+  try{const w=await tess();const c=await ocrPrep(b);const r=await w.recognize(c);text=(r.data&&r.data.text)||''}
+  catch(e){if(!$('ostat'))return;sheet(hdr('Etiqueta')+`<div class="alert bad">No se pudo leer la etiqueta en este celular (${esc(e&&e.message||e)}). Usá el código o elegí de la lista.</div><button class="btn" data-a="close">Cerrar</button>`);return}
+  if(!$('ostat'))return; // cerraron la hoja
+  const R=rank(text),top=R[0],sec=R[1]||{sc:0};
+  const seguro=top&&top.sc>=.45&&top.sc-sec.sc>=.2;
+  const cand=R.filter(r=>r.sc>=.15).slice(0,4);
+  const pct=r=>Math.round(r.sc*100)+'%';
+  sheet(hdr('Etiqueta')+`<img class="ocrimg" src="${u}" alt="Tu foto">
+   ${seguro?`<div class="alert ok">Parece ser <b>[${esc(top.l.code)}] ${esc(top.l.name)}</b> (${pct(top)}). Confirmá mirando la botella.</div>`:cand.length?`<div class="alert wa">No estoy seguro. ¿Es alguno de estos?</div>`:`<div class="alert bad">No pude reconocer la etiqueta entre los productos del pedido. Probá otra foto más cerca y derecha, con buena luz, o usá el código / la lista.</div>`}
+   ${cand.map(r=>`<button class="ln" data-pick="${esc(r.l.code)}" data-via="etiqueta" data-foto="1"><div><div class="nm">${esc(r.l.name)}</div><div class="meta"><span class="loc">${esc(r.l.loc)}</span><span class="mono">${esc(r.l.code)}</span><span>coincide ${pct(r)}</span></div></div><div class="q">${fmt(sumC(r.l.code))}<span style="color:var(--mu);font-size:15px">/${fmt(r.l.qty)}</span></div></button>`).join('')}
+   <div style="display:flex;gap:8px"><button class="btn" data-a="etq" style="flex:1">📷 Otra foto</button><button class="btn" data-a="lista" style="flex:1">Elegir de la lista</button></div>
+   <details><summary class="mu">Texto leído</summary><div class="ocrtxt">${esc(text.trim()||'(nada)')}</div></details>`);
+  lastEtq=b;
+}
+let lastEtq=null;
+
 /* ---- lista para elegir ---- */
 function pickList(){
   sheet(hdr('Elegí el producto')+`<input id="bq" placeholder="Buscar por nombre o código" style="border:1px solid var(--ln);border-radius:10px;padding:12px;background:var(--sf)"><div class="list" id="pl"></div>`);
@@ -313,7 +369,7 @@ let camFor=null;
 document.addEventListener('click',async e=>{
   const b=e.target.closest('button');if(!b)return;
   if(b.dataset.f){flt=b.dataset.f;document.querySelectorAll('#flt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render();return}
-  if(b.dataset.pick){openLine(b.dataset.pick,b.dataset.via);return}
+  if(b.dataset.pick){openLine(b.dataset.pick,b.dataset.via);if(b.dataset.foto&&lastEtq&&F){F.foto=lastEtq;showQ()}return}
   if(b.classList.contains('ln')&&b.dataset.code){openLine(b.dataset.code,'lista');return}
   if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));showQ();return}
   if(b.dataset.pal){F.pallet=b.dataset.pal;showQ();return}
@@ -328,6 +384,8 @@ document.addEventListener('click',async e=>{
     case 'newpal':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;F.pallet='P'+n;showQ();break}
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
     case 'save':saveE();break;
+    case 'etq':$('camEtq').value='';$('camEtq').click();break;
+    case 'lista':pickList();break;
   }
   if(b.id==='bEnv')share();
   if(b.id==='bFot')shareFotos();
@@ -342,6 +400,8 @@ $('cam').addEventListener('change',async e=>{
 });
 $('bScan').addEventListener('click',startScan);
 $('bLista').addEventListener('click',pickList);
+$('bEtq').addEventListener('click',()=>{$('camEtq').value='';$('camEtq').click();tess().catch(()=>{})});
+$('camEtq').addEventListener('change',e=>onEtq(e.target.files[0]));
 $('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim();lsSet('arm_op',S.op);save()});
 function setTab(t){tab=t;[['L','tL','vL'],['P','tP','vP'],['F','tF','vF']].forEach(([k,b,v])=>{$(b).setAttribute('aria-selected',k===t);$(v).hidden=k!==t});render()}
 $('tL').addEventListener('click',()=>setTab('L'));$('tP').addEventListener('click',()=>setTab('P'));$('tF').addEventListener('click',()=>setTab('F'));
