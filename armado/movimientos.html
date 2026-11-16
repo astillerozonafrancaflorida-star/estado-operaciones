@@ -97,6 +97,8 @@ function abrir(p,cajas0){
 function dibujar(){const p=F.p,L=locs(p),tot=F.cajas*p.u+F.sueltas,d=L.find(x=>x.u===F.desde);
   const opcD=modo==='L'?[{u:'LLEGADA',q:null,t:'Llegó (contenedor)'},...L.filter(x=>/^SIN UBIC/.test(x.u))]:L;
   sheet(hdr(esc(p.c))+`<div class="card"><b>${esc(p.n)}</b><div class="mu">Stock ${fmt(p.s)} · ${p.u>1?'caja x'+p.u:'unidad'}</div>
+   <div class="mu" style="margin-top:4px">${(p.ce||[]).length?'📦 Código de caja: '+p.ce.map(e=>'<span class="mono">…'+esc(e.slice(-6))+'</span>').join(', '):'📦 Sin código de caja'}</div>
+   <button class="btn" data-a="cargacaja" style="margin-top:6px">📦 ${(p.ce||[]).length?'Agregar otro':'Cargar'} código de caja</button>
    <div class="chips" style="margin-top:6px">${L.length?L.map(x=>`<span class="loc">${esc(x.u)}${x.q!=null?' ('+fmt(x.q)+')':''}</span>`).join(''):'<span class="mu">Sin ubicaciones cargadas</span>'}</div></div>
    <div><div class="eb" style="margin-bottom:6px">Desde</div><div class="chips">${opcD.map(x=>`<button class="chip" data-desde="${esc(x.u)}" aria-pressed="${x.u===F.desde}">${esc(x.t||x.u)}${x.q!=null?' ('+fmt(x.q)+')':''}</button>`).join('')||'<span class="mu">El producto no tiene ubicaciones: usá "Ubicar lo que llega".</span>'}</div></div>
    ${p.u>1?`<div class="stp"><b>Cajas (x${p.u})</b><div class="ctl"><button data-q="c-">−</button><input id="qc" inputmode="numeric" value="${F.cajas}"><button data-q="c+">+</button></div></div>`:''}
@@ -127,14 +129,14 @@ function render(){$('hoy').innerHTML=H.length?H.map(m=>`<div class="it ${m.env?'
 render();enviar();setInterval(enviar,20000);
 
 /* ---- buscar / escanear ---- */
-function buscar(){sheet(hdr('Buscar producto')+`<input id="bq" class="inp" placeholder="Nombre o código"><div class="res" id="br"></div>`);
+function buscar(cajaDe){CAJA_DE=cajaDe||null;sheet(hdr(cajaDe?'¿De qué producto es esta caja?':'Buscar producto')+(cajaDe?`<div class="mu">Código de caja <span class="mono">${esc(cajaDe)}</span></div>`:'')+`<input id="bq" class="inp" placeholder="Nombre o código"><div class="res" id="br"></div>`);
   const d=()=>{const q=($('bq').value||'').toLowerCase().trim();$('br').innerHTML=q.length<2?'<div class="mu">Escribí al menos 2 letras.</div>':P.filter(p=>p.c===q||p.n.toLowerCase().includes(q)).slice(0,30).map(p=>`<button data-p="${esc(p.c)}"><b>${esc(p.c)}</b> ${esc(p.n)}<div class="mu">${esc(p.l||'sin ubicación')}</div></button>`).join('')||'<div class="mu">Sin resultados.</div>'};$('bq').oninput=d;d();setTimeout(()=>$('bq').focus(),50)}
 function porCodigo(raw){const c=norm(raw);if(!c)return;
   const pc=P.find(p=>(p.ce||[]).includes(c));if(pc){abrir(pc,1);toast('📦 Caja escaneada');return}
   const h=P.filter(p=>p.e.includes(c)||p.c===String(raw).trim());
   if(h.length===1)return abrir(h[0]);
   if(h.length>1){sheet(hdr('¿Cuál es?')+`<div class="res">${h.map(p=>`<button data-p="${esc(p.c)}"><b>${esc(p.c)}</b> ${esc(p.n)}</button>`).join('')}</div>`);return}
-  sheet(hdr('No encontrado')+`<div class="alert bad">El código <span class="mono">${esc(c)}</span> no está en Odoo.</div><button class="btn pri" data-a="buscar">Buscar por nombre</button>`)}
+  sheet(hdr('No encontrado')+`<div class="alert bad">El código <span class="mono">${esc(c)}</span> no está en Odoo.</div><button class="btn pri" data-a="buscar">Buscar por nombre</button><button class="btn" data-cajade="${esc(c)}" style="margin-top:8px">📦 Es el código de una caja → elegir el producto</button>`)}
 let scan=null;
 async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="msg" id="smsg">Apuntá al código de barras</div><div class="bot"><input id="man" inputmode="numeric" placeholder="o escribí el código"><button class="btn pri" data-a="mango">OK</button><button class="btn" data-a="scanoff">Cerrar</button></div></div>`;
   const v=$('vid');try{if('BarcodeDetector' in window){const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);const want=['ean_13','ean_8','upc_a','upc_e','code_128','itf'].filter(f=>fm.includes(f));
@@ -144,15 +146,33 @@ async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" p
     const rd=new ZXingBrowser.BrowserMultiFormatReader();const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,res=>{if(res&&scan)found(res.getText())});scan={stop:()=>ctl.stop()};
   }catch(e){$('smsg').textContent='No se pudo abrir la cámara. Escribí el código abajo.'}}
 function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}porCodigo(raw)}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO_CAJA){const p=MODO_CAJA;MODO_CAJA=null;asignarCaja(p,raw);return}porCodigo(raw)}
+/* ---- códigos de caja ---- */
+let MODO_CAJA=null,CAJA_DE=null;
+const CJ=JSON.parse(ls('mov_cajas')||'[]');const saveCJ=()=>ls('mov_cajas',JSON.stringify(CJ));
+CJ.forEach(k=>{const p=P.find(x=>x.c===k.code);if(p&&!(p.ce||[]).includes(k.ean))(p.ce=p.ce||[]).push(k.ean)});
+function gtinOk(c){if(!/^\d{8}$|^\d{12,14}$/.test(c))return false;const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k}
+function asignarCaja(p,raw){const c=norm(raw),cr=String(raw||'').replace(/\D/g,'');if(!c){toast('Código vacío');return}
+  const bot=P.find(x=>(x.e||[]).includes(c));if(bot){toast(`❌ Ese código es de la botella de ${bot.c} ${bot.n}, no de una caja`,5000);abrir(p);return}
+  const otro=P.find(x=>x!==p&&(x.ce||[]).includes(c));if(otro){toast(`❌ Ese código de caja ya es de ${otro.c} ${otro.n}`,5000);abrir(p);return}
+  if((p.ce||[]).includes(c)){toast('Ese código de caja ya estaba cargado');abrir(p);return}
+  if(!gtinOk(cr)&&!gtinOk(c)&&!confirm(`El código ${cr} no parece un código de barras válido (no coincide el dígito verificador). ¿Guardarlo igual?`)){abrir(p);return}
+  (p.ce=p.ce||[]).push(c);CJ.push({ean:c,raw:cr,code:p.c,nombre:p.n,quien:($('op').value||'').trim(),at:new Date().toISOString(),env:false});saveCJ();
+  toast('📦 Código de caja guardado para '+p.c);abrir(p);enviarCajas()}
+let envC=false;async function enviarCajas(){if(envC)return;envC=true;try{for(const k of CJ.filter(x=>!x.env)){
+    const b64=btoa(unescape(encodeURIComponent(JSON.stringify({ean:k.ean,raw:k.raw,code:k.code,nombre:k.nombre,quien:k.quien,at:k.at}))));
+    const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'CODIGOS-CAJA',nombre:k.ean+'-'+k.code+'.json',b64})});
+    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;k.env=true;saveCJ()}}catch(e){}envC=false}
+enviarCajas();setInterval(enviarCajas,30000);
 $('bScan').onclick=startScan;$('bBus').onclick=buscar;
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  if(b.dataset.p){abrir(P.find(p=>p.c===b.dataset.p));return}
+  if(b.dataset.cajade){buscar(b.dataset.cajade);return}
+  if(b.dataset.p){const p=P.find(p=>p.c===b.dataset.p);if(CAJA_DE){const c=CAJA_DE;CAJA_DE=null;asignarCaja(p,c);return}abrir(p);return}
   if(b.dataset.desde){F.desde=b.dataset.desde;dibujar();return}
   if(b.dataset.hacia){F.hacia=b.dataset.hacia;dibujar();return}
   if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));dibujar();return}
-  switch(b.dataset.a){case 'close':close();break;case 'scanoff':stopScan();close();break;case 'mango':{const v=$('man').value;stopScan();porCodigo(v);break}
-    case 'buscar':buscar();break;case 'guardar':guardar();break;
+  switch(b.dataset.a){case 'close':close();break;case 'scanoff':stopScan();MODO_CAJA=null;close();break;case 'mango':{const v=$('man').value;found(v);break}
+    case 'buscar':buscar();break;case 'cargacaja':MODO_CAJA=F.p;startScan().then(()=>{const m=$('smsg');if(m)m.textContent='📦 Escaneá el código de la CAJA de '+F.p.c});break;case 'guardar':guardar();break;
     case 'todo':{const d=locs(F.p).find(x=>x.u===F.desde);if(d&&d.q){F.cajas=F.p.u>1?Math.floor(d.q/F.p.u):0;F.sueltas=F.p.u>1?d.q%F.p.u:d.q;dibujar()}break}}
 });
 </script></body></html>
