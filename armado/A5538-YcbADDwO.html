@@ -183,7 +183,7 @@ function render(){
   const show=L.filter(l=>{const s=st(l);return flt==='todas'||(flt==='pen'&&s==='pen')||(flt==='ok'&&s==='ok')||(flt==='dif'&&(s==='par'||s==='exc'))});
   $('list').innerHTML=show.length?show.map(l=>{const s=st(l),sm=sumC(l.code),pl=[...new Set(S.ents.filter(e=>e.code===l.code).map(e=>e.pallet))].join(', ');
     return `<button class="ln ${s}" data-code="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div>
-    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔</span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}</div></div>
+    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}</div></div>
     <div class="q">${fmt(sm)}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span><small class="${ST[s][1]}">${ST[s][0]}${s==='par'?' '+fmt(l.qty-sm):s==='exc'?' '+fmt(sm-l.qty):''}</small></div></button>`}).join(''):'<div class="empty">No hay líneas en este filtro.</div>';
   if(tab==='P')renderP();if(tab==='F')renderF();
 }
@@ -251,7 +251,7 @@ function showQ(){
   ${falta&&!tot?`<button class="btn" data-a="todo">Poner lo que falta (${cj(l,falta)})</button>`:''}
   <div><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
-  ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Código de caja cargado ✔ (escanear otro)':'Escanear código de la CAJA'}</button>`:''}
+  ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Escanear otro código de caja':'Escanear código de la CAJA'}</button>${tieneCaja(l)?`<div class="alert ok">📦 Código de caja: <b class="mono">${codsCaja(l).map(esc).join(' · ')}</b></div>`:''}`:''}
   <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>Guardar ${fmt(tot)} en ${esc(F.pallet)}</button>
   ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
   hydrate();
@@ -292,6 +292,7 @@ async function startScan(){
 }
 function loadZX(){return window.ZXingBrowser?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
 function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
+const codsCaja=l=>[...new Set([...(l.ceans||[]),...Object.entries(CAT.cajas||{}).filter(([e,c])=>c===l.code).map(x=>x[0]),...Object.entries(S.cajasN||{}).filter(([e,c])=>c===l.code).map(x=>x[0])])];
 const tieneCaja=l=>(l.ceans||[]).length>0||Object.values(CAT.cajas||{}).includes(l.code)||Object.values(S.cajasN||{}).includes(l.code);
 let MODO=null; // {caja:code} cuando se escanea para registrar el código de la caja de un producto
 function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}onCode(raw,'codigo')}
