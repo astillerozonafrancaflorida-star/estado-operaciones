@@ -372,7 +372,7 @@ async function prepFotos(){
   for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)(G['Pallet '+p]=G['Pallet '+p]||[]).push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
   for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)(G['Productos']=G['Productos']||[]).push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
   // lotes de hasta LOTE fotos, juntando pallets (16/11: con 4 anduvo, probamos más)
-  const LOTE=8;FOT={};
+  const LOTE=20;FOT={};
   const pal=Object.keys(G).filter(k=>k.startsWith('Pallet ')).flatMap(k=>G[k].map(f=>[k.slice(7),f]));
   for(let i=0;i<pal.length;i+=LOTE){const ch=pal.slice(i,i+LOTE),ps=[...new Set(ch.map(x=>x[0]))];FOT['Pallets '+ps.join('-')]=ch.map(x=>x[1])}
   const pr=G['Productos']||[];for(let i=0;i<pr.length;i+=LOTE)FOT[pr.length>LOTE?`Productos (${i/LOTE+1})`:'Productos']=pr.slice(i,i+LOTE);
