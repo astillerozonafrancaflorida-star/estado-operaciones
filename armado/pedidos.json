@@ -444,7 +444,131 @@
   "entrega": "HIPER FREE SHOP",
   "lineas": 19,
   "botellas": 4655,
-  "creado": "2026-11-17T12:24:32.428017+00:00"
+  "creado": "2026-11-17T12:24:32.428017+00:00",
+  "listo": {
+   "carpeta": "HIPER-17NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-17T19:56:35.677Z",
+   "ok": 16,
+   "n": 19,
+   "bot": 4408,
+   "lin": [
+    [
+     "3234",
+     "VODKA EXCLUSIV 1 40% 0.75",
+     240,
+     240
+    ],
+    [
+     "964",
+     "COGNAC REMY MARTIN XO 700 ML",
+     15,
+     15
+    ],
+    [
+     "3463",
+     "VINO VEGA SICILIA UNICO 2013 3000 ML ",
+     2,
+     2
+    ],
+    [
+     "1471",
+     "VINO UNICO EDICION LIMITADA COLECCIONISTA 1996, 2004, 2009 750 ML",
+     2,
+     2
+    ],
+    [
+     "2548",
+     "VINO ANTINORI SOLAIA 2022 750 ML",
+     60,
+     60
+    ],
+    [
+     "2893",
+     "VINO ANTINORI BADIA PASSIGNANO 2022 750 ML",
+     60,
+     60
+    ],
+    [
+     "1014",
+     "CERVEZA BUDWEISER LATA 473 ML",
+     2400,
+     2160
+    ],
+    [
+     "3440",
+     "VINO ALVARO PALACIOS FINCA DOFI 2018 750 ML",
+     12,
+     12
+    ],
+    [
+     "2840",
+     "VINO ALION 2022 750 ML",
+     60,
+     60
+    ],
+    [
+     "2674",
+     "VINO CRASTO DOURO RESERVA TINTO 2023 750 ML",
+     600,
+     600
+    ],
+    [
+     "3443",
+     "VINO ALVARO PALACIOS RESERVA ESPECIAL LA MONTESA 2020 750 ML",
+     12,
+     12
+    ],
+    [
+     "3441",
+     "VINO ALVARO PALACIOS LES TERRASSES 2018 750 ML",
+     12,
+     12
+    ],
+    [
+     "2721",
+     "VINO SAN MARZANO SESSANTANNI PRIMITIVO MANDURIA 2020 750 ML",
+     766,
+     765
+    ],
+    [
+     "3437",
+     "VINO ALVARO PALACIOS LA MONTESA 2018 750 ML",
+     12,
+     12
+    ],
+    [
+     "2342",
+     "VINO GAJA IDDA ROSSO 2023 750 ML",
+     60,
+     60
+    ],
+    [
+     "1544",
+     "VINO TOKAJI OREMUS ASZU 5 PUTTONYOS 2018 500 ML",
+     30,
+     24
+    ],
+    [
+     "53",
+     "VINO TOKAJI OREMUS ASZU 6 PUTTONYOS 2016 500 ML",
+     60,
+     60
+    ],
+    [
+     "2486",
+     "VINO CUNE CONTINO RESERVA 2021 750 ML",
+     132,
+     132
+    ],
+    [
+     "2843",
+     "VINO PINTIA 2021 750 ML",
+     120,
+     120
+    ]
+   ]
+  }
  },
  {
   "id": "A5505-yw3lxKxa",
@@ -453,7 +577,23 @@
   "entrega": "BRANDARG SAS",
   "lineas": 1,
   "botellas": 60,
-  "creado": "2026-11-17T12:24:52.234999+00:00"
+  "creado": "2026-11-17T12:24:52.234999+00:00",
+  "listo": {
+   "carpeta": "BRANDARG-17NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-17T19:53:56.547Z",
+   "ok": 1,
+   "n": 1,
+   "bot": 60,
+   "lin": [
+    [
+     "2563",
+     "CHAMPAGNE BILLECART SALMON LE BLANC DE BLANCS 750 ML",
+     60,
+     60
+    ]
+   ]
+  }
  },
  {
   "id": "A5541-ofTmdbXc",
