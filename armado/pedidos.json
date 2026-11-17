@@ -94,5 +94,14 @@
   "lineas": 16,
   "botellas": 1176,
   "creado": "2026-11-17T14:07:53.729775+00:00"
+ },
+ {
+  "id": "S00376-mM4j9Weo",
+  "titulo": "Pedido S00376",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 5,
+  "botellas": 252,
+  "creado": "2026-11-17T14:08:14.707589+00:00"
  }
 ]
