@@ -23,7 +23,15 @@
   "entrega": "LIBERTY DUTY FREE",
   "lineas": 23,
   "botellas": 1752,
-  "creado": "2026-11-16T20:57:00.328710+00:00"
+  "creado": "2026-11-16T20:57:00.328710+00:00",
+  "listo": {
+   "carpeta": "ALFACOR-17NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-17T14:02:41.566Z",
+   "ok": 23,
+   "n": 23,
+   "bot": 1752
+  }
  },
  {
   "id": "A5535-A5539-sMfUODlO",
@@ -77,5 +85,14 @@
   "lineas": 1,
   "botellas": 360,
   "creado": "2026-11-17T13:35:40.829076+00:00"
+ },
+ {
+  "id": "S00377-xqKQk8d0",
+  "titulo": "Pedido S00377",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 16,
+  "botellas": 1176,
+  "creado": "2026-11-17T14:07:53.729775+00:00"
  }
 ]
