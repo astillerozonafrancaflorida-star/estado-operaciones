@@ -439,7 +439,7 @@
  },
  {
   "id": "A5540-A5508-A5507-A5506-A5503-A5521-A5542-cbwyvUcM",
-  "titulo": "Facturas A5540 · A5508 · A5507 · A5506 · A5503 · A5521 · A5542",
+  "titulo": "Facturas A5540 · A5546 · A5507 · A5506 · A5545 · A5521 · A5542",
   "cliente": "HIPER T Y N SRL",
   "entrega": "HIPER FREE SHOP",
   "lineas": 19,
@@ -568,7 +568,8 @@
      120
     ]
    ]
-  }
+  },
+  "nota": "A5508→A5546 y A5503→A5545 (refacturadas por rotura 17/11)"
  },
  {
   "id": "A5505-yw3lxKxa",
