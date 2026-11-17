@@ -6,7 +6,12 @@
   "entrega": "SHOPPING CHINA RIVERA",
   "lineas": 18,
   "botellas": 792,
-  "creado": "2026-11-16T20:56:44.621185+00:00"
+  "creado": "2026-11-16T20:56:44.621185+00:00",
+  "listo": {
+   "carpeta": "CASA-17NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-17T11:42:41.342Z"
+  }
  },
  {
   "id": "A5534-Y4BKnFLa",
@@ -24,7 +29,12 @@
   "entrega": "BARAO FREE SHOP",
   "lineas": 21,
   "botellas": 2348,
-  "creado": "2026-11-16T20:57:16.082271+00:00"
+  "creado": "2026-11-16T20:57:16.082271+00:00",
+  "listo": {
+   "carpeta": "PROMEDICO-16NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-16T19:03:12.507Z"
+  }
  },
  {
   "id": "S00364-utx8zsrp",
