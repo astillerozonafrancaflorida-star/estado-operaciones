@@ -14,7 +14,17 @@ const id=new URLSearchParams(location.search).get('p')||'';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('es-UY');
 const ST={pen:'Pendiente',ok:'OK',par:'Falta',exc:'Sobra'};
+let LISTO=null;
+async function listo(){try{const pj=await (await fetch('pedidos.json',{cache:'no-store'})).json();const e=pj.find(x=>x.id===id);if(!e||!e.listo||!e.listo.lin)return false;LISTO=e;const t=e.listo,L=t.lin;
+ const f=t.fecha?new Date(t.fecha).toLocaleString('es-UY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
+ document.getElementById('t').textContent=e.titulo;document.getElementById('s').innerHTML=`${esc(e.cliente)}${e.entrega?' · '+esc(e.entrega):''} · armó ${esc(t.armo||'—')} · ${esc(f)}`;
+ const tq=L.reduce((a,l)=>a+l[2],0),ta=L.reduce((a,l)=>a+l[3],0);
+ let h=`<section class="card" style="background:#CFEBD4;border-color:#2F7A3F"><b>✅ Terminado y respaldado</b><div class="mu">Datos del respaldo final (${esc(t.carpeta)}). El avance en vivo del celular ya no se muestra.</div></section>`;
+ h+=`<section class="card prog"><div><div class="n">${t.ok}/${t.n}</div><div class="l">líneas OK</div></div><div><div class="n">${fmt(ta)}/${fmt(tq)}</div><div class="l">botellas</div></div><div></div><div class="bar"><i style="width:${t.n?t.ok/t.n*100:0}%;background:#2F7A3F"></i></div></section>`;
+ h+=`<section class="card"><table><thead><tr><th>Producto</th><th class="r">Armado</th><th class="r">Estado</th></tr></thead><tbody>`+L.map(l=>{const st=l[3]===l[2]?'ok':l[3]<l[2]?'par':'exc';return `<tr class="${st}"><td><b>${esc(l[0])}</b> ${esc(l[1])}</td><td class="r">${fmt(l[3])}/${fmt(l[2])}</td><td class="r">${ST[st]}${st==='par'?' '+fmt(l[2]-l[3]):st==='exc'?' '+fmt(l[3]-l[2]):''}</td></tr>`}).join('')+`</tbody></table></section>`;
+ document.getElementById('m').innerHTML=h;return true}catch(e){return false}}
 async function tick(){
+  if(LISTO)return;
   try{const r=await fetch(API+'/progreso/'+encodeURIComponent(id),{cache:'no-store'});const d=await r.json();
     if(!d){document.getElementById('s').textContent='Todavía no hay avance de este pedido (el celular tiene que tener el PIN puesto).';return}
     const L=d.lineas||[],cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[l.st]++);const tot=L.reduce((a,l)=>a+l.q,0),ctl=L.reduce((a,l)=>a+l.s,0);
@@ -30,5 +40,5 @@ async function tick(){
     document.getElementById('m').innerHTML=h;
   }catch(e){document.getElementById('s').textContent='Sin conexión con el intermediario. Reintentando…'}
 }
-tick();setInterval(tick,5000);
+listo().then(ok=>{if(!ok){tick();setInterval(tick,5000)}});
 </script></body></html>

@@ -13,7 +13,117 @@
    "fecha": "2026-11-17T11:42:41.342Z",
    "ok": 18,
    "n": 18,
-   "bot": 792
+   "bot": 792,
+   "lin": [
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     18,
+     18
+    ],
+    [
+     "43",
+     "LICOR BOTTEGA ESPRESSO 500 ML",
+     12,
+     12
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     18,
+     18
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     18,
+     18
+    ],
+    [
+     "577",
+     "LICOR BOTTEGA GIANDUIA FONDENTE 500 ML",
+     24,
+     24
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     24,
+     24
+    ],
+    [
+     "393",
+     "LICOR BOTTEGA SAMBUCA 700 ML",
+     18,
+     18
+    ],
+    [
+     "595",
+     "LICOR BOTTEGA NEGRONI  700 ML",
+     36,
+     36
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     24,
+     24
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     18,
+     18
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     36,
+     36
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     36,
+     36
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     24,
+     24
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     30,
+     30
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     360,
+     360
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     18,
+     18
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     18,
+     18
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     60,
+     60
+    ]
+   ]
   }
  },
  {
@@ -30,7 +140,147 @@
    "fecha": "2026-11-17T14:02:41.566Z",
    "ok": 23,
    "n": 23,
-   "bot": 1752
+   "bot": 1752,
+   "lin": [
+    [
+     "13",
+     "PROSECCO BOTTEGA WHITE GOLD VENEZIA 750 ML",
+     12,
+     12
+    ],
+    [
+     "1028",
+     "ESPUMANTE MILLESIMATO BOTTEGA BRUT 750 ML",
+     132,
+     132
+    ],
+    [
+     "43",
+     "LICOR BOTTEGA ESPRESSO 500 ML",
+     60,
+     60
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     84,
+     84
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     36,
+     36
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     36,
+     36
+    ],
+    [
+     "159",
+     "LICOR BOTTEGA GINGER 500 ML",
+     36,
+     36
+    ],
+    [
+     "577",
+     "LICOR BOTTEGA GIANDUIA FONDENTE 500 ML",
+     72,
+     72
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     96,
+     96
+    ],
+    [
+     "393",
+     "LICOR BOTTEGA SAMBUCA 700 ML",
+     6,
+     6
+    ],
+    [
+     "595",
+     "LICOR BOTTEGA NEGRONI  700 ML",
+     36,
+     36
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     132,
+     132
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     120,
+     120
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     60,
+     60
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     144,
+     144
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     60,
+     60
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     84,
+     84
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     48,
+     48
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     144,
+     144
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     132,
+     132
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     156,
+     156
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     60,
+     60
+    ],
+    [
+     "590",
+     "GRAPPA PROSECCO BOTTEGA ALEXANDER 700 ML",
+     6,
+     6
+    ]
+   ]
   }
  },
  {
@@ -47,7 +297,135 @@
    "fecha": "2026-11-16T19:03:12.507Z",
    "ok": 21,
    "n": 21,
-   "bot": 2348
+   "bot": 2348,
+   "lin": [
+    [
+     "1022",
+     "LICOR BOTTEGA PISTACHO 500 ML",
+     150,
+     150
+    ],
+    [
+     "13",
+     "PROSECCO BOTTEGA WHITE GOLD VENEZIA 750 ML",
+     30,
+     30
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     60,
+     60
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     60,
+     60
+    ],
+    [
+     "393",
+     "LICOR BOTTEGA SAMBUCA 700 ML",
+     60,
+     60
+    ],
+    [
+     "966",
+     "LICOR COINTREAU 700 ML",
+     600,
+     600
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     30,
+     30
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     120,
+     120
+    ],
+    [
+     "16",
+     "PROSECCO BOTTEGA GOLD 750 ML",
+     12,
+     12
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     30,
+     30
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     60,
+     60
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     600,
+     600
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     120,
+     120
+    ],
+    [
+     "2191",
+     "VINO JOSEPH DROUHIN PULIGNY MONTRACHET 2023 750 ML",
+     36,
+     36
+    ],
+    [
+     "3186",
+     "VINO QUINTARELLI VALPOLICELLA CLASSICO SUPERIORE 2018 750 ML",
+     30,
+     30
+    ],
+    [
+     "2403",
+     "VINO REMIREZ DE GANUZA VIÑA COQUETA RESERVA 2017 750 ML",
+     36,
+     36
+    ],
+    [
+     "1118",
+     "VINO HUGEL RIESLING CLASSIC 2023 750 ML",
+     36,
+     36
+    ],
+    [
+     "2478",
+     "VINO FINCAS DE GANUZA RESERVA 2018 750 ML",
+     138,
+     138
+    ],
+    [
+     "2223",
+     "VINO MASI RESERVA DI COSTASERA AMARONE DELLA VALPOLICELLA CLASICO 2019 750 ML",
+     66,
+     66
+    ],
+    [
+     "2096",
+     "VINO BELLE GLOS LAS ALTURAS PINOT NOIR 2022 750 ML",
+     14,
+     14
+    ],
+    [
+     "3178",
+     "VINO ALLEGRINI AMARONE DELLA VALPOLICELLA CLASSICO 2021 750 ML",
+     60,
+     60
+    ]
+   ]
   }
  },
  {
