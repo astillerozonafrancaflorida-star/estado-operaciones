@@ -59,5 +59,14 @@
   "lineas": 19,
   "botellas": 4655,
   "creado": "2026-11-17T12:24:32.428017+00:00"
+ },
+ {
+  "id": "A5505-yw3lxKxa",
+  "titulo": "Factura A5505",
+  "cliente": "BRANDARG SAS",
+  "entrega": "BRANDARG SAS",
+  "lineas": 1,
+  "botellas": 60,
+  "creado": "2026-11-17T12:24:52.234999+00:00"
  }
 ]
