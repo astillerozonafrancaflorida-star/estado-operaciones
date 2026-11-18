@@ -783,15 +783,6 @@
   }
  },
  {
-  "id": "S00375-RMrkpmQg",
-  "titulo": "Pedido S00375",
-  "cliente": "IBERPARK SA",
-  "entrega": "IBERPARK SA",
-  "lineas": 8,
-  "botellas": 492,
-  "creado": "2026-11-18T14:22:18.628215+00:00"
- },
- {
   "id": "S00376-mM4j9Weo",
   "titulo": "Pedido S00376",
   "cliente": "IBERPARK SA",
@@ -862,5 +853,14 @@
   "lineas": 4,
   "botellas": 720,
   "creado": "2026-11-18T19:24:31.292886+00:00"
+ },
+ {
+  "id": "S00375-RMrkpmQg",
+  "titulo": "Pedido S00375",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 8,
+  "botellas": 492,
+  "creado": "2026-11-18T19:26:27.702726+00:00"
  }
 ]
