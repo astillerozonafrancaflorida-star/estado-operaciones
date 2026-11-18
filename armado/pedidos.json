@@ -832,6 +832,35 @@
   "entrega": "HIPER FREE SHOP",
   "lineas": 3,
   "botellas": 528,
-  "creado": "2026-11-18T19:36:10.798949+00:00"
+  "creado": "2026-11-18T19:36:10.798949+00:00",
+  "listo": {
+   "carpeta": "HIPER-18NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-18T14:13:41.028Z",
+   "ok": 3,
+   "n": 3,
+   "bot": 528,
+   "lin": [
+    [
+     "2339",
+     "VINO JERMANN VINTAGE TUNINA 2022 750 ML",
+     24,
+     24
+    ],
+    [
+     "2340",
+     "VINO JERMANN WHERE DREAMS 2022 750 ML",
+     24,
+     24
+    ],
+    [
+     "3189",
+     "VINO ANTINORI TIGNANELLO 2023 750 ML",
+     480,
+     480
+    ]
+   ],
+   "pal": 1
+  }
  }
 ]
