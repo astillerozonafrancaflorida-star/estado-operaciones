@@ -783,15 +783,6 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 11,
-  "botellas": 1278,
-  "creado": "2026-11-18T14:21:16.037788+00:00"
- },
- {
   "id": "S00270-xXycRIix",
   "titulo": "Pedido S00270",
   "cliente": "IBERPARK SA",
@@ -853,5 +844,14 @@
   "lineas": 1,
   "botellas": 360,
   "creado": "2026-11-18T14:23:08.364090+00:00"
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 11,
+  "botellas": 1278,
+  "creado": "2026-11-18T14:28:41.397951+00:00"
  }
 ]

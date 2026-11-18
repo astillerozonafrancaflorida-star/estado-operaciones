@@ -194,7 +194,7 @@ function render(){
   const recBtn=REC?(()=>{const n=sigPend(null);const pend=L.filter(l=>st(l)!=='ok').length;return `<div class="card rec"><b>🧭 Modo recorrido</b><div class="mu">Los productos están ordenados por ubicación: seguí el orden y hacés un solo recorrido. Cada producto muestra la foto de la botella y de la caja.</div>${(()=>{const k=L.filter(l=>faltan(l).length).length;return k?`<div class="alert wa">⚠️ ${k} de ${L.length} productos tienen datos sin cargar (fotos o códigos). Están marcados con ⚠️: al pasar por ellos sacá la foto o escaneá el código.</div>`:''})()}${n?`<button class="btn ok recgo" data-code="${esc(n.code)}" style="padding:14px">${pend===L.length?'Empezar recorrido':'Seguir recorrido'} → ${esc(n.loc||'sin ubicación')}</button>`:'<div class="alert ok">✅ Recorrido terminado</div>'}</div>`})():'';
   $('list').innerHTML=recBtn+(show.length?show.map(l=>{const s=st(l),sm=sumC(l.code),pl=[...new Set(S.ents.filter(e=>e.code===l.code).map(e=>e.pallet))].join(', ');
     return `<button class="ln ${s}${REC&&l.img?' th':''}" data-code="${esc(l.code)}">${REC&&l.img?`<img class="thb" src="${esc(l.img)}" alt="" loading="lazy">`:''}<div><div class="nm">${REC&&faltan(l).length?'<span style="color:var(--wa)">⚠️ </span>':''}${esc(l.name)}</div>
-    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}${D.fotoLote?((S.lotes||{})[l.code]?'<span style="color:var(--ok);font-weight:700">🏷️ lote ✔</span>':'<span style="color:var(--wa);font-weight:700">🏷️ falta foto lote</span>'):''}</div></div>
+    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}${REC?((S.verif||{})[l.code]?'<span style="color:var(--ok);font-weight:700">✔ confirmado</span>':'<span>📦 sin confirmar</span>'):''}${D.fotoLote?((S.lotes||{})[l.code]?'<span style="color:var(--ok);font-weight:700">🏷️ lote ✔</span>':'<span style="color:var(--wa);font-weight:700">🏷️ falta foto lote</span>'):''}</div></div>
     <div class="q">${fmt(sm)}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span><small class="${ST[s][1]}">${ST[s][0]}${s==='par'?' '+fmt(l.qty-sm):s==='exc'?' '+fmt(sm-l.qty):''}</small></div></button>`}).join(''):'<div class="empty">No hay líneas en este filtro.</div>');
   if(tab==='P')renderP();if(tab==='F')renderF();
 }
@@ -244,8 +244,32 @@ let F=null;
 function close(){F=null;if(S.openCode){S.openCode=null;save()}$('root').innerHTML='';if(typeof render==='function'&&$('list'))render()}
 function sheet(h){$('root').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true">${h}</div></div>`;$('scrim').addEventListener('click',e=>{if(e.target.id==='scrim')close()})}
 const hdr=t=>`<div class="sh"><h2>${t}</h2><button class="x" data-a="close" aria-label="Cerrar">×</button></div>`;
+function verifSheet(l,msg){
+  const tc=codsCaja(l).length>0;
+  sheet(hdr('Paso 1 · Confirmar producto')+(msg||'')+`
+  <div class="recf">${l.imgc?`<figure><img src="${esc(l.imgc)}" alt="Caja"><figcaption>Caja</figcaption></figure>`:''}${l.img?`<figure><img src="${esc(l.img)}" alt="Botella"><figcaption>Botella</figcaption></figure>`:''}</div>
+  <div class="recl"><div><small>IR A</small><b>${esc(l.loc||'SIN UBICACIÓN')}</b></div></div>
+  <div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu mono">${esc(l.code)}</div></div>
+  <button class="btn ok" data-a="verif" style="padding:16px;font-size:17px">📦 Escanear el código de barras de la CAJA</button>
+  ${tc?'':'<div class="alert wa">Este producto todavía no tiene código de caja cargado: el que escanees queda registrado para la próxima vez.</div>'}
+  <button class="btn" data-a="verifbot">La caja no tiene código → escanear la botella</button>
+  ${l.eans.length?'':'<button class="btn" data-a="verifman">Tampoco tiene código la botella → confirmo con la foto</button>'}`);hydrate()}
+function verifCode(raw,code,bot){
+  const c=norm(raw),l=L.find(x=>x.code===code);if(!l||!c){toast('Código vacío');return}
+  const ok=()=>{S.verif=S.verif||{};S.verif[code]=bot?'botella':'caja';save();render();toast('✅ Producto confirmado',1800);openLine(code,bot?'codigo':'caja',null,bot?0:0)};
+  if(bot){if(l.eans.includes(c))return ok();
+    const o=(CAT.map[c]||[]).map(x=>'['+x[0]+'] '+x[1]);return verifSheet(l,`<div class="alert bad">⛔ Ese código de botella ${o.length?'es de '+esc(o.join(', ')):'no es de este producto'}. Revisá que sea el producto correcto.</div>`)}
+  if(codsCaja(l).includes(c))return ok();
+  if(l.eans.includes(c))return verifSheet(l,'<div class="alert wa">Ese es el código de la BOTELLA. Escaneá el de la CAJA.</div>');
+  const otroL=L.find(x=>x.code!==code&&(x.eans.includes(c)||codsCaja(x).includes(c)));
+  const otroC=(CAT.cajas||{})[c]||((CAT.map[c]||[])[0]||[])[0];
+  if(otroL||(otroC&&otroC!==code)){const n=otroL?'['+otroL.code+'] '+otroL.name:'['+otroC+'] '+(((CAT.map[c]||[])[0]||[])[1]||'');return verifSheet(l,`<div class="alert bad">⛔ Esa caja es de <b>${esc(n)}</b>, no de este producto. Buscá la caja correcta.</div>`)}
+  if(!codsCaja(l).length){S.cajasN=S.cajasN||{};S.cajasN[c]=code;pushProg();return ok()}
+  verifSheet(l,`<div class="alert bad">⛔ El código <span class="mono">${esc(c)}</span> no coincide con la caja de este producto.</div><button class="btn" data-a="verifreg" data-ean="${esc(c)}">Es este producto: registrar también este código de caja</button>`);
+}
 function openLine(code,via,aviso,cajas0){
   const l=L.find(x=>x.code===code);if(!l)return;
+  if(REC&&!(S.verif||{})[code]){F=null;S.openCode=null;return verifSheet(l)}
   const falta=Math.max(0,l.qty-sumC(code));
   const pals=pallets();const p=S.last&&pals.includes(S.last)?S.last:(pals[pals.length-1]||'P1');
   const d=(S.drafts||{})[code];
@@ -319,7 +343,7 @@ function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
 const codsCaja=l=>[...new Set([...(l.ceans||[]),...Object.entries(CAT.cajas||{}).filter(([e,c])=>c===l.code).map(x=>x[0]),...Object.entries(S.cajasN||{}).filter(([e,c])=>c===l.code).map(x=>x[0])])];
 const tieneCaja=l=>(l.ceans||[]).length>0||Object.values(CAT.cajas||{}).includes(l.code)||Object.values(S.cajasN||{}).includes(l.code);
 let MODO=null; // {caja:code} cuando se escanea para registrar el código de la caja de un producto
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}onCode(raw,'codigo')}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}onCode(raw,'codigo')}
 function asignarCaja(c,code){if(!c){toast('Código vacío');return}const l=L.find(x=>x.code===code);
   const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
   if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
@@ -531,13 +555,16 @@ document.addEventListener('click',async e=>{
   if(b.dataset.del){if(b.dataset.sure){const i=S.ents.findIndex(x=>x.id===b.dataset.del);if(i>=0){if(S.ents[i].foto)fDel(S.ents[i].id);S.ents.splice(i,1);save();render();showQ();toast('Borrado');pushProg()}}else{b.dataset.sure=1;b.textContent='¿Seguro?'}return}
   switch(b.dataset.a){
     case 'close':close();break;
-    case 'scanoff':stopScan();close();break;
+    case 'scanoff':stopScan();MODO=null;close();break;
     case 'scan':close();startScan();break;
-    case 'mango':{const v=$('man').value;stopScan();onCode(v,'codigo');break}
+    case 'mango':{const v=$('man').value;found(v);break}
     case 'todo':{const l=L.find(x=>x.code===F.code),f=Math.max(0,l.qty-sumC(F.code));F.cajas=l.upc>1?Math.floor(f/l.upc):0;F.sueltas=l.upc>1?f%l.upc:f;showQ();break}
     case 'newpal':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;F.pallet='P'+n;showQ();break}
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
     case 'lote':camFor='lote';$('cam').value='';$('cam').click();break;
+    case 'verif':case 'verifbot':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;MODO={verif:c,bot:b.dataset.a==='verifbot'};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent=MODO&&MODO.bot?'Apuntá al código de la BOTELLA':'Apuntá al código de barras de la CAJA'},300);break}
+    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');break}
+    case 'verifreg':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.cajasN=S.cajasN||{};S.cajasN[b.dataset.ean]=c;S.verif=S.verif||{};S.verif[c]='caja';save();render();pushProg();toast('📦 Código registrado y producto confirmado');openLine(c,'caja');break}
     case 'save':saveE();break;
     case 'bajarfotos':bajarFotos();break;
     case 'zip':enviarZip();break;
