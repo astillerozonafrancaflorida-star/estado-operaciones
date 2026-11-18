@@ -611,15 +611,6 @@
   "creado": "2026-11-17T14:07:53.729775+00:00"
  },
  {
-  "id": "S00376-mM4j9Weo",
-  "titulo": "Pedido S00376",
-  "cliente": "IBERPARK SA",
-  "entrega": "IBERPARK SA",
-  "lineas": 5,
-  "botellas": 252,
-  "creado": "2026-11-17T14:08:14.707589+00:00"
- },
- {
   "id": "A5544-Qc47g5JF",
   "titulo": "Factura A5544",
   "cliente": "LUMIEN LTDA",
@@ -853,5 +844,14 @@
   "lineas": 8,
   "botellas": 492,
   "creado": "2026-11-18T14:22:18.628215+00:00"
+ },
+ {
+  "id": "S00376-mM4j9Weo",
+  "titulo": "Pedido S00376",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 5,
+  "botellas": 252,
+  "creado": "2026-11-18T14:22:33.285522+00:00"
  }
 ]
