@@ -593,44 +593,6 @@
   }
  },
  {
-  "id": "A5547-z8Q0IdyT",
-  "titulo": "Factura A5547",
-  "cliente": "HIPER T Y N SRL",
-  "entrega": "HIPER FREE SHOP",
-  "lineas": 3,
-  "botellas": 528,
-  "creado": "2026-11-18T13:45:45.328095+00:00",
-  "listo": {
-   "carpeta": "HIPER-18NOV26",
-   "armo": "Natalia",
-   "fecha": "2026-11-18T14:13:41.028Z",
-   "ok": 3,
-   "n": 3,
-   "bot": 528,
-   "lin": [
-    [
-     "2339",
-     "VINO JERMANN VINTAGE TUNINA 2022 750 ML",
-     24,
-     24
-    ],
-    [
-     "2340",
-     "VINO JERMANN WHERE DREAMS 2022 750 ML",
-     24,
-     24
-    ],
-    [
-     "3189",
-     "VINO ANTINORI TIGNANELLO 2023 750 ML",
-     480,
-     480
-    ]
-   ],
-   "pal": 1
-  }
- },
- {
   "id": "S00171-nLttRPwh",
   "titulo": "Pedido S00171",
   "cliente": "HIPER T Y N SRL",
@@ -718,6 +680,158 @@
   "entrega": "YURYS FREE SHOP",
   "lineas": 22,
   "botellas": 808,
-  "creado": "2026-11-18T19:34:15.584319+00:00"
+  "creado": "2026-11-18T19:34:15.584319+00:00",
+  "listo": {
+   "carpeta": "LUMIEN-18NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-18T13:01:34.008Z",
+   "ok": 22,
+   "n": 22,
+   "bot": 808,
+   "lin": [
+    [
+     "159",
+     "LICOR BOTTEGA GINGER 500 ML",
+     18,
+     18
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     18,
+     18
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     18,
+     18
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     18,
+     18
+    ],
+    [
+     "2234",
+     "CHAMPAGNE VEUVE CLICQUOT RICH ON ICE 750 ML",
+     24,
+     24
+    ],
+    [
+     "3",
+     "CHAMPAGNE VEUVE CLICQUOT RICH ROSE ON ICE 750 ML",
+     24,
+     24
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     18,
+     18
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "91",
+     "LICOR BOTTEGA BOCCA DI ROSA ROSOLIO 500 ML",
+     12,
+     12
+    ],
+    [
+     "160",
+     "POETI PROSECCO DOC BOTTEGA 750 ML",
+     136,
+     136
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     96,
+     96
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     24,
+     24
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     12,
+     12
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     36,
+     36
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     24,
+     24
+    ],
+    [
+     "2901",
+     "VINO ANTINORI VILLA ANTINORI BLANCO 2025 750 ML",
+     120,
+     120
+    ],
+    [
+     "3249",
+     "VINO VIÑA BOSCONIA RESERVA TINTO 2015 750 ML",
+     30,
+     30
+    ],
+    [
+     "3131",
+     "VINO VALDIVIESO CABALLO LOCO PIRQUE 2024 750 ML",
+     48,
+     48
+    ],
+    [
+     "2355",
+     "VINO GARCES SILVA AMAYNA PINOT NOIR 2023 750 ML",
+     18,
+     18
+    ],
+    [
+     "186",
+     "VINO LE PUY BARTHELEMY 2019 750 ML",
+     12,
+     12
+    ],
+    [
+     "202",
+     "VINO VALDIVIESO CABALLO LOCO APALTA ETIQUETA AZUL 2023 750 ML",
+     60,
+     60
+    ],
+    [
+     "2356",
+     "VINO GARCES SILVA AMAYNA CHARDONNAY 2024 750 ML",
+     18,
+     18
+    ]
+   ],
+   "pal": 2
+  }
+ },
+ {
+  "id": "A5547-z8Q0IdyT",
+  "titulo": "Factura A5547",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 3,
+  "botellas": 528,
+  "creado": "2026-11-18T19:36:10.798949+00:00"
  }
 ]
