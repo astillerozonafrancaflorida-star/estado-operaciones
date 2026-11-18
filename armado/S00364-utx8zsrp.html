@@ -166,7 +166,7 @@ function hydrate(){document.querySelectorAll('img[data-k]').forEach(async im=>{c
 
 /* ---- datos ---- */
 const L=D.lineas;
-const norm=c=>String(c||'').replace(/\D/g,'').replace(/^0+/,'');
+const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+/,'');const esLote=c=>{const d=String(c||'').replace(/\D/g,'');return d.length>16&&gs1(d)===d};
 const sumC=c=>S.ents.filter(e=>e.code===c).reduce((a,e)=>a+e.total,0);
 function st(l){const s=sumC(l.code);if(!s)return 'pen';return s===l.qty?'ok':s<l.qty?'par':'exc'}
 const ST={pen:['Pendiente','s-pen'],ok:['OK','s-ok'],par:['Falta','s-par'],exc:['Sobra','s-exc']};
@@ -369,7 +369,7 @@ function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
 const codsCaja=l=>[...new Set([...(l.ceans||[]),...Object.entries(CAT.cajas||{}).filter(([e,c])=>c===l.code).map(x=>x[0]),...Object.entries(S.cajasN||{}).filter(([e,c])=>c===l.code).map(x=>x[0])])];
 const tieneCaja=l=>(l.ceans||[]).length>0||Object.values(CAT.cajas||{}).includes(l.code)||Object.values(S.cajasN||{}).includes(l.code);
 let MODO=null; // {caja:code} cuando se escanea para registrar el código de la caja de un producto
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}if(MODO&&MODO.botn){const code=MODO.botn;MODO=null;asignarBot(norm(raw),code);return}onCode(raw,'codigo')}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA de la caja. Escaneá el OTRO código largo (el del producto).',5000);setTimeout(startScan,1200);return}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}if(MODO&&MODO.botn){const code=MODO.botn;MODO=null;asignarBot(norm(raw),code);return}onCode(raw,'codigo')}
 function asignarBot(c,code){if(!c){toast('Código vacío');return}
   const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
   if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
