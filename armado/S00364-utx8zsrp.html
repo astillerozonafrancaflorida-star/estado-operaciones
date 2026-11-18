@@ -170,7 +170,8 @@ const norm=c=>String(c||'').replace(/\D/g,'').replace(/^0+/,'');
 const sumC=c=>S.ents.filter(e=>e.code===c).reduce((a,e)=>a+e.total,0);
 function st(l){const s=sumC(l.code);if(!s)return 'pen';return s===l.qty?'ok':s<l.qty?'par':'exc'}
 const ST={pen:['Pendiente','s-pen'],ok:['OK','s-ok'],par:['Falta','s-par'],exc:['Sobra','s-exc']};
-function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(Boolean));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>a.localeCompare(b,'es',{numeric:true}))}
+const SINPAL='SIN PALLET';
+function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>a.localeCompare(b,'es',{numeric:true}))}
 /* ---- modo recorrido (piloto 18/11, solo pedidos con D.recorrido) ---- */
 const REC=!!D.recorrido;
 const rutaOrd=(a,b)=>(!a.loc)-(!b.loc)||String(a.loc||'').localeCompare(String(b.loc||''),'es',{numeric:true});
@@ -273,7 +274,7 @@ function openLine(code,via,aviso,cajas0){
   const falta=Math.max(0,l.qty-sumC(code));
   const pals=pallets();const p=S.last&&pals.includes(S.last)?S.last:(pals[pals.length-1]||'P1');
   const d=(S.drafts||{})[code];
-  F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:p,foto:null,aviso};
+  F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:REC?SINPAL:p,foto:null,aviso};
   if(d){F.cajas=(d.cajas||0)+(via==='caja'&&cajas0&&d.cajas?cajas0:0)||F.cajas;F.sueltas=d.sueltas||0;if(d.pallet)F.pallet=d.pallet;if(via==='lista'&&d.via)F.via=d.via;
     if(d.foto)fGet('d_'+code).then(b=>{if(b&&F&&F.code===code&&!F.foto){F.foto=b;showQ()}})}
   showQ();
@@ -291,11 +292,11 @@ function showQ(){
   <div class="stp"><b>${l.upc>1?'Unidades sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
   <div class="tot"><span id="qtot">${fmt(tot)}</span> <span class="mu" style="font-size:15px">unid.</span></div>
   ${falta&&!tot?`<button class="btn" data-a="todo">Poner lo que falta (${cj(l,falta)})</button>`:''}
-  <div><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
+  ${REC?'<div class="mu">El pallet se arma después: ahora solo se registra lo que sacaste de la ubicación.</div>':''}<div ${REC?'hidden':''}><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
   ${D.fotoLote?`<button class="btn ${((S.lotes||{})[F.code])?'':'pri'}" data-a="lote">${((S.lotes||{})[F.code])?'✔ Foto del LOTE tomada (cambiar)':'🏷️ Sacar foto del código de LOTE'}</button>${((S.lotes||{})[F.code])?`<img data-k="${(S.lotes||{})[F.code]}" alt="Lote" style="max-height:120px;object-fit:contain;border-radius:8px">`:''}`:''}
   ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Escanear otro código de caja':'Escanear código de la CAJA'}</button>${tieneCaja(l)?`<div class="alert ok">📦 Código de caja: <b class="mono">${codsCaja(l).map(esc).join(' · ')}</b></div>`:''}`:''}
-  <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>Guardar ${fmt(tot)} en ${esc(F.pallet)}</button>
+  <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>${REC?'✔ Saqué '+fmt(tot):'Guardar '+fmt(tot)+' en '+esc(F.pallet)}</button>
   ${tot||F.foto?'<div class="mu" style="text-align:center">✏️ Lo que vas cargando queda guardado aunque cierres o cambies de producto. Tocá Guardar cuando esté completo.</div>':''}
   ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
   hydrate();dsave();
@@ -304,12 +305,12 @@ function showQ(){
 function dsave(){if(!F)return;S.drafts=S.drafts||{};const d=S.drafts[F.code]||{};
   if(!F.cajas&&!F.sueltas&&!F.foto&&!d.foto){delete S.drafts[F.code]}else S.drafts[F.code]={cajas:F.cajas,sueltas:F.sueltas,pallet:F.pallet,via:F.via,foto:!!F.foto||!!d.foto,at:Date.now()};
   S.openCode=F.code;save()}
-function upd(){dsave();const l=L.find(x=>x.code===F.code),t=F.cajas*l.upc+F.sueltas;$('qtot').textContent=fmt(t);const b=$('bSave');b.disabled=!t;b.textContent='Guardar '+fmt(t)+' en '+F.pallet}
+function upd(){dsave();const l=L.find(x=>x.code===F.code),t=F.cajas*l.upc+F.sueltas;$('qtot').textContent=fmt(t);const b=$('bSave');b.disabled=!t;b.textContent=REC?'✔ Saqué '+fmt(t):'Guardar '+fmt(t)+' en '+F.pallet}
 async function saveE(){
   const l=L.find(x=>x.code===F.code),tot=F.cajas*l.upc+F.sueltas;if(!tot)return;
   const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
   if(F.foto){try{await fPut(id,F.foto)}catch(e){toast('No se pudo guardar la foto')}}
-  S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto,op:S.op});
+  S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:REC?SINPAL:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto,op:S.op});
   S.last=F.pallet;if(S.drafts){delete S.drafts[F.code]}fDel('d_'+F.code);save();close();render();pushProg();
   if(REC){const n=sigPend(l.code);if(n&&st(l)!=='par')setTimeout(()=>openLine(n.code),350)}
   const s=st(l);toast(s==='ok'?'✅ '+l.code+' completo':s==='par'?'Guardado · faltan '+fmt(l.qty-sumC(l.code)):'⚠️ Sobran '+fmt(sumC(l.code)-l.qty)+' de '+l.code);
