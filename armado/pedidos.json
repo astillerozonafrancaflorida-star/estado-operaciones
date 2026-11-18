@@ -808,21 +808,50 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 11,
-  "botellas": 1278,
-  "creado": "2026-11-18T13:01:50.139377+00:00"
- },
- {
   "id": "A5547-z8Q0IdyT",
   "titulo": "Factura A5547",
   "cliente": "HIPER T Y N SRL",
   "entrega": "HIPER FREE SHOP",
   "lineas": 3,
   "botellas": 528,
-  "creado": "2026-11-18T13:45:45.328095+00:00"
+  "creado": "2026-11-18T13:45:45.328095+00:00",
+  "listo": {
+   "carpeta": "HIPER-18NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-18T14:13:41.028Z",
+   "ok": 3,
+   "n": 3,
+   "bot": 528,
+   "lin": [
+    [
+     "2339",
+     "VINO JERMANN VINTAGE TUNINA 2022 750 ML",
+     24,
+     24
+    ],
+    [
+     "2340",
+     "VINO JERMANN WHERE DREAMS 2022 750 ML",
+     24,
+     24
+    ],
+    [
+     "3189",
+     "VINO ANTINORI TIGNANELLO 2023 750 ML",
+     480,
+     480
+    ]
+   ],
+   "pal": 1
+  }
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 11,
+  "botellas": 1278,
+  "creado": "2026-11-18T14:21:16.037788+00:00"
  }
 ]
