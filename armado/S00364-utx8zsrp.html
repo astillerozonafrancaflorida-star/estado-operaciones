@@ -175,7 +175,8 @@ function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINP
 /* ---- modo recorrido (piloto 18/11, solo pedidos con D.recorrido) ---- */
 const REC=!!D.recorrido;
 const rutaOrd=(a,b)=>(!a.loc)-(!b.loc)||String(a.loc||'').localeCompare(String(b.loc||''),'es',{numeric:true});
-function faltan(l){const f=[];if(!l.img)f.push('foto de la botella');if(l.upc>1&&!l.imgc)f.push('foto de la caja');if(!(l.eans||[]).length)f.push('código de barras de la botella');if(l.upc>1&&!tieneCaja(l))f.push('código de barras de la caja');return f}
+const tieneBot=l=>(l.eans||[]).length>0||Object.values(S.nuevos||{}).includes(l.code);
+function faltan(l){const f=[];if(!l.img)f.push('foto de la botella');if(l.upc>1&&!l.imgc)f.push('foto de la caja');if(!tieneBot(l))f.push('código de barras de la botella');if(l.upc>1&&!tieneCaja(l))f.push('código de barras de la caja');return f}
 function sigPend(desde){const R=L.slice().sort(rutaOrd).filter(l=>st(l)==='pen'||st(l)==='par');if(!R.length)return null;const i=R.findIndex(l=>l.code===desde);return (i>=0&&R[i+1])?R[i+1]:R.find(l=>l.code!==desde)||null}
 function cj(l,q){if(l.upc<=1)return fmt(q)+' u.';const c=Math.floor(q/l.upc),s=q%l.upc;return (c?c+' cj':'')+(c&&s?' + ':'')+(s?s+' u.':'')||'0'}
 
@@ -195,7 +196,7 @@ function render(){
   const recBtn=REC?(()=>{const n=sigPend(null);const pend=L.filter(l=>st(l)!=='ok').length;return `<div class="card rec"><b>🧭 Modo recorrido</b><div class="mu">Los productos están ordenados por ubicación: seguí el orden y hacés un solo recorrido. Cada producto muestra la foto de la botella y de la caja.</div>${(()=>{const k=L.filter(l=>faltan(l).length).length;return k?`<div class="alert wa">⚠️ ${k} de ${L.length} productos tienen datos sin cargar (fotos o códigos). Están marcados con ⚠️: al pasar por ellos sacá la foto o escaneá el código.</div>`:''})()}${n?`<button class="btn ok recgo" data-code="${esc(n.code)}" style="padding:14px">${pend===L.length?'Empezar recorrido':'Seguir recorrido'} → ${esc(n.loc||'sin ubicación')}</button>`:'<div class="alert ok">✅ Recorrido terminado</div>'}</div>`})():'';
   $('list').innerHTML=recBtn+(show.length?show.map(l=>{const s=st(l),sm=sumC(l.code),pl=[...new Set(S.ents.filter(e=>e.code===l.code).map(e=>e.pallet))].join(', ');
     return `<button class="ln ${s}${REC&&l.img?' th':''}" data-code="${esc(l.code)}">${REC&&l.img?`<img class="thb" src="${esc(l.img)}" alt="" loading="lazy">`:''}<div><div class="nm">${REC&&faltan(l).length?'<span style="color:var(--wa)">⚠️ </span>':''}${esc(l.name)}</div>
-    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${l.eans.length?'':'<span>sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}${REC?((S.verif||{})[l.code]?'<span style="color:var(--ok);font-weight:700">✔ confirmado</span>':'<span>📦 sin confirmar</span>'):''}${D.fotoLote?((S.lotes||{})[l.code]?'<span style="color:var(--ok);font-weight:700">🏷️ lote ✔</span>':'<span style="color:var(--wa);font-weight:700">🏷️ falta foto lote</span>'):''}</div></div>
+    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${tieneBot(l)?'':'<span>🍾 sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}${REC?((S.verif||{})[l.code]?'<span style="color:var(--ok);font-weight:700">✔ confirmado</span>':'<span>📦 sin confirmar</span>'):''}${D.fotoLote?((S.lotes||{})[l.code]?'<span style="color:var(--ok);font-weight:700">🏷️ lote ✔</span>':'<span style="color:var(--wa);font-weight:700">🏷️ falta foto lote</span>'):''}</div></div>
     <div class="q">${fmt(sm)}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span><small class="${ST[s][1]}">${ST[s][0]}${s==='par'?' '+fmt(l.qty-sm):s==='exc'?' '+fmt(sm-l.qty):''}</small></div></button>`}).join(''):'<div class="empty">No hay líneas en este filtro.</div>');
   if(tab==='P')renderP();if(tab==='F')renderF();
 }
@@ -304,7 +305,7 @@ function showQ(){
   const ents=S.ents.filter(e=>e.code===F.code);
   sheet(hdr(esc(l.code))+(F.aviso?`<div class="alert wa">${F.aviso}</div>`:'')+`
   ${REC?`<div class="recf">${l.img?`<figure><img src="${esc(l.img)}" alt="Botella"><figcaption>Botella</figcaption></figure>`:''}${l.imgc?`<figure><img src="${esc(l.imgc)}" alt="Caja"><figcaption>Caja</figcaption></figure>`:'<figure class="nof"><span>📦</span><figcaption>Sin foto de caja</figcaption></figure>'}</div>
-  ${faltan(l).length?`<div class="alert wa"><b>⚠️ Falta cargar:</b> ${faltan(l).join(', ')}.<br>Aprovechá que estás en el lugar: ${[!l.img||(l.upc>1&&!l.imgc)?'sacá la foto con 📷 (botella y/o caja)':'',!(l.eans||[]).length?'escaneá el código de la botella':'',l.upc>1&&!tieneCaja(l)?'escaneá el código de la caja con 📦':''].filter(Boolean).join(' · ')}.</div>`:''}
+  ${faltan(l).length?`<div class="alert wa"><b>⚠️ Falta cargar:</b> ${faltan(l).join(', ')}.<br>Aprovechá que estás en el lugar: ${[!l.img||(l.upc>1&&!l.imgc)?'sacá la foto con 📷 (botella y/o caja)':'',!tieneBot(l)?'escaneá el código de la botella con 🍾':'',l.upc>1&&!tieneCaja(l)?'escaneá el código de la caja con 📦':''].filter(Boolean).join(' · ')}.</div>`:''}
   <div class="recl"><div><small>IR A</small><b>${esc(l.loc||'SIN UBICACIÓN')}</b></div><div><small>LLEVAR</small><b>${cj(l,falta)||'—'}</b></div></div>`:''}
   <div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu"><span class="loc">${esc(l.loc)}</span> · Pedido <b>${fmt(l.qty)}</b> · ya armado ${fmt(sm)} · ${l.upc>1?'caja x'+l.upc:'unidad'}</div></div>
   ${l.upc>1?`<div class="stp"><b>Cajas (x${l.upc})</b><div class="ctl"><button data-q="c-">−</button><input id="qc" inputmode="numeric" value="${F.cajas}"><button data-q="c+">+</button></div></div>`:''}
@@ -314,6 +315,7 @@ function showQ(){
   ${REC?'<div class="mu">El pallet se arma después: lo que sacás queda en el ÁREA DE ARMADO.</div>':''}<div ${REC?'hidden':''}><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
   ${D.fotoLote?`<button class="btn ${((S.lotes||{})[F.code])?'':'pri'}" data-a="lote">${((S.lotes||{})[F.code])?'✔ Foto del LOTE tomada (cambiar)':'🏷️ Sacar foto del código de LOTE'}</button>${((S.lotes||{})[F.code])?`<img data-k="${(S.lotes||{})[F.code]}" alt="Lote" style="max-height:120px;object-fit:contain;border-radius:8px">`:''}`:''}
+  ${tieneBot(l)?'':`<button class="btn" data-a="botcod">🍾 Escanear código de la BOTELLA</button>`}
   ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Escanear otro código de caja':'Escanear código de la CAJA'}</button>${tieneCaja(l)?`<div class="alert ok">📦 Código de caja: <b class="mono">${codsCaja(l).map(esc).join(' · ')}</b></div>`:''}`:''}
   <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>${REC?'✔ Saqué '+fmt(tot):'Guardar '+fmt(tot)+' en '+esc(F.pallet)}</button>
   ${tot||F.foto?'<div class="mu" style="text-align:center">✏️ Lo que vas cargando queda guardado aunque cierres o cambies de producto. Tocá Guardar cuando esté completo.</div>':''}
@@ -363,7 +365,12 @@ function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
 const codsCaja=l=>[...new Set([...(l.ceans||[]),...Object.entries(CAT.cajas||{}).filter(([e,c])=>c===l.code).map(x=>x[0]),...Object.entries(S.cajasN||{}).filter(([e,c])=>c===l.code).map(x=>x[0])])];
 const tieneCaja=l=>(l.ceans||[]).length>0||Object.values(CAT.cajas||{}).includes(l.code)||Object.values(S.cajasN||{}).includes(l.code);
 let MODO=null; // {caja:code} cuando se escanea para registrar el código de la caja de un producto
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}onCode(raw,'codigo')}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}if(MODO&&MODO.botn){const code=MODO.botn;MODO=null;asignarBot(norm(raw),code);return}onCode(raw,'codigo')}
+function asignarBot(c,code){if(!c){toast('Código vacío');return}
+  const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
+  if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
+  if(S.cajasN[c]===code||(CAT.cajas||{})[c]===code){toast('Ese es el código de la CAJA. Escaneá el de la botella.',4500);openLine(code,'lista');return}
+  S.nuevos[c]=code;save();render();pushProg();toast('🍾 Código de botella '+c+' guardado para '+code+'.',4000);openLine(code,'codigo')}
 function asignarCaja(c,code){if(!c){toast('Código vacío');return}const l=L.find(x=>x.code===code);
   const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
   if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
@@ -599,6 +606,7 @@ document.addEventListener('click',async e=>{
     case 'etq':$('camEtq').value='';$('camEtq').click();break;
     case 'lista':pickList();break;
     case 'asignar':pickList(b.dataset.ean);break;
+    case 'botcod':MODO={botn:F.code};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent='Apuntá al código de barras de la BOTELLA'},300);break;
     case 'cajacod':MODO={caja:F.code};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent='Apuntá al código de barras de la CAJA'},300);break;
     case 'escaja':{const ean=b.dataset.ean,code=b.dataset.code;delete S.nuevos[ean];save();asignarCaja(ean,code);break}
   }
