@@ -593,15 +593,6 @@
   }
  },
  {
-  "id": "S00171-nLttRPwh",
-  "titulo": "Pedido S00171",
-  "cliente": "HIPER T Y N SRL",
-  "entrega": "HIPER FREE SHOP",
-  "lineas": 3,
-  "botellas": 720,
-  "creado": "2026-11-18T19:16:51.971404+00:00"
- },
- {
   "id": "S00364-utx8zsrp",
   "titulo": "Pedido S00364",
   "cliente": "LETRA L SRL, LETRA L SRL",
