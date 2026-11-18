@@ -71,7 +71,7 @@ let modo='R';
 $('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
 function setModo(m){modo=m;$('mR').setAttribute('aria-pressed',m==='R');$('mL').setAttribute('aria-pressed',m==='L')}
 $('mR').onclick=()=>setModo('R');$('mL').onclick=()=>setModo('L');
-const norm=c=>String(c||'').replace(/\D/g,'').replace(/^0+/,'');
+const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+/,'');const esLote=c=>{const d=String(c||'').replace(/\D/g,'');return d.length>16&&gs1(d)===d};
 // ubicaciones del producto: "28-A (120); P11 117-3; SIN UBICACIÓN (6)" (las notas [..] se ignoran)
 function locs(p){return (p.l||'').replace(/\[[^\]]*\]/g,'').split(/[;,]/).map(t=>t.trim()).filter(Boolean).map(t=>{const m=t.match(/^(.*?)\s*\((\d+)(?![\d-])[^)]*\)\s*$/);return m?{u:m[1].trim(),q:+m[2]}:{u:t,q:null}})}
 // normalizar lo que escriben: "2a"→"2-A", "28 1"→"28-1", "117-3"→"P11 117-3", "cam 4"→"CAM 4"
@@ -153,7 +153,7 @@ async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" p
     const rd=new ZXingBrowser.BrowserMultiFormatReader();const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,res=>{if(res&&scan)found(res.getText())});scan={stop:()=>ctl.stop()};
   }catch(e){$('smsg').textContent='No se pudo abrir la cámara. Escribí el código abajo.'}}
 function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(MODO_CAJA){const p=MODO_CAJA;MODO_CAJA=null;asignarCaja(p,raw);return}porCodigo(raw)}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA de la caja. Escaneá el OTRO código largo (el del producto).',5000);setTimeout(startScan,1200);return}if(MODO_CAJA){const p=MODO_CAJA;MODO_CAJA=null;asignarCaja(p,raw);return}porCodigo(raw)}
 /* ---- códigos de caja ---- */
 let MODO_CAJA=null,CAJA_DE=null;
 const CJ=JSON.parse(ls('mov_cajas')||'[]');const saveCJ=()=>ls('mov_cajas',JSON.stringify(CJ));
