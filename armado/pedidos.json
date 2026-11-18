@@ -815,5 +815,14 @@
   "lineas": 11,
   "botellas": 1278,
   "creado": "2026-11-18T13:01:50.139377+00:00"
+ },
+ {
+  "id": "A5547-z8Q0IdyT",
+  "titulo": "Factura A5547",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 3,
+  "botellas": 528,
+  "creado": "2026-11-18T13:45:45.328095+00:00"
  }
 ]
