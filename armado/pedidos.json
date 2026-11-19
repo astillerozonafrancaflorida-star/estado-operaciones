@@ -971,15 +971,6 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 11,
-  "botellas": 1278,
-  "creado": "2026-11-19T14:12:01.549279+00:00"
- },
- {
   "id": "A5520-WuVn7ILm",
   "titulo": "Factura A5520",
   "cliente": "FM RADIO INTEGRACION 101.5 MHZ S.R.L.",
@@ -1040,5 +1031,14 @@
    ],
    "pal": 1
   }
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 17,
+  "botellas": 1639,
+  "creado": "2026-11-19T18:36:45.297383+00:00"
  }
 ]
