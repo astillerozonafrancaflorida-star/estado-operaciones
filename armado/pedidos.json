@@ -846,15 +846,6 @@
   }
  },
  {
-  "id": "A5541-ofTmdbXc",
-  "titulo": "Factura A5541",
-  "cliente": "IBERPARK SA",
-  "entrega": "IBERPARK SA",
-  "lineas": 1,
-  "botellas": 360,
-  "creado": "2026-11-18T20:35:17.478225+00:00"
- },
- {
   "id": "A5500-A5502-oXUefXqy",
   "titulo": "Facturas A5500 · A5502",
   "cliente": "RAGAMAR SA",
