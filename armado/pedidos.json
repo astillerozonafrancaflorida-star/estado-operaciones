@@ -863,36 +863,60 @@
   "creado": "2026-11-19T11:46:45.389512+00:00"
  },
  {
-  "id": "A5549-HyNdArMZ",
-  "titulo": "Factura A5549",
+  "id": "A5548-VMA6Va9q",
+  "titulo": "Factura A5548",
   "cliente": "IBERPARK SA",
   "entrega": "IBERPARK SA",
-  "lineas": 3,
-  "botellas": 216,
-  "creado": "2026-11-19T11:50:31.136055+00:00",
+  "lineas": 7,
+  "botellas": 546,
+  "creado": "2026-11-19T13:51:02.526414+00:00",
   "listo": {
-   "carpeta": "IBERPARK-A5549-19NOV26",
+   "carpeta": "IBERPARK-A5548-19NOV26",
    "armo": "Natalia",
-   "fecha": "2026-11-19T13:45:50.274Z",
-   "ok": 3,
-   "n": 3,
-   "bot": 216,
+   "fecha": "2026-11-19T13:33:59.605Z",
+   "ok": 7,
+   "n": 7,
+   "bot": 546,
    "lin": [
     [
-     "2736",
-     "VINO JOSEPH DROUHIN BOURGOGNE ROUGE 2023 750 ML",
-     60,
-     60
+     "3329",
+     "VINO IZADI CRIANZA 2022 750 ML",
+     180,
+     180
     ],
     [
-     "10027",
-     "VINO JOSEPH DROUHIN BEAUJOLAIS VILLAGES 2024 750 ML",
+     "3327",
+     "VINO IZADI SELECCION TINTO 2020 750 ML",
      96,
      96
     ],
     [
-     "3351",
-     "VINO JOSEPH DROUHIN BOURGOGNE ALIGOTE 2025 750 M",
+     "3101",
+     "VINO MUGA RESERVA SELECCION ESPECIAL 2021 750 ML",
+     24,
+     24
+    ],
+    [
+     "3102",
+     "VINO MUGA RESERVA TINTO 2022 750 ML",
+     90,
+     90
+    ],
+    [
+     "2998",
+     "VINO ALVARO PALACIOS FINCA DOFI 2023 750 ML",
+     36,
+     36
+    ],
+    [
+     "3000",
+     "VINO ALVARO PALACIOS CAMINS DEL PRIORAT 2024 750 ML",
+     60,
+     60
+    ],
+    [
+     "2999",
+     "VINO ALVARO PALACIOS LES TERRASSES 2022 750 ML",
      60,
      60
     ]
@@ -901,12 +925,12 @@
   }
  },
  {
-  "id": "A5548-VMA6Va9q",
-  "titulo": "Factura A5548",
+  "id": "A5549-HyNdArMZ",
+  "titulo": "Factura A5549",
   "cliente": "IBERPARK SA",
   "entrega": "IBERPARK SA",
-  "lineas": 7,
-  "botellas": 546,
-  "creado": "2026-11-19T13:51:02.526414+00:00"
+  "lineas": 3,
+  "botellas": 216,
+  "creado": "2026-11-19T13:53:00.355702+00:00"
  }
 ]
