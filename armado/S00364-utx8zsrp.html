@@ -519,7 +519,7 @@ async function share(){
 }
 
 const MES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
-function nomResp(){let c=(D.alias||D.cliente||'').toUpperCase().replace(/[.,]/g,' ').replace(/\b(S ?A|S ?R ?L|SAS|LTDA|SC|Y CIA|CIA)\b/g,' ').replace(/\s+/g,' ').trim();const w=c.split(' ');c=(w[0]||'').length>=4?w[0]:w.slice(0,2).join(' ');const d=new Date();return `${c} ${String(d.getDate()).padStart(2,'0')}${MES[d.getMonth()]}${String(d.getFullYear()).slice(2)}`}
+function nomResp(){let c=(D.alias||D.cliente||'').toUpperCase().replace(/[.,]/g,' ').replace(/\b(S ?A|S ?R ?L|SAS|LTDA|SC|Y CIA|CIA)\b/g,' ').replace(/\s+/g,' ').trim();const w=c.split(' ');c=(w[0]||'').length>=4?w[0]:w.slice(0,2).join(' ');const d=new Date();const nro=(D.nombres||[]).map(x=>String(x).replace(/-EF.*$/,'')).join(' ');return `${c}${nro?' '+nro:''} ${String(d.getDate()).padStart(2,'0')}${MES[d.getMonth()]}${String(d.getFullYear()).slice(2)}`}  // con nro de factura/SO: dos pedidos del mismo cliente el mismo día no se pisan (19/11)
 function loadJZ(){return window.JSZip?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='jszip.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
 let ZIPF=null;
 async function armarZip(){

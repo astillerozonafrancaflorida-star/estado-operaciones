@@ -593,15 +593,6 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 11,
-  "botellas": 1278,
-  "creado": "2026-11-18T19:18:45.447736+00:00"
- },
- {
   "id": "A5544-Qc47g5JF",
   "titulo": "Factura A5544",
   "cliente": "LUMIEN LTDA",
@@ -961,5 +952,14 @@
   "lineas": 1,
   "botellas": 360,
   "creado": "2026-11-19T13:57:06.476695+00:00"
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 11,
+  "botellas": 1278,
+  "creado": "2026-11-19T13:59:07.778045+00:00"
  }
 ]
