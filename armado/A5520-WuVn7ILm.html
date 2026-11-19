@@ -235,7 +235,7 @@ function resumen(){
   const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
   const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
   const d=new Date(),z=n=>String(n).padStart(2,'0');const f=`${z(d.getDate())}/${z(d.getMonth()+1)} ${z(d.getHours())}:${z(d.getMinutes())}`;
-  let t=`*ARMADO ${n} — ${D.entrega||D.cliente}*\nArmó: ${[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y ')||'(sin nombre)'} · ${f}\n`;
+  let t=`*ARMADO ${n} — ${String(D.cliente||D.entrega||'').split(', ')[0]}*\nArmó: ${[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y ')||'(sin nombre)'} · ${f}\n`;
   t+=(cnt.ok===L.length?'✅ Completo: ':'⚠️ ')+`${cnt.ok}/${L.length} líneas OK · ${fmt(ctl)}/${fmt(tot)} botellas\n`;
   const dif=L.filter(l=>st(l)!=='ok');
   if(dif.length){t+='\n*Diferencias:*\n';dif.forEach(l=>{const s=sumC(l.code);t+=`• ${l.code} ${l.name}: pedido ${fmt(l.qty)}, armado ${fmt(s)} → ${s===0?'NO ARMADO':s<l.qty?'FALTAN '+fmt(l.qty-s):'SOBRAN '+fmt(s-l.qty)}${(S.salt||{})[l.code]?' ('+S.salt[l.code].m+')':''}\n`})}
