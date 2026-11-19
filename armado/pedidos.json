@@ -931,6 +931,35 @@
   "entrega": "IBERPARK SA",
   "lineas": 3,
   "botellas": 216,
-  "creado": "2026-11-19T13:53:00.355702+00:00"
+  "creado": "2026-11-19T13:53:00.355702+00:00",
+  "listo": {
+   "carpeta": "IBERPARK-A5549-19NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-19T13:45:50.274Z",
+   "ok": 3,
+   "n": 3,
+   "bot": 216,
+   "lin": [
+    [
+     "2736",
+     "VINO JOSEPH DROUHIN BOURGOGNE ROUGE 2023 750 ML",
+     60,
+     60
+    ],
+    [
+     "10027",
+     "VINO JOSEPH DROUHIN BEAUJOLAIS VILLAGES 2024 750 ML",
+     96,
+     96
+    ],
+    [
+     "3351",
+     "VINO JOSEPH DROUHIN BOURGOGNE ALIGOTE 2025 750 M",
+     60,
+     60
+    ]
+   ],
+   "pal": 1
+  }
  }
 ]
