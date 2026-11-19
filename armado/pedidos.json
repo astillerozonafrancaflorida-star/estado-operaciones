@@ -945,15 +945,6 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 11,
-  "botellas": 1278,
-  "creado": "2026-11-19T13:59:07.778045+00:00"
- },
- {
   "id": "A5520-WuVn7ILm",
   "titulo": "Factura A5520",
   "cliente": "FM RADIO INTEGRACION 101.5 MHZ S.R.L.",
@@ -969,6 +960,32 @@
   "entrega": "IBERPARK SA",
   "lineas": 1,
   "botellas": 360,
-  "creado": "2026-11-19T14:10:01.140598+00:00"
+  "creado": "2026-11-19T14:10:01.140598+00:00",
+  "listo": {
+   "carpeta": "IBERPARK-19NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-19T14:06:55.938Z",
+   "ok": 1,
+   "n": 1,
+   "bot": 360,
+   "lin": [
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     360,
+     360
+    ]
+   ],
+   "pal": 1
+  }
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 11,
+  "botellas": 1278,
+  "creado": "2026-11-19T14:12:01.549279+00:00"
  }
 ]
