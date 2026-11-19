@@ -986,6 +986,59 @@
   "entrega": "447 FREE SHOP",
   "lineas": 7,
   "botellas": 192,
-  "creado": "2026-11-19T14:14:05.929230+00:00"
+  "creado": "2026-11-19T14:14:05.929230+00:00",
+  "listo": {
+   "carpeta": "FM-RADIO-A5520-19NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-19T15:03:45.883Z",
+   "ok": 7,
+   "n": 7,
+   "bot": 192,
+   "lin": [
+    [
+     "622",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML",
+     48,
+     48
+    ],
+    [
+     "2234",
+     "CHAMPAGNE VEUVE CLICQUOT RICH ON ICE 750 ML",
+     36,
+     36
+    ],
+    [
+     "3132",
+     "VINO ERRAZURIZ ESTATE SAUVIGNON BLANC 2025 750 ML",
+     12,
+     12
+    ],
+    [
+     "2398",
+     "VINO ERRAZURIZ ESTATE CARMENERE 2024 750 ML",
+     18,
+     18
+    ],
+    [
+     "966",
+     "LICOR COINTREAU 700 ML",
+     18,
+     18
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     24,
+     24
+    ],
+    [
+     "3174",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT COFFRET ARROW SAO PAULO 750 ML",
+     36,
+     36
+    ]
+   ],
+   "pal": 1
+  }
  }
 ]
