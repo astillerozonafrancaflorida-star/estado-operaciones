@@ -1040,5 +1040,14 @@
   "lineas": 17,
   "botellas": 1639,
   "creado": "2026-11-19T18:36:45.297383+00:00"
+ },
+ {
+  "id": "S00161-IeCFCMCz",
+  "titulo": "Pedido S00161",
+  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
+  "entrega": "BONNO FREE SHOP",
+  "lineas": 84,
+  "botellas": 5835,
+  "creado": "2026-11-19T18:48:56.648782+00:00"
  }
 ]
