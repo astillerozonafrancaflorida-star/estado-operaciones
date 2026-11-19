@@ -47,7 +47,7 @@ function render(){
   P.forEach(p=>{const s=estado(p),e=E[p.id]||{};if(s===2&&e.prog&&e.prog.recibido&&Date.now()-e.prog.recibido>3*86400000)return;C[s].push(p)});
   C.forEach((L,i)=>{$('n'+i).textContent=L.length;$('c'+i).innerHTML=L.length?L.map(p=>{const e=E[p.id]||{},g=e.prog,t=e.tomado,mio=t&&t.quien.toLowerCase()===yo;
     const pct=g&&g.q?Math.round(g.s/g.q*100):0;
-    return `<div class="card ${i===1?'cur':i===2?'fin':''}"><b>${esc(p.titulo)}</b><div class="mu">${esc(p.entrega||p.cliente)} · ${p.lineas} líneas · ${fmt(p.botellas)} bot.</div>
+    return `<div class="card ${i===1?'cur':i===2?'fin':''}"><b>${esc(p.titulo)}</b><div class="mu">${esc(String(p.cliente||p.entrega||'').split(', ')[0])} · ${p.lineas} líneas · ${fmt(p.botellas)} bot.</div>
     ${t?`<div class="mu">Tomado por <b style="display:inline">${esc(t.quien)}</b>${mio?'<span class="yo">vos</span>':''} · ${ago(t.at)}</div>`:''}
     ${p.listo&&p.listo.n?`<div class="bar"><i style="width:100%"></i></div><div class="mu">${p.listo.ok}/${p.listo.n} líneas OK · ${fmt(p.listo.bot)} bot.${p.listo.pal?' · <b>'+p.listo.pal+' pallet'+(p.listo.pal>1?'s':'')+'</b>':''}</div>`:g?`<div class="bar"><i style="width:${pct}%"></i></div><div class="mu">${g.ok}/${g.n} líneas OK · ${fmt(g.s)}/${fmt(g.q)} bot. · ${ago(g.recibido)}${g.subido?' · ☁️ respaldo subido':''}</div>${!g.subido&&g.n&&g.ok===g.n?'<div class="mu" style="color:#B26A00;font-weight:700">✔ Completo · falta subir el respaldo (fotos)</div>':''}`:''}${p.listo?`<div class="mu">✅ Terminado y respaldado${p.listo.armo?' · '+esc(p.listo.armo):''}</div>`:''}
     <div class="btns">${i===0?`<button class="btn pri" data-tomar="${esc(p.id)}">Tomar</button>`:i===1&&(!t||mio)?`<a class="btn pri" href="${esc(p.id)}.html">Continuar</a>`:''}
