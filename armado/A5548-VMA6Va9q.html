@@ -1,0 +1,646 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<title>Armado</title>
+<style>
+:root{--bg:#F2F3EF;--sf:#fff;--fg:#1A211D;--mu:#5E6862;--ln:#D9DDD6;--ac:#7A1F3D;--ok:#2F7A3F;--oks:#E1F0E3;--wa:#9A6400;--was:#FBEFD6;--bad:#B3261E;--bads:#F9E0DE}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:14px max(14px,env(safe-area-inset-left)) 130px;display:flex;flex-direction:column;gap:12px}
+h1{font-size:24px;margin:0;line-height:1.1}
+h2{font-size:19px;margin:0}
+.eb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-weight:700}
+.mu{color:var(--mu);font-size:13px}
+.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-variant-numeric:tabular-nums}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
+.who{display:flex;gap:8px;align-items:center}
+.who input{flex:1;border:1px solid var(--ln);border-radius:8px;padding:8px 10px;background:var(--sf)}
+.prog{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.prog .n{font-size:26px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.prog .l{font-size:12px;color:var(--mu)}
+.bar{grid-column:1/-1;height:8px;border-radius:4px;background:var(--ln);overflow:hidden;display:flex}
+.bar i{display:block;height:100%}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--ln)}
+.tabs button{background:none;border:0;padding:10px 12px;font-weight:700;color:var(--mu);border-bottom:3px solid transparent;margin-bottom:-1px}
+.tabs button[aria-selected=true]{color:var(--fg);border-color:var(--ac)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{border:1px solid var(--ln);background:var(--sf);border-radius:999px;padding:6px 12px;font-size:13px}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.list{display:flex;flex-direction:column;gap:8px}
+.ln{background:var(--sf);border:1px solid var(--ln);border-left:6px solid var(--ln);border-radius:10px;padding:10px 12px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;width:100%;text-align:left}
+.ln.ok{border-color:var(--ok);border-left-color:var(--ok);background:#CFEBD4}.ln.ok .nm{color:#1D5A2A}.ln.ok .meta{color:#2F5E39}.ln.par{border-left-color:var(--wa)}.ln.exc{border-left-color:var(--bad)}
+.ln .nm{font-weight:700;font-size:14px;line-height:1.25}
+.ln .meta{font-size:12px;color:var(--mu);display:flex;gap:8px;flex-wrap:wrap;margin-top:3px}
+.loc{background:#1A211D;color:#fff;border-radius:5px;padding:1px 6px;font-weight:700}
+.ln .q{text-align:right;font-size:22px;font-weight:800;line-height:1;white-space:nowrap;font-variant-numeric:tabular-nums}
+.ln .q small{display:block;font-size:11px;font-weight:700;margin-top:4px}
+.s-ok{color:var(--ok)}.s-par{color:var(--wa)}.s-exc{color:var(--bad)}.s-pen{color:var(--mu)}
+.empty{border:1px dashed var(--ln);border-radius:12px;padding:20px;text-align:center;color:var(--mu);background:var(--sf)}
+.dock{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
+.big{flex:1;max-width:220px;padding-left:6px;padding-right:6px;border:0;border-radius:14px;padding:15px 10px;font-weight:800;font-size:16px;background:var(--ac);color:#fff;display:flex;align-items:center;justify-content:center;gap:8px;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.big.sec{background:var(--sf);color:var(--fg);border:2px solid var(--fg);box-shadow:none}
+.big svg{width:22px;height:22px}
+.btn{border:1px solid var(--ln);background:var(--sf);border-radius:10px;padding:10px 14px;font-weight:700}
+.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
+.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.btn.dan{color:var(--bad);border-color:var(--bad)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.x{border:0;background:none;font-size:30px;line-height:1;padding:0 4px}
+.stp{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.stp .ctl{display:flex;align-items:center;gap:8px}
+.stp .ctl button{width:48px;height:48px;border-radius:12px;border:1px solid var(--ln);background:var(--sf);font-size:24px;font-weight:800}
+.stp .ctl input{width:70px;height:48px;text-align:center;font-size:22px;font-weight:800;border:1px solid var(--ln);border-radius:10px;background:var(--sf)}
+.tot{font-size:30px;font-weight:800;text-align:center}
+.alert{border-radius:10px;padding:10px 12px;font-weight:600}
+.alert.bad{background:var(--bads);color:var(--bad)}.alert.wa{background:var(--was);color:var(--wa)}.alert.ok{background:var(--oks);color:var(--ok)}
+.ent{display:grid;grid-template-columns:56px 1fr auto;gap:10px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:8px}
+.ent img,.ent .ni{width:56px;height:56px;object-fit:cover;border-radius:8px;background:var(--bg)}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:6px 4px;border-bottom:1px solid var(--ln);text-align:left;vertical-align:top}
+td.r,th.r{text-align:right}
+.caras{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.cara{border:1px dashed var(--ln);background:var(--bg);border-radius:10px;padding:0;aspect-ratio:3/4;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden;position:relative}
+.cara img{width:100%;height:100%;object-fit:cover;position:absolute;inset:0}
+.cara span{font-size:22px}
+.cara small{position:absolute;bottom:0;left:0;right:0;background:rgba(0,0,0,.55);color:#fff;font-size:11px;font-weight:700;padding:2px 0;text-align:center}
+#scan{position:fixed;inset:0;background:#000;z-index:30;display:flex;flex-direction:column}
+#scan video{flex:1;width:100%;object-fit:cover;min-height:0}
+#scan .guide{position:absolute;left:8%;right:8%;top:35%;height:22%;border:3px solid rgba(255,255,255,.85);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,.35);pointer-events:none}
+#scan .bot{padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:#111;display:flex;gap:8px;flex-wrap:wrap}
+#scan .bot input{flex:1;min-width:150px;padding:12px;border-radius:10px;border:0;font-size:18px;color:#000}
+#scan .msg{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;right:14px;color:#fff;text-align:center;font-weight:700;text-shadow:0 1px 3px #000}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:100px;background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:40;font-weight:700;max-width:90vw;text-align:center}
+.fin{display:flex;flex-direction:column;gap:8px}
+.ocrimg{width:100%;max-height:220px;object-fit:contain;border-radius:10px;background:#000}
+.pbar{height:8px;border-radius:4px;background:var(--ln);overflow:hidden}.pbar i{display:block;height:100%;background:var(--ac);width:0;transition:width .2s}
+.ocrtxt{font:12px/1.3 ui-monospace,Menlo,monospace;color:var(--mu);white-space:pre-wrap;max-height:90px;overflow:auto;background:var(--sf);border:1px solid var(--ln);border-radius:8px;padding:6px}
+.rec{display:flex;flex-direction:column;gap:8px;border:2px solid var(--ok)}
+.ln.th{grid-template-columns:52px 1fr auto}.thb{width:52px;height:64px;object-fit:contain;background:#fff;border-radius:8px}
+.recf{display:flex;gap:8px}.recf figure{flex:1;margin:0;background:#fff;border:1px solid var(--ln);border-radius:12px;padding:6px;text-align:center}.recf img{width:100%;height:190px;object-fit:contain}.recf figcaption{font-size:12px;color:var(--mu)}.recf .nof{display:flex;flex-direction:column;justify-content:center;min-height:200px}.recf .nof span{font-size:40px}
+.recl{display:flex;gap:8px}.recl div{flex:1;background:#1F3864;color:#fff;border-radius:12px;padding:10px;text-align:center}.recl small{display:block;font-size:11px;opacity:.8;letter-spacing:.06em}.recl b{font-size:22px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:6px">
+    <div class="eb" style="display:flex;justify-content:space-between"><span>Astillero · Control de armado</span><a href="./" style="color:var(--ac);text-decoration:none">← Tablero</a></div>
+    <h1 id="tit"></h1>
+    <div class="mu" id="sub"></div>
+  </header>
+  <div id="remBox" hidden></div>
+  <div class="card who"><label for="op" style="font-weight:700">Arma:</label><input id="op" placeholder="Tu nombre" autocomplete="name"></div>
+  <section class="card prog">
+    <div><div class="n" id="pLin">–</div><div class="l">líneas OK</div></div>
+    <div><div class="n" id="pBot">–</div><div class="l">botellas</div></div>
+    <div><div class="n" id="pPal">–</div><div class="l">pallets</div></div>
+    <div class="bar" id="pBar"></div>
+  </section>
+  <nav class="tabs" role="tablist">
+    <button id="tL" role="tab" aria-selected="true">Líneas</button>
+    <button id="tP" role="tab" aria-selected="false">Pallets</button>
+    <button id="tF" role="tab" aria-selected="false">Terminar</button>
+  </nav>
+  <section id="vL" class="list" style="gap:10px">
+    <div class="chips" id="flt">
+      <button class="chip" data-f="todas" aria-pressed="true">Todas</button>
+      <button class="chip" data-f="pen" aria-pressed="false">Pendientes</button>
+      <button class="chip" data-f="dif" aria-pressed="false">Con diferencia</button>
+      <button class="chip" data-f="ok" aria-pressed="false">OK</button>
+    </div>
+    <div class="list" id="list"></div>
+  </section>
+  <section id="vP" class="list" hidden></section>
+  <section id="vF" class="fin" hidden></section>
+</div>
+<div class="dock"><button class="big" id="bScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14"/></svg>Código</button><button class="big" id="bEtq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.4-2h6.8l1.4 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg>Etiqueta</button><button class="big sec" id="bLista">Lista</button></div>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<input type="file" id="camEtq" accept="image/*" capture="environment" hidden>
+<div id="root"></div>
+<div id="toast" class="toast" hidden></div>
+
+<script src="catalogo.js"></script>
+<script>
+const D={"nombres": ["A5548-EF"], "so": false, "cliente": "IBERPARK SA", "entrega": "IBERPARK SA", "fecha": "19/11/2026", "pedidos": ["A5548-EF: S00377"], "lineas": [{"code": "3329", "name": "VINO IZADI CRIANZA 2022 750 ML", "qty": 180, "upc": 12, "eans": ["8423302111113"], "ceans": [], "loc": "03-1 (180)", "fac": "A5548"}, {"code": "3327", "name": "VINO IZADI SELECCION TINTO 2020 750 ML", "qty": 96, "upc": 12, "eans": [], "ceans": [], "loc": "20-1 (96)", "fac": "A5548"}, {"code": "3101", "name": "VINO MUGA RESERVA SELECCION ESPECIAL 2021 750 ML", "qty": 24, "upc": 6, "eans": ["8414542150093"], "ceans": [], "loc": "20-3 (24)", "fac": "A5548"}, {"code": "3102", "name": "VINO MUGA RESERVA TINTO 2022 750 ML", "qty": 90, "upc": 6, "eans": ["8414542100104"], "ceans": ["28414542100108"], "loc": "23-1 (30); SIN UBICACIÓN", "fac": "A5548"}, {"code": "2998", "name": "VINO ALVARO PALACIOS FINCA DOFI 2023 750 ML", "qty": 36, "upc": 6, "eans": ["8429073025666"], "ceans": [], "loc": "26-3 (36)", "fac": "A5548"}, {"code": "3000", "name": "VINO ALVARO PALACIOS CAMINS DEL PRIORAT 2024 750 ML", "qty": 60, "upc": 12, "eans": ["8429073025017"], "ceans": [], "loc": "26-4 (60)", "fac": "A5548"}, {"code": "2999", "name": "VINO ALVARO PALACIOS LES TERRASSES 2022 750 ML", "qty": 60, "upc": 12, "eans": ["8429073024201"], "ceans": [], "loc": "26-4 (60)", "fac": "A5548"}], "fotoLote": true, "id": "A5548-VMA6Va9q"};
+const CAT=window.CAT||{map:{},hermanos:{}};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('es-UY');
+const KEY='arm_'+D.id;
+function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2600)}
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+let S={ents:[],pal:{},last:null,op:'',nuevos:{}};
+try{const s=JSON.parse(lsGet(KEY)||'null');if(s)S=Object.assign(S,s)}catch(e){}
+if(!S.op)S.op=lsGet('arm_op')||'';
+if(!S.nuevos)S.nuevos={};
+if(!S.cajasN)S.cajasN={};
+for(const k in S.pal){if(S.pal[k]===true)S.pal[k]=['pal_'+k]}
+const CARAS=['Cara 1','Cara 2','Cara 3','Cara 4'];
+const palKeys=p=>(S.pal[p]||[]).filter(Boolean);
+function save(){lsSet(KEY,JSON.stringify(S))}
+
+/* ---- fotos en IndexedDB ---- */
+let _db=null;
+function idb(){if(_db)return _db;_db=new Promise((ok,ko)=>{try{const r=indexedDB.open('armado',1);r.onupgradeneeded=()=>r.result.createObjectStore('f');r.onsuccess=()=>ok(r.result);r.onerror=()=>ko(r.error)}catch(e){ko(e)}});return _db}
+async function fPut(k,b){const db=await idb();return new Promise((ok,ko)=>{const t=db.transaction('f','readwrite');t.objectStore('f').put(b,k);t.oncomplete=ok;t.onerror=()=>ko(t.error)})}
+async function fGet(k){const db=await idb();return new Promise(ok=>{const t=db.transaction('f');const r=t.objectStore('f').get(k);r.onsuccess=()=>ok(r.result||null);r.onerror=()=>ok(null)})}
+async function fDel(k){try{const db=await idb();db.transaction('f','readwrite').objectStore('f').delete(k)}catch(e){}}
+const urls={};
+async function fUrl(k){if(urls[k])return urls[k];const b=await fGet(k);if(!b)return '';return urls[k]=URL.createObjectURL(b)}
+async function prep(file,max=1400){
+  const u=URL.createObjectURL(file);
+  try{const i=await new Promise((ok,ko)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=ko;im.src=u});
+    const k=Math.min(1,max/Math.max(i.naturalWidth,i.naturalHeight));const c=document.createElement('canvas');
+    c.width=Math.round(i.naturalWidth*k);c.height=Math.round(i.naturalHeight*k);c.getContext('2d').drawImage(i,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(r,'image/jpeg',.82))}finally{URL.revokeObjectURL(u)}
+}
+function hydrate(){document.querySelectorAll('img[data-k]').forEach(async im=>{const u=await fUrl(im.dataset.k);if(u)im.src=u})}
+
+/* ---- datos ---- */
+const L=D.lineas;
+const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+/,'');const esLote=c=>{const d=String(c||'').replace(/\D/g,'');return d.length>16&&gs1(d)===d};
+const sumC=c=>S.ents.filter(e=>e.code===c).reduce((a,e)=>a+e.total,0);
+function st(l){const s=sumC(l.code);if(!s)return 'pen';return s===l.qty?'ok':s<l.qty?'par':'exc'}
+const ST={pen:['Pendiente','s-pen'],ok:['OK','s-ok'],par:['Falta','s-par'],exc:['Sobra','s-exc']};
+const SINPAL='ÁREA DE ARMADO';
+function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>a.localeCompare(b,'es',{numeric:true}))}
+/* ---- modo recorrido (piloto 18/11, solo pedidos con D.recorrido) ---- */
+const REC=!!D.recorrido;
+const rutaOrd=(a,b)=>(!a.loc)-(!b.loc)||String(a.loc||'').localeCompare(String(b.loc||''),'es',{numeric:true});
+const tieneBot=l=>(l.eans||[]).length>0||Object.values(S.nuevos||{}).includes(l.code);
+function faltan(l){const f=[];if(!l.img)f.push('foto de la botella');if(l.upc>1&&!l.imgc)f.push('foto de la caja');if(!tieneBot(l))f.push('código de barras de la botella');if(l.upc>1&&!tieneCaja(l))f.push('código de barras de la caja');return f}
+function sigPend(desde){const O=L.slice().sort(rutaOrd),all=O.filter(l=>st(l)==='pen'||st(l)==='par');if(!all.length)return null;const sk=S.salt||{},R=all.filter(l=>!sk[l.code]),pool=R.length?R:all,ord=O.map(l=>l.code),pi=ord.indexOf(desde);return pool.find(l=>l.code!==desde&&ord.indexOf(l.code)>pi)||pool.find(l=>l.code!==desde)||null}
+function saltar(code,m){S.salt=S.salt||{};S.salt[code]={m,at:Date.now()};save();close();render();pushProg();const n=sigPend(code);toast('⏭️ '+code+' queda pendiente: '+m,2500);if(n)setTimeout(()=>openLine(n.code),350)}
+function cj(l,q){if(l.upc<=1)return fmt(q)+' u.';const c=Math.floor(q/l.upc),s=q%l.upc;return (c?c+' cj':'')+(c&&s?' + ':'')+(s?s+' u.':'')||'0'}
+
+/* ---- render ---- */
+let tab='L',flt='todas';
+function render(){
+  $('tit').textContent=(D.so?'Pedido ':'Factura'+(D.nombres.length>1?'s ':' '))+D.nombres.map(n=>n.replace(/-EF.*$/,'')).join(' · ');
+  $('sub').innerHTML=`<b>${esc(D.cliente)}</b>${D.entrega&&D.entrega!==D.cliente?' · '+esc(D.entrega):''} · ${esc(D.fecha)}`;
+  document.title='Armado '+D.nombres.map(n=>n.replace(/-EF.*$/,'')).join(' ');
+  const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
+  const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
+  $('pLin').textContent=cnt.ok+'/'+L.length;$('pBot').textContent=fmt(ctl)+'/'+fmt(tot);$('pPal').textContent=pallets().length;
+  const w=k=>cnt[k]/L.length*100;
+  $('pBar').innerHTML=`<i style="width:${w('ok')}%;background:var(--ok)"></i><i style="width:${w('par')}%;background:var(--wa)"></i><i style="width:${w('exc')}%;background:var(--bad)"></i>`;
+  const show=L.filter(l=>{const s=st(l);return flt==='todas'||(flt==='pen'&&s==='pen')||(flt==='ok'&&s==='ok')||(flt==='dif'&&(s==='par'||s==='exc'))});
+  if(REC)show.sort(rutaOrd);
+  const recBtn=REC?(()=>{const n=sigPend(null);const pend=L.filter(l=>st(l)!=='ok').length;return `<div class="card rec"><b>🧭 Modo recorrido</b>${(()=>{const k=L.filter(l=>(S.salt||{})[l.code]&&st(l)!=='ok');return k.length?`<div class="alert wa">⏭️ Quedaron pendientes ${k.length}: ${k.map(l=>esc(l.code)+' ('+esc(S.salt[l.code].m)+')').join(', ')}. Cuando lleguen, tocalos en la lista.</div>`:''})()}<div class="mu">Los productos están ordenados por ubicación: seguí el orden y hacés un solo recorrido. Cada producto muestra la foto de la botella y de la caja.</div>${(()=>{const k=L.filter(l=>faltan(l).length).length;return k?`<div class="alert wa">⚠️ ${k} de ${L.length} productos tienen datos sin cargar (fotos o códigos). Están marcados con ⚠️: al pasar por ellos sacá la foto o escaneá el código.</div>`:''})()}${n?`<button class="btn ok recgo" data-code="${esc(n.code)}" style="padding:14px">${pend===L.length?'Empezar recorrido':'Seguir recorrido'} → ${esc(n.loc||'sin ubicación')}</button>`:'<div class="alert ok">✅ Recorrido terminado</div>'}</div>`})():'';
+  $('list').innerHTML=recBtn+(show.length?show.map(l=>{const s=st(l),sm=sumC(l.code),pl=[...new Set(S.ents.filter(e=>e.code===l.code).map(e=>e.pallet))].join(', ');
+    return `<button class="ln ${s}${REC&&l.img?' th':''}" data-code="${esc(l.code)}">${REC&&l.img?`<img class="thb" src="${esc(l.img)}" alt="" loading="lazy">`:''}<div><div class="nm">${REC&&faltan(l).length?'<span style="color:var(--wa)">⚠️ </span>':''}${esc(l.name)}</div>
+    <div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span><span>${l.upc>1?'caja x'+l.upc:'unidad'}</span>${tieneBot(l)?'':'<span>🍾 sin código</span>'}${(S.drafts||{})[l.code]?'<span style="color:var(--wa);font-weight:700">✏️ sin guardar</span>':''}${(S.salt||{})[l.code]&&st(l)!=='ok'?'<span style="color:var(--wa);font-weight:700">⏭️ pendiente: '+esc(S.salt[l.code].m)+'</span>':''}${l.upc>1?(tieneCaja(l)?'<span style="color:var(--ok);font-weight:700">📦 caja ✔ <span class="mono">…'+codsCaja(l).map(c=>c.slice(-5)).join(' / …')+'</span></span>':'<span>📦 sin cód. caja</span>'):''}${pl?'<span>'+esc(pl)+'</span>':''}${REC?((S.verif||{})[l.code]?'<span style="color:var(--ok);font-weight:700">✔ confirmado</span>':'<span>📦 sin confirmar</span>'):''}${D.fotoLote?((S.lotes||{})[l.code]?'<span style="color:var(--ok);font-weight:700">🏷️ lote ✔</span>':'<span style="color:var(--wa);font-weight:700">🏷️ falta foto lote</span>'):''}</div></div>
+    <div class="q">${fmt(sm)}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span><small class="${ST[s][1]}">${ST[s][0]}${s==='par'?' '+fmt(l.qty-sm):s==='exc'?' '+fmt(sm-l.qty):''}</small></div></button>`}).join(''):'<div class="empty">No hay líneas en este filtro.</div>');
+  if(tab==='P')renderP();if(tab==='F')renderF();
+}
+/* ---- fase 2 (piloto): del ÁREA DE ARMADO al pallet ---- */
+const enArea=c=>S.ents.filter(e=>e.code===c&&e.pallet===SINPAL).reduce((a,e)=>a+e.total,0);
+let PZ=null;
+function palSheet(code){const l=L.find(x=>x.code===code),max=enArea(code);const P=pallets();if(!PZ||PZ.code!==code)PZ={code,cajas:l.upc>1?Math.floor(max/l.upc):0,sueltas:l.upc>1?max%l.upc:max,pallet:S.last&&P.includes(S.last)?S.last:(P[P.length-1]||'P1')};
+  const pals=P.includes(PZ.pallet)?P:[...P,PZ.pallet];const t=PZ.cajas*l.upc+PZ.sueltas;
+  sheet(hdr('Paso 2 · Armar pallet')+`<div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu">En ÁREA DE ARMADO: <b>${cj(l,max)}</b></div></div>
+  ${l.upc>1?`<div class="stp"><b>Cajas (x${l.upc})</b><div class="ctl"><button data-z="c-">−</button><input id="zc" inputmode="numeric" value="${PZ.cajas}"><button data-z="c+">+</button></div></div>`:''}
+  <div class="stp"><b>${l.upc>1?'Unidades sueltas':'Unidades'}</b><div class="ctl"><button data-z="s-">−</button><input id="zs" inputmode="numeric" value="${PZ.sueltas}"><button data-z="s+">+</button></div></div>
+  <div><div class="eb" style="margin-bottom:6px">¿A qué pallet va?</div><div class="chips">${pals.map(p=>`<button class="chip" data-zpal="${esc(p)}" aria-pressed="${p===PZ.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="znew">+ Nuevo</button></div></div>
+  ${t>max?`<div class="alert bad">Es más de lo que hay en el área (${fmt(max)}).</div>`:''}
+  <button class="btn ok" data-a="zsave" style="padding:14px" ${t&&t<=max?'':'disabled'}>Poner ${fmt(t)} en ${esc(PZ.pallet)}</button>`);
+  const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('change',()=>{PZ[k]=Math.max(0,parseInt(i.value)||0);palSheet(code)})};bind('zc','cajas');bind('zs','sueltas')}
+function palSave(){const l=L.find(x=>x.code===PZ.code);let n=PZ.cajas*l.upc+PZ.sueltas;if(!n||n>enArea(PZ.code))return;const P=PZ.pallet;
+  for(const e of S.ents.filter(e=>e.code===PZ.code&&e.pallet===SINPAL)){if(!n)break;const t=Math.min(n,e.total);
+    if(t===e.total){e.pallet=P}else{e.total-=t;e.cajas=Math.floor(e.total/l.upc);e.sueltas=e.total%l.upc;S.ents.push({id:'e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5),code:e.code,cajas:Math.floor(t/l.upc),sueltas:t%l.upc,total:t,pallet:P,at:Date.now(),via:'armado',foto:false,op:S.op})}n-=t}
+  S.last=P;PZ=null;save();close();render();renderP();pushProg();toast('📦 Puesto en '+P)}
+function renderP(){
+  const P=pallets();
+  const AR=REC?L.filter(l=>enArea(l.code)>0):[];
+  const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya está en pallets.</div>'}</div>`:'';
+  if(!P.length){$('vP').innerHTML=area+(REC?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');return}
+  $('vP').innerHTML=area+P.map(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});
+    const tu=Object.values(R).reduce((a,b)=>a+b,0);
+    return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="sh"><h2>${esc(p)}</h2><span class="mu">${fmt(tu)} unid.</span></div>
+    <div class="caras">${CARAS.map((c,i)=>{const kk=(S.pal[p]||[])[i];return `<button class="cara" data-palfoto="${esc(p)}" data-cara="${i}">${kk?`<img data-k="${kk}" alt="${c}">`:'<span>📷</span>'}<small>${kk?'✔ ':''}${c}</small></button>`}).join('')}</div>
+    <table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,R[c])}</td></tr>`}).join('')||'<tr><td colspan=3 class="mu">Vacío</td></tr>'}</tbody></table>
+    <div class="mu">Fotos del pallet terminado: ${palKeys(p).length}/4 caras. Tocá una cara para sacar o cambiar la foto.</div></div>`}).join('');
+  hydrate();
+}
+function resumen(){
+  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join(' · ');
+  const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
+  const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
+  const d=new Date(),z=n=>String(n).padStart(2,'0');const f=`${z(d.getDate())}/${z(d.getMonth()+1)} ${z(d.getHours())}:${z(d.getMinutes())}`;
+  let t=`*ARMADO ${n} — ${D.entrega||D.cliente}*\nArmó: ${[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y ')||'(sin nombre)'} · ${f}\n`;
+  t+=(cnt.ok===L.length?'✅ Completo: ':'⚠️ ')+`${cnt.ok}/${L.length} líneas OK · ${fmt(ctl)}/${fmt(tot)} botellas\n`;
+  const dif=L.filter(l=>st(l)!=='ok');
+  if(dif.length){t+='\n*Diferencias:*\n';dif.forEach(l=>{const s=sumC(l.code);t+=`• ${l.code} ${l.name}: pedido ${fmt(l.qty)}, armado ${fmt(s)} → ${s===0?'NO ARMADO':s<l.qty?'FALTAN '+fmt(l.qty-s):'SOBRAN '+fmt(s-l.qty)}${(S.salt||{})[l.code]?' ('+S.salt[l.code].m+')':''}\n`})}
+  const P=pallets();
+  if(P.length){t+='\n*Pallets:*\n';P.forEach(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});t+=`*${p}:* `+Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{upc:1};return `${c} (${cj(l,R[c])})`}).join(' · ')+` · 📷 ${palKeys(p).length}/4`+'\n'})}
+  if(D.fotoLote){const fl=L.filter(l=>!(S.lotes||{})[l.code]);t+=`\n🏷️ Fotos de lote: ${L.length-fl.length}/${L.length}`+(fl.length?` · faltan: ${fl.map(l=>l.code).join(', ')}`:'')+'\n'}
+  if(REC){const ar=L.filter(l=>enArea(l.code)>0);if(ar.length)t+=`\n⚠️ Quedan en ÁREA DE ARMADO sin paletizar: ${ar.map(l=>l.code+' ('+cj(l,enArea(l.code))+')').join(', ')}\n`}
+  const nv=Object.entries(S.nuevos||{});
+  if(nv.length){t+='\n*Códigos de barras nuevos (cargar en Odoo):*\n';nv.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:''};t+=`• ${e} → ${c} ${l.name}\n`})}
+  const cn=Object.entries(S.cajasN||{});
+  if(cn.length){t+='\n*Códigos de CAJA nuevos (cargar en Odoo):*\n';cn.forEach(([e,c])=>{const l=L.find(x=>x.code===c)||{name:'',upc:''};t+=`• ${e} → ${c} ${l.name} (caja x${l.upc})\n`})}
+  return t.trim();
+}
+function renderF(){ZIPF=null;if(!renderF._v){renderF._v=1;setTimeout(()=>{verRemoto().finally(()=>renderF._v=0)},0)}setTimeout(()=>{armarZip().catch(()=>{})},0);
+  const nf=S.ents.filter(e=>e.foto).length+Object.keys(S.pal).reduce((a,p)=>a+palKeys(p).length,0);
+  $('vF').innerHTML=`<div class="card"><div class="eb" style="margin-bottom:6px">Resumen para WhatsApp</div><pre style="white-space:pre-wrap;font:13px/1.4 system-ui;margin:0">${esc(resumen())}</pre></div>
+  <button class="btn pri" id="bEnv" style="padding:14px">📤 Enviar resumen por WhatsApp</button>
+  ${S.remSubido&&!S.subido?`<div class="alert ok" style="display:flex;flex-direction:column;gap:8px">✅ Este pedido ya lo cerró <b>${esc(S.remSubido.por||'otra persona')}</b> como <b>${esc(S.remSubido.nom)}</b>.${S.fotosEnv?`<span>Tus fotos ya se enviaron (${S.fotosEnv.n}).</span>`:`<span>Si sacaste fotos en este celular, mandalas para que queden en el mismo respaldo:</span><button class="btn pri" data-a="misfotos" style="padding:12px">☁️ Enviar mis fotos</button>`}</div>`:''}
+  <div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Respaldo (ZIP con todas las fotos + resumen)</div><input id="zipNom" value="${esc(nomResp())}" style="border:1px solid var(--ln);border-radius:8px;padding:10px;font-weight:700"><button class="btn pri" data-a="subir" style="padding:14px">☁️ Subir respaldo</button>${S.subido?`<div class="alert ok">Subido: ${esc(S.subido.nom)} · ${new Date(S.subido.at).toTimeString().slice(0,5)}</div>`:''}<div class="mu">Sube fotos y resumen directo a la pestaña "Armados" de la página del grupo. Sin WhatsApp.</div><button class="btn" data-a="zip" style="font-size:13px;padding:8px 12px;align-self:flex-start">📦 Plan B: mandar ZIP (solo si falla la subida)</button></div>
+
+  <button class="btn" id="bCop">Copiar resumen</button>
+  <button class="btn dan" id="bRes" style="margin-top:18px">Borrar todo y empezar de nuevo</button>
+  <div class="mu">Lo cargado queda guardado en este celular aunque cierres la página.</div>`;
+}
+
+/* ---- hoja de cantidad ---- */
+let F=null;
+function close(){F=null;if(S.openCode){S.openCode=null;save()}$('root').innerHTML='';if(typeof render==='function'&&$('list'))render()}
+function sheet(h){$('root').innerHTML=`<div class="scrim" id="scrim"><div class="sheet" role="dialog" aria-modal="true">${h}</div></div>`;$('scrim').addEventListener('click',e=>{if(e.target.id==='scrim')close()})}
+const hdr=t=>`<div class="sh"><h2>${t}</h2><button class="x" data-a="close" aria-label="Cerrar">×</button></div>`;
+function verifSheet(l,msg){
+  const tc=codsCaja(l).length>0;
+  sheet(hdr('Paso 1 · Confirmar producto')+(msg||'')+`
+  <div class="recf">${l.imgc?`<figure><img src="${esc(l.imgc)}" alt="Caja"><figcaption>Caja</figcaption></figure>`:''}${l.img?`<figure><img src="${esc(l.img)}" alt="Botella"><figcaption>Botella</figcaption></figure>`:''}</div>
+  <div class="recl"><div><small>IR A</small><b>${esc(l.loc||'SIN UBICACIÓN')}</b></div></div>
+  <div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu mono">${esc(l.code)}</div></div>
+  <button class="btn ok" data-a="verif" style="padding:16px;font-size:17px">📦 Escanear el código de barras de la CAJA</button>
+  ${tc?'':'<div class="alert wa">Este producto todavía no tiene código de caja cargado: el que escanees queda registrado para la próxima vez.</div>'}
+  <button class="btn" data-a="verifbot">La caja no tiene código → escanear la botella</button>
+  ${l.eans.length?'':'<button class="btn" data-a="verifman">Tampoco tiene código la botella → confirmo con la foto</button>'}
+  ${REC?`<div class="eb" style="margin:6px 0">⏭️ ¿No está o no alcanza? Pasá al siguiente (este queda pendiente)</div><div class="chips"><button class="chip" data-salt="No llegó" data-code="${esc(l.code)}">No llegó</button><button class="chip" data-salt="En el otro depósito" data-code="${esc(l.code)}">Está en el otro depósito</button><button class="chip" data-salt="No alcanza" data-code="${esc(l.code)}">No alcanza / falta parte</button></div>`:''}`);hydrate()}
+function verifCode(raw,code,bot){
+  const c=norm(raw),l=L.find(x=>x.code===code);if(!l||!c){toast('Código vacío');return}
+  const ok=()=>{S.verif=S.verif||{};S.verif[code]=bot?'botella':'caja';save();render();toast('✅ Producto confirmado',1800);openLine(code,bot?'codigo':'caja',null,bot?0:0)};
+  if(bot){if(l.eans.includes(c))return ok();
+    const o=(CAT.map[c]||[]).map(x=>'['+x[0]+'] '+x[1]);return verifSheet(l,`<div class="alert bad">⛔ Ese código de botella ${o.length?'es de '+esc(o.join(', ')):'no es de este producto'}. Revisá que sea el producto correcto.</div>`)}
+  if(codsCaja(l).includes(c))return ok();
+  if(l.eans.includes(c))return verifSheet(l,'<div class="alert wa">Ese es el código de la BOTELLA. Escaneá el de la CAJA.</div>');
+  const otroL=L.find(x=>x.code!==code&&(x.eans.includes(c)||codsCaja(x).includes(c)));
+  const otroC=(CAT.cajas||{})[c]||((CAT.map[c]||[])[0]||[])[0];
+  if(otroL||(otroC&&otroC!==code)){const n=otroL?'['+otroL.code+'] '+otroL.name:'['+otroC+'] '+(((CAT.map[c]||[])[0]||[])[1]||'');return verifSheet(l,`<div class="alert bad">⛔ Esa caja es de <b>${esc(n)}</b>, no de este producto. Buscá la caja correcta.</div>`)}
+  if(!codsCaja(l).length){S.cajasN=S.cajasN||{};S.cajasN[c]=code;pushProg();return ok()}
+  verifSheet(l,`<div class="alert bad">⛔ El código <span class="mono">${esc(c)}</span> no coincide con la caja de este producto.</div><button class="btn" data-a="verifreg" data-ean="${esc(c)}">Es este producto: registrar también este código de caja</button>`);
+}
+function openLine(code,via,aviso,cajas0){
+  const l=L.find(x=>x.code===code);if(!l)return;
+  if(REC&&!(S.verif||{})[code]){F=null;S.openCode=null;return verifSheet(l)}
+  const falta=Math.max(0,l.qty-sumC(code));
+  const pals=pallets();const p=S.last&&pals.includes(S.last)?S.last:(pals[pals.length-1]||'P1');
+  const d=(S.drafts||{})[code];
+  F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:REC?SINPAL:p,foto:null,aviso};
+  if(d){F.cajas=(d.cajas||0)+(via==='caja'&&cajas0&&d.cajas?cajas0:0)||F.cajas;F.sueltas=d.sueltas||0;if(d.pallet)F.pallet=d.pallet;if(via==='lista'&&d.via)F.via=d.via;
+    if(d.foto)fGet('d_'+code).then(b=>{if(b&&F&&F.code===code&&!F.foto){F.foto=b;showQ()}})}
+  showQ();
+}
+function showQ(){
+  const l=L.find(x=>x.code===F.code),sm=sumC(F.code),falta=Math.max(0,l.qty-sm),tot=F.cajas*l.upc+F.sueltas;
+  const pals=pallets();if(!pals.includes(F.pallet))pals.push(F.pallet);
+  const ents=S.ents.filter(e=>e.code===F.code);
+  sheet(hdr(esc(l.code))+(F.aviso?`<div class="alert wa">${F.aviso}</div>`:'')+`
+  ${REC?`<div class="recf">${l.img?`<figure><img src="${esc(l.img)}" alt="Botella"><figcaption>Botella</figcaption></figure>`:''}${l.imgc?`<figure><img src="${esc(l.imgc)}" alt="Caja"><figcaption>Caja</figcaption></figure>`:'<figure class="nof"><span>📦</span><figcaption>Sin foto de caja</figcaption></figure>'}</div>
+  ${faltan(l).length?`<div class="alert wa"><b>⚠️ Falta cargar:</b> ${faltan(l).join(', ')}.<br>Aprovechá que estás en el lugar: ${[!l.img||(l.upc>1&&!l.imgc)?'sacá la foto con 📷 (botella y/o caja)':'',!tieneBot(l)?'escaneá el código de la botella con 🍾':'',l.upc>1&&!tieneCaja(l)?'escaneá el código de la caja con 📦':''].filter(Boolean).join(' · ')}.</div>`:''}
+  <div class="recl"><div><small>IR A</small><b>${esc(l.loc||'SIN UBICACIÓN')}</b></div><div><small>LLEVAR</small><b>${cj(l,falta)||'—'}</b></div></div>`:''}
+  <div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu"><span class="loc">${esc(l.loc)}</span> · Pedido <b>${fmt(l.qty)}</b> · ya armado ${fmt(sm)} · ${l.upc>1?'caja x'+l.upc:'unidad'}</div></div>
+  ${l.upc>1?`<div class="stp"><b>Cajas (x${l.upc})</b><div class="ctl"><button data-q="c-">−</button><input id="qc" inputmode="numeric" value="${F.cajas}"><button data-q="c+">+</button></div></div>`:''}
+  <div class="stp"><b>${l.upc>1?'Unidades sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
+  <div class="tot"><span id="qtot">${fmt(tot)}</span> <span class="mu" style="font-size:15px">unid.</span></div>
+  ${falta&&!tot?`<button class="btn" data-a="todo">Poner lo que falta (${cj(l,falta)})</button>`:''}
+  ${REC?'<div class="mu">El pallet se arma después: lo que sacás queda en el ÁREA DE ARMADO.</div>':''}<div ${REC?'hidden':''}><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
+  <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
+  ${D.fotoLote?`<button class="btn ${((S.lotes||{})[F.code])?'':'pri'}" data-a="lote">${((S.lotes||{})[F.code])?'✔ Foto del LOTE tomada (cambiar)':'🏷️ Sacar foto del código de LOTE'}</button>${((S.lotes||{})[F.code])?`<img data-k="${(S.lotes||{})[F.code]}" alt="Lote" style="max-height:120px;object-fit:contain;border-radius:8px">`:''}`:''}
+  ${tieneBot(l)?'':`<button class="btn" data-a="botcod">🍾 Escanear código de la BOTELLA</button>`}
+  ${l.upc>1?`<button class="btn" data-a="cajacod">📦 ${tieneCaja(l)?'Escanear otro código de caja':'Escanear código de la CAJA'}</button>${tieneCaja(l)?`<div class="alert ok">📦 Código de caja: <b class="mono">${codsCaja(l).map(esc).join(' · ')}</b></div>`:''}`:''}
+  ${REC?`<div class="eb" style="margin:6px 0">⏭️ ¿No está o no alcanza? Pasá al siguiente (este queda pendiente)</div><div class="chips"><button class="chip" data-salt="No llegó" data-code="${esc(l.code)}">No llegó</button><button class="chip" data-salt="En el otro depósito" data-code="${esc(l.code)}">Está en el otro depósito</button><button class="chip" data-salt="No alcanza" data-code="${esc(l.code)}">No alcanza / falta parte</button></div>`:''}
+  <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot?'':'disabled'}>${REC?'✔ Saqué '+fmt(tot):'Guardar '+fmt(tot)+' en '+esc(F.pallet)}</button>
+  ${tot||F.foto?'<div class="mu" style="text-align:center">✏️ Lo que vas cargando queda guardado aunque cierres o cambies de producto. Tocá Guardar cuando esté completo.</div>':''}
+  ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
+  hydrate();dsave();
+  const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('input',()=>{F[k]=Math.max(0,parseInt(i.value)||0);upd()})};bind('qc','cajas');bind('qs','sueltas');
+}
+function dsave(){if(!F)return;S.drafts=S.drafts||{};const d=S.drafts[F.code]||{};
+  if(!F.cajas&&!F.sueltas&&!F.foto&&!d.foto){delete S.drafts[F.code]}else S.drafts[F.code]={cajas:F.cajas,sueltas:F.sueltas,pallet:F.pallet,via:F.via,foto:!!F.foto||!!d.foto,at:Date.now()};
+  S.openCode=F.code;save()}
+function upd(){dsave();const l=L.find(x=>x.code===F.code),t=F.cajas*l.upc+F.sueltas;$('qtot').textContent=fmt(t);const b=$('bSave');b.disabled=!t;b.textContent=REC?'✔ Saqué '+fmt(t):'Guardar '+fmt(t)+' en '+F.pallet}
+async function saveE(){
+  const l=L.find(x=>x.code===F.code),tot=F.cajas*l.upc+F.sueltas;if(!tot)return;
+  const id='e'+Date.now().toString(36)+Math.random().toString(36).slice(2,5);
+  if(F.foto){try{await fPut(id,F.foto)}catch(e){toast('No se pudo guardar la foto')}}
+  S.ents.push({id,code:F.code,cajas:F.cajas,sueltas:F.sueltas,total:tot,pallet:REC?SINPAL:F.pallet,at:Date.now(),via:F.via,foto:!!F.foto,op:S.op});
+  S.last=F.pallet;if(S.drafts){delete S.drafts[F.code]}fDel('d_'+F.code);save();close();render();pushProg();
+  if(st(l)==='ok'&&S.salt&&S.salt[l.code]){delete S.salt[l.code];save()}
+  if(REC){const n=sigPend(l.code);if(st(l)==='par')setTimeout(()=>openLine(l.code),350);else if(n)setTimeout(()=>openLine(n.code),350)}
+  const s=st(l);toast(s==='ok'?'✅ '+l.code+' completo':s==='par'?'Guardado · faltan '+fmt(l.qty-sumC(l.code)):'⚠️ Sobran '+fmt(sumC(l.code)-l.qty)+' de '+l.code);
+}
+
+/* ---- escaneo ---- */
+let scan=null;
+async function startScan(){
+  $('root').innerHTML=`<div id="scan"><video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="msg" id="smsg">Apuntá al código de barras</div>
+  <div class="bot"><input id="man" inputmode="numeric" placeholder="o escribí el código"><button class="btn pri" data-a="mango">OK</button><button class="btn" data-a="scanoff">Cerrar</button></div></div>`;
+  const v=$('vid');
+  try{
+    if('BarcodeDetector' in window){
+      const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);
+      const want=['ean_13','ean_8','upc_a','upc_e','code_128','itf'].filter(f=>fm.includes(f));
+      if(want.length){
+        const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}},audio:false});
+        v.srcObject=st;await v.play();const bd=new BarcodeDetector({formats:want});
+        scan={stop:()=>st.getTracks().forEach(t=>t.stop())};let busy=false;
+        const loop=async()=>{if(!scan)return;if(!busy&&v.readyState>=2){busy=true;try{const r=await bd.detect(v);if(r.length&&scan){found(r[0].rawValue);return}}catch(e){}busy=false}requestAnimationFrame(loop)};loop();return;
+      }
+    }
+    await loadZX();
+    const rd=new ZXingBrowser.BrowserMultiFormatReader();
+    const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,(res)=>{if(res&&scan)found(res.getText())});
+    scan={stop:()=>ctl.stop()};
+  }catch(e){$('smsg').textContent='No se pudo abrir la cámara. Escribí el código abajo o permití la cámara.'}
+}
+function loadZX(){return window.ZXingBrowser?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
+const codsCaja=l=>[...new Set([...(l.ceans||[]),...Object.entries(CAT.cajas||{}).filter(([e,c])=>c===l.code).map(x=>x[0]),...Object.entries(S.cajasN||{}).filter(([e,c])=>c===l.code).map(x=>x[0])])];
+const tieneCaja=l=>(l.ceans||[]).length>0||Object.values(CAT.cajas||{}).includes(l.code)||Object.values(S.cajasN||{}).includes(l.code);
+let MODO=null; // {caja:code} cuando se escanea para registrar el código de la caja de un producto
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA de la caja. Escaneá el OTRO código largo (el del producto).',5000);setTimeout(startScan,1200);return}if(MODO&&MODO.verif){const m=MODO;MODO=null;verifCode(raw,m.verif,m.bot);return}if(MODO&&MODO.caja){const code=MODO.caja;MODO=null;asignarCaja(norm(raw),code);return}if(MODO&&MODO.botn){const code=MODO.botn;MODO=null;asignarBot(norm(raw),code);return}onCode(raw,'codigo')}
+function asignarBot(c,code){if(!c){toast('Código vacío');return}
+  const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
+  if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
+  if(S.cajasN[c]===code||(CAT.cajas||{})[c]===code){toast('Ese es el código de la CAJA. Escaneá el de la botella.',4500);openLine(code,'lista');return}
+  S.nuevos[c]=code;save();render();pushProg();toast('🍾 Código de botella '+c+' guardado para '+code+'.',4000);openLine(code,'codigo')}
+function asignarCaja(c,code){if(!c){toast('Código vacío');return}const l=L.find(x=>x.code===code);
+  const otro=L.find(x=>x.code!==code&&(x.eans.includes(c)||(x.ceans||[]).includes(c)||S.cajasN[c]===x.code||S.nuevos[c]===x.code));
+  if(otro){toast('Ese código ya es de '+otro.code+' '+otro.name,4500);openLine(code,'lista');return}
+  if(l&&l.eans.includes(c)){toast('Ese es el código de la BOTELLA, no de la caja. Escaneá el de la caja.',4500);openLine(code,'lista');return}
+  S.cajasN[c]=code;save();render();pushProg();toast('📦 Código de caja '+c+' guardado para '+code+'. La próxima caja la toma sola.',4000);openLine(code,'caja',null,((S.drafts||{})[code]||{}).cajas?0:1)}
+function onCode(raw,via){
+  const c=norm(raw);if(!c){toast('Código vacío');return}
+  const cat=(CAT.map[c]||[]).map(x=>x[0]);
+  const cx=L.filter(l=>(l.ceans||[]).includes(c)||S.cajasN[c]===l.code||(CAT.cajas||{})[c]===l.code);
+  if(cx.length===1){openLine(cx[0].code,'caja',null,1);toast('📦 Caja escaneada: +1 caja',2000);return}
+  const hit=L.filter(l=>l.eans.includes(c)||cat.includes(l.code)||S.nuevos[c]===l.code||l.code===String(raw).trim());
+  if(hit.length===1){const otros=(CAT.map[c]||[]).filter(x=>x[0]!==hit[0].code&&!L.some(l=>l.code===x[0]));
+    openLine(hit[0].code,via,otros.length?'⚠️ Ojo: este código también es de '+otros.map(x=>'<b>['+esc(x[0])+'] '+esc(x[1])+'</b>').join(', ')+', que NO va en este pedido. Confirmá que la botella sea la correcta (añada / estuche) antes de cargar.':null);return}
+  if(hit.length>1){sheet(hdr('¿Cuál es?')+`<div class="alert wa">Este código corresponde a ${hit.length} productos del pedido. Fijate la añada o el estuche.</div>`+hit.map(l=>`<button class="ln" data-pick="${esc(l.code)}" data-via="${via}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span><span class="loc">${esc(l.loc)}</span></div></div><div class="q">${fmt(l.qty)}</div></button>`).join(''));return}
+  const nombres=(CAT.map[c]||[]).map(x=>`[${x[0]}] ${x[1]}`);
+  const herm=(CAT.hermanos[c]||[]).map(x=>x[0]).filter(k=>L.some(l=>l.code===k));
+  sheet(hdr('No está en el pedido')+`<div class="alert bad">⛔ ${nombres.length?'Escaneaste:<br>'+nombres.map(esc).join('<br>'):'Código <span class="mono">'+esc(c)+'</span> no reconocido.'}<br><br>Ese producto NO va en este pedido.</div>`+
+   (herm.length?`<div class="alert wa">Ojo: el pedido lleva ${herm.map(k=>{const l=L.find(x=>x.code===k);return '<b>['+k+'] '+esc(l.name)+'</b>'}).join(', ')}. ¿Es otra añada o presentación?</div>`:'')+
+   `<button class="btn" data-a="asignar" data-ean="${esc(c)}" style="padding:13px">🔗 Es un producto del pedido con otro código → elegir cuál</button><button class="btn pri" data-a="scan">Escanear otro</button><button class="btn" data-a="close">Cerrar</button>`);
+}
+
+
+/* ---- lectura de etiqueta (OCR en el celular) ---- */
+const SW=new Set('VINO VINHO WINE ESPUMANTE LICOR WHISKY WHISKEY GIN RON VODKA TEQUILA CHAMPAGNE CERVEZA LATA BOTELLA CON SIN ESTUCHE CAJA DE DEL LA LE LES EL LOS LAS DI DA DO DU ET Y AND THE ML LT CL CC'.split(' '));
+const deacc=t=>t.normalize('NFD').replace(/[̀-ͯ]/g,'').toUpperCase();
+const toks=t=>deacc(t).replace(/[^A-Z0-9]+/g,' ').split(' ').filter(w=>w.length>=3&&!SW.has(w)&&!/^\d+$/.test(w));
+function lev(a,b){if(Math.abs(a.length-b.length)>2)return 9;const m=[...Array(b.length+1).keys()];for(let i=1;i<=a.length;i++){let p=m[0];m[0]=i;for(let j=1;j<=b.length;j++){const t=m[j];m[j]=Math.min(m[j]+1,m[j-1]+1,p+(a[i-1]===b[j-1]?0:1));p=t}}return m[b.length]}
+function near(w,set){if(set.has(w))return 1;let best=0;for(const o of set){if(w.length>=5&&o.length>=4){const d=lev(w,o);if(d===1)best=Math.max(best,.8);else if(d===2&&w.length>=7)best=Math.max(best,.5)}if(w.length>=6&&o.length>=4&&(w.includes(o)||o.includes(w)))best=Math.max(best,.6)}return best}
+function rank(text){
+  const ot=new Set(toks(text)),yrs=(deacc(text).match(/\b(19[5-9]\d|20[0-4]\d)\b/g)||[]);
+  const df={};L.forEach(l=>new Set(toks(l.name)).forEach(w=>df[w]=(df[w]||0)+1));
+  return L.map(l=>{const ws=[...new Set(toks(l.name))];let tw=0,hw=0;
+    ws.forEach(w=>{const wt=Math.min(w.length,8)/(df[w]||1);tw+=wt;hw+=wt*near(w,ot)});
+    let sc=tw?hw/tw:0;const y=(l.name.match(/\b(19|20)\d{2}\b/)||[])[0];
+    if(y&&yrs.length)sc+=yrs.includes(y)?.15:-.2;
+    return {l,sc:Math.max(0,Math.min(1,sc))}}).sort((a,b)=>b.sc-a.sc);
+}
+let TW=null;
+async function tess(){
+  if(TW)return TW;
+  await new Promise((ok,ko)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='tess/tesseract.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
+  TW=Tesseract.createWorker('eng',1,{workerPath:new URL('tess/worker.min.js',location.href).href,corePath:new URL('tess/',location.href).href,langPath:new URL('tess/',location.href).href,gzip:true,
+    logger:m=>{const b=document.querySelector('#obar i'),t=$('ostat');if(!b)return;const pr=Math.round((m.progress||0)*100);
+      if(m.status==='recognizing text'){b.style.width=pr+'%';t&&(t.textContent='Leyendo etiqueta… '+pr+'%')}else{t&&(t.textContent=m.status.startsWith('load')||m.status.startsWith('init')?'Preparando lector (la primera vez tarda un poco)…':'Procesando…')}}})
+   .then(async w=>{await w.setParameters({tessedit_pageseg_mode:'11'});return w}).catch(e=>{TW=null;throw e});
+  return TW;
+}
+async function ocrPrep(blob){
+  const u=URL.createObjectURL(blob);
+  try{const i=await new Promise((ok,ko)=>{const im=new Image();im.onload=()=>ok(im);im.onerror=ko;im.src=u});
+    const k=Math.min(1,1600/Math.max(i.naturalWidth,i.naturalHeight)),c=document.createElement('canvas');c.width=Math.round(i.naturalWidth*k);c.height=Math.round(i.naturalHeight*k);
+    const x=c.getContext('2d');x.filter='grayscale(1) contrast(1.4)';x.drawImage(i,0,0,c.width,c.height);return c}finally{URL.revokeObjectURL(u)}
+}
+async function onEtq(file){
+  if(!file)return;const b=await prep(file),u=URL.createObjectURL(b);
+  sheet(hdr('Etiqueta')+`<img class="ocrimg" src="${u}" alt="Tu foto"><div class="pbar" id="obar"><i></i></div><div class="mu" id="ostat">Preparando lector…</div>`);
+  let text='';
+  try{const w=await tess();const c=await ocrPrep(b);const r=await w.recognize(c);text=(r.data&&r.data.text)||''}
+  catch(e){if(!$('ostat'))return;sheet(hdr('Etiqueta')+`<div class="alert bad">No se pudo leer la etiqueta en este celular (${esc(e&&e.message||e)}). Usá el código o elegí de la lista.</div><button class="btn" data-a="close">Cerrar</button>`);return}
+  if(!$('ostat'))return; // cerraron la hoja
+  const R=rank(text),top=R[0],sec=R[1]||{sc:0};
+  const seguro=top&&top.sc>=.45&&top.sc-sec.sc>=.2;
+  const cand=R.filter(r=>r.sc>=.15).slice(0,4);
+  const pct=r=>Math.round(r.sc*100)+'%';
+  sheet(hdr('Etiqueta')+`<img class="ocrimg" src="${u}" alt="Tu foto">
+   ${seguro?`<div class="alert ok">Parece ser <b>[${esc(top.l.code)}] ${esc(top.l.name)}</b> (${pct(top)}). Confirmá mirando la botella.</div>`:cand.length?`<div class="alert wa">No estoy seguro. ¿Es alguno de estos?</div>`:`<div class="alert bad">No pude reconocer la etiqueta entre los productos del pedido. Probá otra foto más cerca y derecha, con buena luz, o usá el código / la lista.</div>`}
+   ${cand.map(r=>`<button class="ln" data-pick="${esc(r.l.code)}" data-via="etiqueta" data-foto="1"><div><div class="nm">${esc(r.l.name)}</div><div class="meta"><span class="loc">${esc(r.l.loc)}</span><span class="mono">${esc(r.l.code)}</span><span>coincide ${pct(r)}</span></div></div><div class="q">${fmt(sumC(r.l.code))}<span style="color:var(--mu);font-size:15px">/${fmt(r.l.qty)}</span></div></button>`).join('')}
+   <div style="display:flex;gap:8px"><button class="btn" data-a="etq" style="flex:1">📷 Otra foto</button><button class="btn" data-a="lista" style="flex:1">Elegir de la lista</button></div>
+   <details><summary class="mu">Texto leído</summary><div class="ocrtxt">${esc(text.trim()||'(nada)')}</div></details>`);
+  lastEtq=b;
+}
+let lastEtq=null;
+
+
+/* ---- intermediario (Cloudflare Worker): avance en vivo + respaldo sin WhatsApp ---- */
+const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+const getPin=()=>lsGet('arm_pin')||'';
+function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<div class="mu">${msg||'Poné el PIN que te pasó Mario. Se pide una sola vez en este celular.'}</div><input id="pinIn" inputmode="numeric" type="password" style="border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:22px;text-align:center"><button class="btn pri" id="pinOk" style="padding:14px">Guardar</button>`);
+  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()};setTimeout(()=>$('pinIn').focus(),50)})}
+async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
+function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
+  Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
+  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},cajasN:S.cajasN||{},subido:S.subido||S.remSubido||null,ents:S.ents.map(e=>({id:e.id,code:e.code,cajas:e.cajas,sueltas:e.sueltas,total:e.total,pallet:e.pallet,at:e.at,via:e.via,op:e.op||S.op,foto:!!e.foto}))}}
+let _pv=null,REM=null;
+async function verRemoto(){try{const r=await fetch(API+'/progreso/'+encodeURIComponent(D.id),{cache:'no-store'});REM=await r.json()}catch(e){REM=null}
+  if(!REM)return;if(REM.subido&&(!S.subido||S.subido.nom!==REM.subido.nom)){S.remSubido=REM.subido;save()}
+  const otros=(REM.ents||[]).filter(e=>!S.ents.some(x=>x.id===e.id));
+  const box=$('remBox');if(!box)return;
+  if(otros.length&&(REM.recibido||0)>(S.syncAt||0)){const quien=[...new Set(otros.map(e=>e.op).filter(Boolean))].join(', ')||REM.op||'otra persona';
+    box.innerHTML=`<div class="alert wa" style="display:flex;flex-direction:column;gap:8px">🤝 <b>${esc(quien)}</b> ya cargó ${otros.length} registro${otros.length>1?'s':''} en este pedido desde otro celular.<button class="btn pri" data-a="traer" style="padding:12px">Continuar desde donde quedó</button></div>`;box.hidden=false}
+  else box.hidden=true;
+  if(tab==='F'&&!renderF._v)renderF();}
+function traerRemoto(){if(!REM)return;const mios={};S.ents.forEach(e=>mios[e.id]=e);
+  (REM.ents||[]).forEach(e=>{if(!mios[e.id])S.ents.push({...e,foto:false,remota:true})});
+  Object.assign(S.nuevos,REM.nuevos||{});S.cajasN=Object.assign({},REM.cajasN||{},S.cajasN||{});
+  S.syncAt=REM.recibido||Date.now();save();$('remBox').hidden=true;render();pushProg();toast('Listo: seguís desde donde quedó',3000)}
+let _pinAsk=false;
+function pushProg(){if(!getPin()&&!_pinAsk){_pinAsk=true;setTimeout(()=>pedirPin().then(pushProg),800);return}clearTimeout(_pv);_pv=setTimeout(async()=>{if(!getPin())return;await verRemoto();if(REM&&(REM.ents||[]).some(e=>!S.ents.some(x=>x.id===e.id))&&(REM.recibido||0)>(S.syncAt||0)){toast('Hay registros de otra persona: tocá "Continuar desde donde quedó" arriba',4500);return}try{await api('/progreso/'+encodeURIComponent(D.id),{estado:estadoVivo()});S.vivoOk=Date.now()}catch(e){if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo en Terminar',4000)}},1500)}
+const b64blob=b=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ko;r.readAsDataURL(b)});
+const b64txt=t=>b64blob(new Blob([t],{type:'text/plain'}));
+async function subirRespaldo(soloFotos){
+  if(!S.op){toast('Poné tu nombre arriba antes de subir');$('op').focus();return}
+  if(!getPin())await pedirPin();
+  const nom=(S.remSubido&&S.remSubido.nom)||(S.subido&&S.subido.nom)||(($('zipNom')||{}).value||nomResp()).trim().toUpperCase();
+  const items=[];
+  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++)if(arr[i])items.push([`${p}_cara${i+1}.jpg`,arr[i]])}
+  for(const e of S.ents.filter(e=>e.foto&&!e.remota))items.push([`producto_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,e.id]);
+  for(const [c,k] of Object.entries(S.lotes||{}))items.push([`lote_${c}.jpg`,k]);
+  if(soloFotos&&!items.length){toast('No tenés fotos en este celular para enviar');return}
+  const tot=items.length+(soloFotos?0:3);let n=0;
+  sheet(hdr('Subiendo respaldo')+`<div style="font-weight:800">${esc(nom)}</div><div class="pbar"><i id="upb"></i></div><div class="mu" id="upt">Preparando…</div><div class="mu">No cierres la página hasta que termine.</div>`);
+  const prog=t=>{n++;const b=$('upb');if(b)b.style.width=Math.round(n/tot*100)+'%';const x=$('upt');if(x)x.textContent=`${n}/${tot} · ${t}`};
+  try{
+    for(const [nm,k] of items){const b=await fGet(k);if(!b){prog('falta '+nm);continue}let ok=false,err;for(let t=0;t<3&&!ok;t++){try{await api('/foto',{carpeta:nom,nombre:nm,b64:await b64blob(b)});ok=true}catch(e){err=e;if(e.message==='PIN')throw e;await new Promise(r=>setTimeout(r,1500))}}if(!ok)throw err;prog(nm)}
+    if(soloFotos){S.fotosEnv={nom,at:Date.now(),n:items.length};save();sheet(hdr('Fotos enviadas ✅')+`<div class="alert ok">Se sumaron ${items.length} fotos tuyas a <b>${esc(nom)}</b>.</div><button class="btn" data-a="close">Cerrar</button>`);renderF();return}
+    await api('/foto',{carpeta:nom,nombre:'resumen.txt',b64:await b64txt(resumen())});prog('resumen');
+    const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y '),fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,cajasN:S.cajasN,lotes:Object.keys(S.lotes||{}),fotos:items.map(x=>x[0])};
+    await api('/foto',{carpeta:nom,nombre:'datos.json',b64:await b64txt(JSON.stringify(dat,null,1))});prog('datos');
+    await api('/listo',{carpeta:nom});prog('listo');
+    S.subido={nom,at:Date.now(),por:S.op};save();pushProg();
+    sheet(hdr('Respaldo subido ✅')+`<div class="alert ok">Se subió <b>${esc(nom)}</b>: ${items.length} fotos y el resumen. En unos minutos aparece en la pestaña <b>Armados</b> de la página del grupo.</div><button class="btn" data-a="close">Cerrar</button>`);
+    renderF();
+  }catch(e){
+    if(e.message==='PIN'){close();await pedirPin('El PIN no es correcto. Probá de nuevo.');return}
+    sheet(hdr('No se pudo subir')+`<div class="alert bad">Error: ${esc(e.message||e)}. Revisá la conexión y tocá de nuevo "Subir respaldo": lo que ya subió no se duplica.</div><button class="btn" data-a="close">Cerrar</button>`);
+  }
+}
+
+/* ---- lista para elegir ---- */
+function pickList(ean){
+  sheet(hdr(ean?'¿De qué producto es el código '+esc(ean)+'?':'Elegí el producto')+`<input id="bq" placeholder="Buscar por nombre o código" style="border:1px solid var(--ln);border-radius:10px;padding:12px;background:var(--sf)"><div class="list" id="pl"></div>`);
+  const draw=()=>{const q=($('bq').value||'').toLowerCase();$('pl').innerHTML=L.filter(l=>!q||l.name.toLowerCase().includes(q)||l.code.includes(q)).map(l=>{const s=st(l);return `<button class="ln ${s}" data-pick="${esc(l.code)}" data-via="${ean?'codigo':'lista'}"${ean?` data-ean="${esc(ean)}"`:''}><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="loc">${esc(l.loc)}</span><span class="mono">${esc(l.code)}</span></div></div><div class="q">${fmt(sumC(l.code))}<span style="color:var(--mu);font-size:15px">/${fmt(l.qty)}</span></div></button>`}).join('')};
+  $('bq').addEventListener('input',draw);draw();
+}
+
+/* ---- compartir ---- */
+async function share(){
+  if(!S.op){toast('Poné tu nombre arriba antes de enviar');$('op').focus();return}
+  const t=resumen();
+  if(navigator.share){try{await navigator.share({text:t});return}catch(e){if(e&&e.name==='AbortError')return}}
+  location.href='https://wa.me/?text='+encodeURIComponent(t);
+}
+
+const MES=['ENE','FEB','MAR','ABR','MAY','JUN','JUL','AGO','SEP','OCT','NOV','DIC'];
+function nomResp(){let c=(D.alias||D.cliente||'').toUpperCase().replace(/[.,]/g,' ').replace(/\b(S ?A|S ?R ?L|SAS|LTDA|SC|Y CIA|CIA)\b/g,' ').replace(/\s+/g,' ').trim();const w=c.split(' ');c=(w[0]||'').length>=4?w[0]:w.slice(0,2).join(' ');const d=new Date();return `${c} ${String(d.getDate()).padStart(2,'0')}${MES[d.getMonth()]}${String(d.getFullYear()).slice(2)}`}
+function loadJZ(){return window.JSZip?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='jszip.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+let ZIPF=null;
+async function armarZip(){
+  await loadJZ();const nom=(($('zipNom')||{}).value||nomResp()).trim().toUpperCase();const z=new JSZip();
+  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)z.file(`${p}_cara${i+1}.jpg`,b)}}
+  for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)z.file(`producto_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,b)}
+  for(const [c,k] of Object.entries(S.lotes||{})){const b=await fGet(k);if(b)z.file(`lote_${c}.jpg`,b)}
+  z.file('resumen.txt',resumen());
+  z.file('datos.json',JSON.stringify({nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:S.op,fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos},null,1));
+  const blob=await z.generateAsync({type:'blob',compression:'STORE'});
+  ZIPF=new File([blob],nom.replace(/[^A-Z0-9 _-]/g,'')+'.zip',{type:'application/zip'});return ZIPF;
+}
+async function enviarZip(){
+  if(!S.op){toast('Poné tu nombre arriba antes de enviar');$('op').focus();return}
+  if(!ZIPF){toast('Preparando respaldo… tocá de nuevo en un segundo');armarZip().then(()=>toast('Respaldo listo: tocá "Enviar respaldo"'));return}
+  const files=[ZIPF];
+  if(navigator.canShare&&navigator.canShare({files})){try{await navigator.share({files,title:ZIPF.name});return}catch(e){if(e&&e.name==='AbortError')return}}
+  const u=URL.createObjectURL(ZIPF),a=document.createElement('a');a.href=u;a.download=ZIPF.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),5000);toast('Respaldo guardado en Descargas: mandalo desde ahí',4000);
+}
+let FOT={},FOTK=[],FOTI=0;
+function updSeq(){const b=$('bFotSeq');if(!b)return;const n=FOTK.length;if(FOTI>=n){b.textContent='✅ Fotos enviadas · volver a enviar';$('fotEst').textContent='';return}const k=FOTK[FOTI];b.textContent=n>1?`🖼️ Enviar fotos · parte ${FOTI+1} de ${n} (${FOT[k].length})`:`🖼️ Enviar fotos (${FOT[k].length})`;$('fotEst').textContent=n>1?'Parte '+(FOTI+1)+': '+k:''}
+async function prepFotos(){
+  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join('_');const G={};
+  for(const p of Object.keys(S.pal)){const arr=S.pal[p]||[];for(let i=0;i<arr.length;i++){if(!arr[i])continue;const b=await fGet(arr[i]);if(b)(G['Pallet '+p]=G['Pallet '+p]||[]).push(new File([b],`${n}_${p}_cara${i+1}.jpg`,{type:'image/jpeg'}))}}
+  for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)(G['Productos']=G['Productos']||[]).push(new File([b],`${n}_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,{type:'image/jpeg'}))}
+  // lotes de hasta LOTE fotos, juntando pallets (16/11: con 4 anduvo, probamos más)
+  const LOTE=10;FOT={};
+  const pal=Object.keys(G).filter(k=>k.startsWith('Pallet ')).flatMap(k=>G[k].map(f=>[k.slice(7),f]));
+  for(let i=0;i<pal.length;i+=LOTE){const ch=pal.slice(i,i+LOTE),ps=[...new Set(ch.map(x=>x[0]))];FOT['Pallets '+ps.join('-')]=ch.map(x=>x[1])}
+  const pr=G['Productos']||[];for(let i=0;i<pr.length;i+=LOTE)FOT[pr.length>LOTE?`Productos (${i/LOTE+1})`:'Productos']=pr.slice(i,i+LOTE);
+  const box=$('fotBox');if(!box)return;
+  const ks=Object.keys(FOT);
+  FOTK=ks;if(FOTI>=ks.length)FOTI=0;
+  const tot=ks.reduce((a,k)=>a+FOT[k].length,0);
+  box.innerHTML=ks.length?`<button class="btn pri" id="bFotSeq" style="padding:14px"></button><div class="mu" id="fotEst"></div><button class="btn" data-a="bajarfotos">⬇️ Guardar todas las fotos en el celular</button><div class="mu">${tot} fotos en ${ks.length} parte${ks.length>1?'s':''}. Tocá el botón, mandá a WhatsApp, volvé y tocá de nuevo para la parte siguiente.</div>`:'<div class="mu">No hay fotos para enviar.</div>';
+  updSeq();
+}
+async function shareFotos(k){
+  const files=FOT[k];if(!files||!files.length){toast('No hay fotos');return}
+  const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join(' ');
+  if(!(navigator.canShare&&navigator.canShare({files}))){toast('Este celular no deja compartir fotos desde la página. Usá "Guardar todas las fotos".',4500);return}
+  try{await navigator.share({files,title:'Armado '+n+' · '+k});return true}
+  catch(e){if(e&&e.name==='AbortError')return;toast('No se pudo compartir ('+(e&&e.name||e)+'). Probá "Guardar todas las fotos".',5000)}
+}
+function bajarFotos(){
+  let i=0;const all=Object.values(FOT).flat();if(!all.length){toast('No hay fotos');return}
+  all.forEach((f,j)=>setTimeout(()=>{const u=URL.createObjectURL(f),a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)},j*400));
+  toast('Guardando '+all.length+' fotos en Descargas…',4000);
+}
+
+/* ---- eventos ---- */
+let camFor=null;
+document.addEventListener('click',async e=>{
+  const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.salt&&b.dataset.code){saltar(b.dataset.code,b.dataset.salt);return}
+  if(b.dataset.f){flt=b.dataset.f;document.querySelectorAll('#flt .chip').forEach(c=>c.setAttribute('aria-pressed',c===b));render();return}
+  if(b.dataset.pick&&b.dataset.ean){const l=L.find(x=>x.code===b.dataset.pick);
+    if(l&&l.upc>1&&!b.dataset.tipo){sheet(hdr('¿Botella o caja?')+`<div class="mu">El código <span class="mono">${esc(b.dataset.ean)}</span> ¿es el de la botella o el de la caja de ${esc(l.name)}?</div><button class="btn pri" data-pick="${esc(l.code)}" data-ean="${esc(b.dataset.ean)}" data-tipo="botella" data-via="codigo" style="padding:14px">🍾 Es de la BOTELLA</button><button class="btn" data-a="escaja" data-ean="${esc(b.dataset.ean)}" data-code="${esc(l.code)}" style="padding:14px">📦 Es de la CAJA (x${l.upc})</button>`);return}
+    S.nuevos[b.dataset.ean]=b.dataset.pick;save();pushProg();toast('Código '+b.dataset.ean+' asignado a '+b.dataset.pick+'. La próxima vez lo toma solo.',3500)}
+  if(b.dataset.pick){openLine(b.dataset.pick,b.dataset.via);if(b.dataset.foto&&lastEtq&&F){F.foto=lastEtq;showQ()}return}
+  if((b.classList.contains('ln')||b.classList.contains('recgo'))&&b.dataset.code){openLine(b.dataset.code,'lista');return}
+  if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));showQ();return}
+  if(b.dataset.pal){F.pallet=b.dataset.pal;showQ();return}
+  if(b.dataset.zcode){PZ=null;palSheet(b.dataset.zcode);return}
+  if(b.dataset.zpal){PZ.pallet=b.dataset.zpal;palSheet(PZ.code);return}
+  if(b.dataset.z){const k=b.dataset.z[0]==='c'?'cajas':'sueltas';PZ[k]=Math.max(0,PZ[k]+(b.dataset.z[1]==='+'?1:-1));palSheet(PZ.code);return}
+  if(b.dataset.palfoto){camFor='pal:'+b.dataset.palfoto+'|'+(b.dataset.cara||0);$('cam').value='';$('cam').click();return}
+  if(b.dataset.del){if(b.dataset.sure){const i=S.ents.findIndex(x=>x.id===b.dataset.del);if(i>=0){if(S.ents[i].foto)fDel(S.ents[i].id);S.ents.splice(i,1);save();render();showQ();toast('Borrado');pushProg()}}else{b.dataset.sure=1;b.textContent='¿Seguro?'}return}
+  switch(b.dataset.a){
+    case 'close':close();break;
+    case 'scanoff':stopScan();MODO=null;close();break;
+    case 'scan':close();startScan();break;
+    case 'mango':{const v=$('man').value;found(v);break}
+    case 'todo':{const l=L.find(x=>x.code===F.code),f=Math.max(0,l.qty-sumC(F.code));F.cajas=l.upc>1?Math.floor(f/l.upc):0;F.sueltas=l.upc>1?f%l.upc:f;showQ();break}
+    case 'znew':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;PZ.pallet='P'+n;palSheet(PZ.code);break}
+    case 'zsave':palSave();break;
+    case 'newpal':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;F.pallet='P'+n;showQ();break}
+    case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
+    case 'lote':camFor='lote';$('cam').value='';$('cam').click();break;
+    case 'verif':case 'verifbot':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;MODO={verif:c,bot:b.dataset.a==='verifbot'};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent=MODO&&MODO.bot?'Apuntá al código de la BOTELLA':'Apuntá al código de barras de la CAJA'},300);break}
+    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');break}
+    case 'verifreg':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.cajasN=S.cajasN||{};S.cajasN[b.dataset.ean]=c;S.verif=S.verif||{};S.verif[c]='caja';save();render();pushProg();toast('📦 Código registrado y producto confirmado');openLine(c,'caja');break}
+    case 'save':saveE();break;
+    case 'bajarfotos':bajarFotos();break;
+    case 'zip':enviarZip();break;
+    case 'subir':subirRespaldo();break;
+    case 'traer':traerRemoto();break;
+    case 'misfotos':subirRespaldo(true);break;
+    case 'etq':$('camEtq').value='';$('camEtq').click();break;
+    case 'lista':pickList();break;
+    case 'asignar':pickList(b.dataset.ean);break;
+    case 'botcod':MODO={botn:F.code};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent='Apuntá al código de barras de la BOTELLA'},300);break;
+    case 'cajacod':MODO={caja:F.code};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent='Apuntá al código de barras de la CAJA'},300);break;
+    case 'escaja':{const ean=b.dataset.ean,code=b.dataset.code;delete S.nuevos[ean];save();asignarCaja(ean,code);break}
+  }
+  if(b.id==='bEnv')share();
+  if(b.dataset.fot){shareFotos(b.dataset.fot);return}
+  if(b.id==='bFotSeq'){if(FOTI>=FOTK.length)FOTI=0;const ok=await shareFotos(FOTK[FOTI]);if(ok){FOTI++;updSeq();toast(FOTI<FOTK.length?'Parte enviada. Tocá de nuevo para la siguiente.':'✅ Todas las fotos enviadas',3500)}return}
+  if(b.id==='bCop'){try{await navigator.clipboard.writeText(resumen());toast('Copiado')}catch(x){toast('No se pudo copiar')}}
+  if(b.id==='bRes'){if(b.dataset.sure){for(const x of S.ents)if(x.foto)fDel(x.id);for(const p of Object.keys(S.pal))palKeys(p).forEach(fDel);S.ents=[];S.pal={};S.nuevos={};S.cajasN={};S.last=null;save();render();renderF();toast('Borrado todo')}else{b.dataset.sure=1;b.textContent='¿Seguro? Se borra todo lo cargado. Tocá de nuevo'}}
+});
+$('cam').addEventListener('change',async e=>{
+  const f=e.target.files[0];if(!f)return;const b=await prep(f);
+  if(camFor==='line'&&F){F.foto=b;try{await fPut('d_'+F.code,b)}catch(e){}showQ()}
+  else if(camFor==='lote'&&F){const k='lote_'+F.code+'_'+Date.now().toString(36);try{await fPut(k,b);S.lotes=S.lotes||{};if(S.lotes[F.code])fDel(S.lotes[F.code]);S.lotes[F.code]=k;save();showQ();render();toast('🏷️ Foto del lote guardada')}catch(x){toast('No se pudo guardar la foto')}}
+  else if(camFor&&camFor.startsWith('pal:')){const [p,ci]=camFor.slice(4).split('|');const i=+ci||0;const k='pal_'+p+'_'+i+'_'+Date.now().toString(36);
+    try{await fPut(k,b);const arr=S.pal[p]||[];if(arr[i])fDel(arr[i]);arr[i]=k;S.pal[p]=arr;save();renderP();pushProg();toast(p+': '+CARAS[i]+' guardada ('+palKeys(p).length+'/4)')}catch(x){toast('No se pudo guardar la foto')}}
+  camFor=null;
+});
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='zipNom'){ZIPF=null;clearTimeout(window._zt);window._zt=setTimeout(()=>armarZip().catch(()=>{}),600)}});
+$('bScan').addEventListener('click',startScan);
+$('bLista').addEventListener('click',()=>pickList());
+$('bEtq').addEventListener('click',()=>{$('camEtq').value='';$('camEtq').click();tess().catch(()=>{})});
+$('camEtq').addEventListener('change',e=>onEtq(e.target.files[0]));
+$('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim();lsSet('arm_op',S.op);save();pushProg()});
+function setTab(t){tab=t;[['L','tL','vL'],['P','tP','vP'],['F','tF','vF']].forEach(([k,b,v])=>{$(b).setAttribute('aria-selected',k===t);$(v).hidden=k!==t});render()}
+$('tL').addEventListener('click',()=>setTab('L'));$('tP').addEventListener('click',()=>setTab('P'));$('tF').addEventListener('click',()=>setTab('F'));
+render();
+if(S.openCode&&L.find(l=>l.code===S.openCode))setTimeout(()=>openLine(S.openCode,'lista'),300);
+verRemoto();setInterval(verRemoto,30000);
+if(getPin()&&S.ents.length)pushProg();
+</script>
+</body>
+</html>

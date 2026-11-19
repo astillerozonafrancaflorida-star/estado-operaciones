@@ -871,5 +871,14 @@
   "lineas": 1,
   "botellas": 360,
   "creado": "2026-11-19T11:46:45.389512+00:00"
+ },
+ {
+  "id": "A5548-VMA6Va9q",
+  "titulo": "Factura A5548",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 7,
+  "botellas": 546,
+  "creado": "2026-11-19T11:48:41.311025+00:00"
  }
 ]
