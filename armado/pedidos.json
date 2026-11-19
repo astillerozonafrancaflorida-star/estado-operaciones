@@ -855,15 +855,6 @@
   "creado": "2026-11-19T11:16:46.335586+00:00"
  },
  {
-  "id": "A5541-A5548-A5549-hu4Rdsa1",
-  "titulo": "Facturas A5541 · A5548 · A5549",
-  "cliente": "IBERPARK SA",
-  "entrega": "IBERPARK SA",
-  "lineas": 11,
-  "botellas": 1122,
-  "creado": "2026-11-19T11:41:00.077313+00:00"
- },
- {
   "id": "A5541-ofTmdbXc",
   "titulo": "Factura A5541",
   "cliente": "IBERPARK SA",
