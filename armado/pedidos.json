@@ -945,15 +945,6 @@
   }
  },
  {
-  "id": "A5541-ofTmdbXc",
-  "titulo": "Factura A5541",
-  "cliente": "IBERPARK SA",
-  "entrega": "IBERPARK SA",
-  "lineas": 1,
-  "botellas": 360,
-  "creado": "2026-11-19T13:57:06.476695+00:00"
- },
- {
   "id": "S00364-utx8zsrp",
   "titulo": "Pedido S00364",
   "cliente": "LETRA L SRL, LETRA L SRL",
@@ -970,5 +961,14 @@
   "lineas": 7,
   "botellas": 192,
   "creado": "2026-11-19T14:01:29.197550+00:00"
+ },
+ {
+  "id": "A5541-ofTmdbXc",
+  "titulo": "Factura A5541",
+  "cliente": "IBERPARK SA",
+  "entrega": "IBERPARK SA",
+  "lineas": 1,
+  "botellas": 360,
+  "creado": "2026-11-19T14:10:01.140598+00:00"
  }
 ]
