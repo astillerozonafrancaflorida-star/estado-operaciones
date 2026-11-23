@@ -100,7 +100,7 @@ td.r,th.r{text-align:right}
   <section class="card prog">
     <div><div class="n" id="pLin">–</div><div class="l">líneas OK</div></div>
     <div><div class="n" id="pBot">–</div><div class="l">botellas</div></div>
-    <div><div class="n" id="pPal">–</div><div class="l">pallets</div></div>
+    <div><div class="n" id="pPal">–</div><div class="l" id="pPalL">pallets</div></div>
     <div class="bar" id="pBar"></div>
   </section>
   <nav class="tabs" role="tablist">
@@ -128,7 +128,7 @@ td.r,th.r{text-align:right}
 
 <script src="catalogo.js"></script>
 <script>
-const D={"nombres": ["S00161"], "so": "PRUEBA", "cliente": "PRUEBA – NO ES UN PEDIDO REAL", "entrega": "BONNO FREE SHOP", "fecha": "08/09/2026", "pedidos": ["S00161: pedido sin facturar"], "lineas": [{"code": "622", "name": "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML", "qty": 24, "upc": 6, "eans": ["3049614222245"], "ceans": ["3049614227141"], "loc": "P11", "fac": "S00161"}, {"code": "49", "name": "LICOR BOTTEGA CANNELLA 500 ML", "qty": 12, "upc": 6, "eans": ["8005829609009"], "ceans": ["8005829609610"], "loc": "P11", "fac": "S00161"}, {"code": "1581", "name": "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML", "qty": 60, "upc": 6, "eans": ["8005829990107"], "ceans": ["8005829249991"], "loc": "P11", "fac": "S00161"}, {"code": "90", "name": "LICOR BOTTEGA MELONCINO 500 ML", "qty": 24, "upc": 6, "eans": ["8005829610104"], "ceans": ["8005829610715"], "loc": "P11", "fac": "S00161"}, {"code": "1022", "name": "LICOR BOTTEGA PISTACHO 500 ML", "qty": 12, "upc": 6, "eans": ["8005829981037"], "ceans": ["8005829224820"], "loc": "P11", "fac": "S00161"}, {"code": "1388", "name": "VINO OPORTO TAYLOR`S FINE RUBY 750 ML", "qty": 12, "upc": 6, "eans": ["5013626111215"], "ceans": ["5013626000694"], "loc": "P11", "fac": "S00161"}, {"code": "1389", "name": "VINO OPORTO TAYLOR`S FINE TAWNY 750ML", "qty": 12, "upc": 6, "eans": ["5013626111222"], "ceans": [], "loc": "P11", "fac": "S00161"}, {"code": "3237", "name": "VODKA EXCLUSIV 2 CITRON 40% 0.200", "qty": 24, "upc": 24, "eans": ["4840096002061"], "ceans": [], "loc": "P11", "fac": "S00161"}], "recorrido": true, "id": "PRUEBA-rec7Qm2x"};
+const D={"nombres": ["PRUEBA"], "so": "PRUEBA", "cliente": "PRUEBA – NO ES UN PEDIDO REAL", "entrega": "BONNO FREE SHOP", "fecha": "08/09/2026", "pedidos": ["PRUEBA"], "lineas": [{"code": "622", "name": "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML", "qty": 24, "upc": 6, "eans": ["3049614222245"], "ceans": ["3049614227141"], "loc": "P11", "fac": "S00161"}, {"code": "49", "name": "LICOR BOTTEGA CANNELLA 500 ML", "qty": 12, "upc": 6, "eans": ["8005829609009"], "ceans": ["8005829609610"], "loc": "P11", "fac": "S00161"}, {"code": "1581", "name": "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML", "qty": 60, "upc": 6, "eans": ["8005829990107"], "ceans": ["8005829249991"], "loc": "P11", "fac": "S00161"}, {"code": "90", "name": "LICOR BOTTEGA MELONCINO 500 ML", "qty": 24, "upc": 6, "eans": ["8005829610104"], "ceans": ["8005829610715"], "loc": "P11", "fac": "S00161"}, {"code": "1022", "name": "LICOR BOTTEGA PISTACHO 500 ML", "qty": 12, "upc": 6, "eans": ["8005829981037"], "ceans": ["8005829224820"], "loc": "P11", "fac": "S00161"}, {"code": "1388", "name": "VINO OPORTO TAYLOR`S FINE RUBY 750 ML", "qty": 12, "upc": 6, "eans": ["5013626111215"], "ceans": ["5013626000694"], "loc": "P11", "fac": "S00161"}, {"code": "1389", "name": "VINO OPORTO TAYLOR`S FINE TAWNY 750ML", "qty": 12, "upc": 6, "eans": ["5013626111222"], "ceans": [], "loc": "P11", "fac": "S00161"}, {"code": "3237", "name": "VODKA EXCLUSIV 2 CITRON 40% 0.200", "qty": 24, "upc": 24, "eans": ["4840096002061"], "ceans": [], "loc": "P11", "fac": "S00161"}], "recorrido": true, "id": "PRUEBA-rec7Qm2x"};
 const CAT=window.CAT||{map:{},hermanos:{}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -173,7 +173,7 @@ const sumC=c=>S.ents.filter(e=>e.code===c).reduce((a,e)=>a+e.total,0);
 function st(l){const s=sumC(l.code);if(!s)return 'pen';return s===l.qty?'ok':s<l.qty?'par':'exc'}
 const ST={pen:['Pendiente','s-pen'],ok:['OK','s-ok'],par:['Falta','s-par'],exc:['Sobra','s-exc']};
 const SINPAL='ÁREA DE ARMADO';
-function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL&&x!==SUELTO));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>a.localeCompare(b,'es',{numeric:true}))}
+function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL&&x!==SUELTO));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>(isOrig(a)-isOrig(b))||a.localeCompare(b,'es',{numeric:true}))}
 /* ---- modo recorrido (piloto 18/11, solo pedidos con D.recorrido) ---- */
 const REC=!!D.recorrido;
 const rutaOrd=(a,b)=>(!a.loc)-(!b.loc)||String(a.loc||'').localeCompare(String(b.loc||''),'es',{numeric:true});
@@ -191,7 +191,7 @@ function render(){
   document.title='Armado '+D.nombres.map(n=>n.replace(/-EF.*$/,'')).join(' ');
   const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
   const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
-  $('pLin').textContent=cnt.ok+'/'+L.length;$('pBot').textContent=fmt(ctl)+'/'+fmt(tot);$('pPal').textContent=pallets().length;
+  $('pLin').textContent=cnt.ok+'/'+L.length;$('pBot').textContent=fmt(ctl)+'/'+fmt(tot);{const P=pallets(),nO=P.filter(isOrig).length,nA=P.length-nO,nS=S.ents.some(e=>e.pallet===SUELTO);$('pPal').textContent=nA;$('pPalL').textContent='pallets'+(nO?' + '+nO+' origen':'')+(nS?' + suelto':'')}
   const w=k=>cnt[k]/L.length*100;
   $('pBar').innerHTML=`<i style="width:${w('ok')}%;background:var(--ok)"></i><i style="width:${w('par')}%;background:var(--wa)"></i><i style="width:${w('exc')}%;background:var(--bad)"></i>`;
   const show=L.filter(l=>{const s=st(l);return flt==='todas'||(flt==='pen'&&s==='pen')||(flt==='ok'&&s==='ok')||(flt==='dif'&&(s==='par'||s==='exc'))});
@@ -206,7 +206,7 @@ function render(){
 /* ---- fase 2 (piloto): del ÁREA DE ARMADO al pallet ---- */
 const enArea=c=>S.ents.filter(e=>e.code===c&&e.pallet===SINPAL).reduce((a,e)=>a+e.total,0);
 let PZ=null;
-function palSheet(code){const l=L.find(x=>x.code===code),max=enArea(code);const P=pallets();if(!PZ||PZ.code!==code)PZ={code,cajas:l.upc>1?Math.floor(max/l.upc):0,sueltas:l.upc>1?max%l.upc:max,pallet:S.last&&(P.includes(S.last)||S.last===SUELTO)?S.last:(P[P.length-1]||'P1')};
+function palSheet(code){const l=L.find(x=>x.code===code),max=enArea(code);const P=pallets();if(!PZ||PZ.code!==code)PZ={code,cajas:l.upc>1?Math.floor(max/l.upc):0,sueltas:l.upc>1?max%l.upc:max,pallet:S.last&&!isOrig(S.last)&&(P.includes(S.last)||S.last===SUELTO)?S.last:(P.filter(x=>!isOrig(x)).slice(-1)[0]||'P1')};
   const pals=(P.includes(PZ.pallet)||PZ.pallet===SUELTO)?P:[...P,PZ.pallet];const t=PZ.cajas*l.upc+PZ.sueltas;
   sheet(hdr('Paso 2 · Armar pallet')+`<div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu">En ÁREA DE ARMADO: <b>${cj(l,max)}</b></div></div>
   ${l.upc>1?`<div class="stp"><b>Cajas (x${l.upc})</b><div class="ctl"><button data-z="c-">−</button><input id="zc" inputmode="numeric" value="${PZ.cajas}"><button data-z="c+">+</button></div></div>`:''}
@@ -222,7 +222,7 @@ function palSave(){const l=L.find(x=>x.code===PZ.code);let n=PZ.cajas*l.upc+PZ.s
 function renderP(){
   const P=pallets();
   const AR=REC?L.filter(l=>enArea(l.code)>0):[];
-  const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya está en pallets.</div>'}${AR.length?'<button class="btn" data-a="areasuelto">Todo lo del área → SUELTO (sin pallet)</button>':''}</div>`:'';
+  const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya tiene destino (pallet o suelto).</div>'}${AR.length?'<button class="btn" data-a="areasuelto">Todo lo del área → SUELTO (sin pallet)</button>':''}</div>`:'';
   const SU={};S.ents.filter(e=>e.pallet===SUELTO).forEach(e=>{SU[e.code]=(SU[e.code]||0)+e.total});
   const suel=Object.keys(SU).length?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px dashed var(--ln)"><div class="sh"><h2>SUELTO</h2><span class="mu">${fmt(Object.values(SU).reduce((a,b)=>a+b,0))} unid. · sin pallet</span></div><table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(SU).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,SU[c])}</td></tr>`}).join('')}</tbody></table><div class="mu">Va sin pallet. No lleva fotos de caras.</div></div>`:'';
   if(!P.length){$('vP').innerHTML=area+suel+(REC||suel?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');return}
@@ -299,7 +299,7 @@ function openLine(code,via,aviso,cajas0){
   const l=L.find(x=>x.code===code);if(!l)return;
   if(REC&&!(S.verif||{})[code]){F=null;S.openCode=null;return verifSheet(l)}
   const falta=Math.max(0,l.qty-sumC(code));
-  const pals=pallets();const p=S.last&&(pals.includes(S.last)||S.last===SUELTO)?S.last:(pals[pals.length-1]||'P1');
+  const pals=pallets(),pa=pals.filter(x=>!isOrig(x));const p=S.last&&!isOrig(S.last)&&(pals.includes(S.last)||S.last===SUELTO)?S.last:(pa[pa.length-1]||'P1');
   const d=(S.drafts||{})[code];
   F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:REC?SINPAL:p,foto:null,aviso};
   if(d){F.cajas=(d.cajas||0)+(via==='caja'&&cajas0&&d.cajas?cajas0:0)||F.cajas;F.sueltas=d.sueltas||0;if(d.pallet)F.pallet=d.pallet;if(via==='lista'&&d.via)F.via=d.via;
@@ -602,7 +602,7 @@ document.addEventListener('click',async e=>{
     case 'znew':{PZ.pallet=nuevoNom('P');palSheet(PZ.code);break}
     case 'zorig':{PZ.pallet=nuevoNom('O');palSheet(PZ.code);break}
     case 'neworig':{F.pallet=nuevoNom('O');showQ();break}
-    case 'areasuelto':{const b2=document.querySelector('[data-a=areasuelto]');if(b2&&!b2.dataset.sure){b2.dataset.sure=1;b2.textContent='¿Seguro? Todo lo del ÁREA DE ARMADO pasa a SUELTO. Tocá de nuevo';break}let k=0;S.ents.forEach(e=>{if(e.pallet===SINPAL){e.pallet=SUELTO;k++}});S.last=SUELTO;save();render();renderP();pushProg();toast('📦 '+k+' carga'+(k===1?'':'s')+' pasadas a SUELTO');break}
+    case 'areasuelto':{const b2=document.querySelector('[data-a=areasuelto]');if(b2&&!b2.dataset.sure){b2.dataset.sure=1;b2.textContent='¿Seguro? Todo lo del ÁREA DE ARMADO pasa a SUELTO. Tocá de nuevo';break}let k=0;S.ents.forEach(e=>{if(e.pallet===SINPAL){e.pallet=SUELTO;k++}});S.last=SUELTO;save();render();renderP();pushProg();toast('📦 '+k+(k===1?' carga pasada':' cargas pasadas')+' a SUELTO');break}
     case 'zsave':palSave();break;
     case 'newpal':{F.pallet=nuevoNom('P');showQ();break}
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
