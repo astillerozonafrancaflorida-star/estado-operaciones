@@ -458,7 +458,7 @@ let lastEtq=null;
 const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
 const getPin=()=>lsGet('arm_pin')||'';
 function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<div class="mu">${msg||'Poné el PIN que te pasó Mario. Se pide una sola vez en este celular.'}</div><input id="pinIn" inputmode="numeric" type="password" style="border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:22px;text-align:center"><button class="btn pri" id="pinOk" style="padding:14px">Guardar</button>`);
-  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()};setTimeout(()=>$('pinIn').focus(),50)})}
+  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()};setTimeout(()=>{const i=$('pinIn');if(i)i.focus()},50)})}
 async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
 function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
   Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
