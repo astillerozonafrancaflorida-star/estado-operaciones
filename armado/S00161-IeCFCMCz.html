@@ -477,11 +477,12 @@ function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<
 async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
 function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
   Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
-  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},cajasN:S.cajasN||{},subido:S.subido||S.remSubido||null,ents:S.ents.map(e=>({id:e.id,code:e.code,cajas:e.cajas,sueltas:e.sueltas,total:e.total,pallet:e.pallet,at:e.at,via:e.via,op:e.op||S.op,foto:!!e.foto}))}}
+  return {id:D.id,titulo:$('tit').textContent,cliente:D.cliente,entrega:D.entrega,op:S.op,at:Date.now(),lineas:L.map(l=>({c:l.code,n:l.name,q:l.qty,s:sumC(l.code),st:st(l),loc:l.loc,u:l.upc})),pallets:P,nuevos:S.nuevos||{},cajasN:S.cajasN||{},last:S.last||null,verif:S.verif||{},salt:S.salt||{},inicio:S.inicio||null,subido:S.subido||S.remSubido||null,ents:S.ents.map(e=>({id:e.id,code:e.code,cajas:e.cajas,sueltas:e.sueltas,total:e.total,pallet:e.pallet,at:e.at,via:e.via,op:e.op||S.op,foto:!!e.foto}))}}
 let _pv=null,REM=null;
 async function verRemoto(){try{const r=await fetch(API+'/progreso/'+encodeURIComponent(D.id),{cache:'no-store'});REM=await r.json()}catch(e){REM=null}
   if(!REM)return;if(REM.subido&&(!S.subido||S.subido.nom!==REM.subido.nom)){S.remSubido=REM.subido;save()}
   const otros=(REM.ents||[]).filter(e=>!S.ents.some(x=>x.id===e.id));
+  if(otros.length&&!S.ents.length){traerRemoto();return}
   const box=$('remBox');if(!box)return;
   if(otros.length&&(REM.recibido||0)>(S.syncAt||0)){const quien=[...new Set(otros.map(e=>e.op).filter(Boolean))].join(', ')||REM.op||'otra persona';
     box.innerHTML=`<div class="alert wa" style="display:flex;flex-direction:column;gap:8px">🤝 <b>${esc(quien)}</b> ya cargó ${otros.length} registro${otros.length>1?'s':''} en este pedido desde otro celular.<button class="btn pri" data-a="traer" style="padding:12px">Continuar desde donde quedó</button></div>`;box.hidden=false}
@@ -490,7 +491,12 @@ async function verRemoto(){try{const r=await fetch(API+'/progreso/'+encodeURICom
 function traerRemoto(){if(!REM)return;const mios={};S.ents.forEach(e=>mios[e.id]=e);
   (REM.ents||[]).forEach(e=>{if(!mios[e.id])S.ents.push({...e,foto:false,remota:true})});
   Object.assign(S.nuevos,REM.nuevos||{});S.cajasN=Object.assign({},REM.cajasN||{},S.cajasN||{});
-  S.syncAt=REM.recibido||Date.now();save();$('remBox').hidden=true;render();pushProg();toast('Listo: seguís desde donde quedó',3000)}
+  S.verif=Object.assign({},REM.verif||{},S.verif||{});S.salt=Object.assign({},REM.salt||{},S.salt||{});
+  if(REM.inicio&&(!S.inicio||REM.inicio<S.inicio))S.inicio=REM.inicio;
+  const P=pallets(),ult=REM.last&&(P.includes(REM.last)||REM.last===SUELTO)?REM.last:(P.filter(x=>!isOrig(x)).slice(-1)[0]||null);
+  if(ult&&!isOrig(ult))S.last=ult;
+  S.syncAt=REM.recibido||Date.now();save();$('remBox').hidden=true;render();pushProg();
+  toast('Listo: seguís desde donde quedó'+(S.last&&S.last!==SUELTO?' · pallet '+S.last:''),3500)}
 let _pinAsk=false;
 function pushProg(){if(!getPin()&&!_pinAsk){_pinAsk=true;setTimeout(()=>pedirPin().then(pushProg),800);return}clearTimeout(_pv);_pv=setTimeout(async()=>{if(!getPin())return;await verRemoto();if(REM&&(REM.ents||[]).some(e=>!S.ents.some(x=>x.id===e.id))&&(REM.recibido||0)>(S.syncAt||0)){toast('Hay registros de otra persona: tocá "Continuar desde donde quedó" arriba',4500);return}try{await api('/progreso/'+encodeURIComponent(D.id),{estado:estadoVivo()});S.vivoOk=Date.now()}catch(e){if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo en Terminar',4000)}},1500)}
 const b64blob=b=>new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(String(r.result).split(',')[1]);r.onerror=ko;r.readAsDataURL(b)});
