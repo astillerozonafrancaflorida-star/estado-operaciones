@@ -124,7 +124,16 @@
      60
     ]
    ],
-   "pal": 2
+   "pal": 2,
+   "inicio": 1794859629297,
+   "fin": 1794862021033,
+   "activo_min": 39.9,
+   "lineas": 18,
+   "min_linea": 2.2,
+   "seg_bot": 3.0,
+   "inicio_txt": "16/11 17:07",
+   "fin_txt": "16/11 17:47",
+   "activo_txt": "40 min"
   }
  },
  {
@@ -282,7 +291,16 @@
      6
     ]
    ],
-   "pal": 4
+   "pal": 4,
+   "inicio": 1794857938519,
+   "fin": 1794918996951,
+   "activo_min": 124.8,
+   "lineas": 23,
+   "min_linea": 5.4,
+   "seg_bot": 4.3,
+   "inicio_txt": "16/11 16:38",
+   "fin_txt": "17/11 09:36",
+   "activo_txt": "2 h 05 min"
   }
  },
  {
@@ -428,7 +446,16 @@
      60
     ]
    ],
-   "pal": 4
+   "pal": 4,
+   "inicio": 1794838659565,
+   "fin": 1794844373009,
+   "activo_min": 95.2,
+   "lineas": 21,
+   "min_linea": 4.5,
+   "seg_bot": 2.4,
+   "inicio_txt": "16/11 11:17",
+   "fin_txt": "16/11 12:52",
+   "activo_txt": "1 h 35 min"
   }
  },
  {
@@ -562,7 +589,16 @@
      120
     ]
    ],
-   "pal": 6
+   "pal": 6,
+   "inicio": 1794928950337,
+   "fin": 1794943601315,
+   "activo_min": 79.2,
+   "lineas": 19,
+   "min_linea": 4.2,
+   "seg_bot": 1.1,
+   "inicio_txt": "17/11 12:22",
+   "fin_txt": "17/11 16:26",
+   "activo_txt": "1 h 19 min"
   },
   "nota": "A5508→A5546 y A5503→A5545 (refacturadas por rotura 17/11)"
  },
@@ -589,7 +625,16 @@
      60
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1794944710223,
+   "fin": 1794944710223,
+   "activo_min": 5.0,
+   "lineas": 1,
+   "min_linea": 5.0,
+   "seg_bot": 5.0,
+   "inicio_txt": "17/11 16:45",
+   "fin_txt": "17/11 16:45",
+   "activo_txt": "5 min"
   }
  },
  {
@@ -741,7 +786,16 @@
      18
     ]
    ],
-   "pal": 2
+   "pal": 2,
+   "inicio": 1795001032993,
+   "fin": 1795006623176,
+   "activo_min": 49.1,
+   "lineas": 22,
+   "min_linea": 2.2,
+   "seg_bot": 3.6,
+   "inicio_txt": "18/11 08:23",
+   "fin_txt": "18/11 09:57",
+   "activo_txt": "49 min"
   }
  },
  {
@@ -779,7 +833,16 @@
      480
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795010721788,
+   "fin": 1795010954299,
+   "activo_min": 3.9,
+   "lineas": 3,
+   "min_linea": 1.3,
+   "seg_bot": 0.4,
+   "inicio_txt": "18/11 11:05",
+   "fin_txt": "18/11 11:09",
+   "activo_txt": "4 min"
   }
  },
  {
@@ -841,7 +904,16 @@
      1
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795093193141,
+   "fin": 1795093436043,
+   "activo_min": 4.0,
+   "lineas": 7,
+   "min_linea": 0.6,
+   "seg_bot": 1.5,
+   "inicio_txt": "19/11 09:59",
+   "fin_txt": "19/11 10:03",
+   "activo_txt": "4 min"
   }
  },
  {
@@ -903,7 +975,16 @@
      60
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795090318111,
+   "fin": 1795092314437,
+   "activo_min": 33.3,
+   "lineas": 7,
+   "min_linea": 4.8,
+   "seg_bot": 3.7,
+   "inicio_txt": "19/11 09:11",
+   "fin_txt": "19/11 09:45",
+   "activo_txt": "33 min"
   }
  },
  {
@@ -941,7 +1022,16 @@
      60
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795094018614,
+   "fin": 1795094287511,
+   "activo_min": 4.5,
+   "lineas": 3,
+   "min_linea": 1.5,
+   "seg_bot": 1.2,
+   "inicio_txt": "19/11 10:13",
+   "fin_txt": "19/11 10:18",
+   "activo_txt": "4 min"
   }
  },
  {
@@ -967,7 +1057,16 @@
      360
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795096936390,
+   "fin": 1795096936390,
+   "activo_min": 5.0,
+   "lineas": 1,
+   "min_linea": 5.0,
+   "seg_bot": 0.8,
+   "inicio_txt": "19/11 11:02",
+   "fin_txt": "19/11 11:02",
+   "activo_txt": "5 min"
   }
  },
  {
@@ -1029,7 +1128,16 @@
      36
     ]
    ],
-   "pal": 1
+   "pal": 1,
+   "inicio": 1795099310259,
+   "fin": 1795099571209,
+   "activo_min": 4.3,
+   "lineas": 7,
+   "min_linea": 0.6,
+   "seg_bot": 1.4,
+   "inicio_txt": "19/11 11:41",
+   "fin_txt": "19/11 11:46",
+   "activo_txt": "4 min"
   }
  },
  {
@@ -1040,15 +1148,6 @@
   "lineas": 17,
   "botellas": 1639,
   "creado": "2026-11-19T18:36:45.297383+00:00"
- },
- {
-  "id": "S00161-IeCFCMCz",
-  "titulo": "Pedido S00161",
-  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
-  "entrega": "BONNO FREE SHOP",
-  "lineas": 84,
-  "botellas": 5835,
-  "creado": "2026-11-23T14:14:49.601308+00:00"
  },
  {
   "id": "A5550-A5551-hOmmRkQt",
@@ -1067,5 +1166,14 @@
   "lineas": 55,
   "botellas": 4892,
   "creado": "2026-11-23T17:52:51.031259+00:00"
+ },
+ {
+  "id": "S00161-IeCFCMCz",
+  "titulo": "Pedido S00161",
+  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
+  "entrega": "BONNO FREE SHOP",
+  "lineas": 84,
+  "botellas": 5835,
+  "creado": "2026-11-23T19:56:34.910017+00:00"
  }
 ]
