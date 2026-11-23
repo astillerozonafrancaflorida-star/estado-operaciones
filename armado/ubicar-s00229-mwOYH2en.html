@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>Ubicar devolución</title>
+<style>
+:root{--bg:#F2F3EF;--sf:#fff;--fg:#1A211D;--mu:#5E6862;--ln:#D9DDD6;--ac:#1F5F8B;--ok:#2F7A3F;--oks:#E1F0E3;--wa:#9A6400;--was:#FBEFD6;--bad:#B3261E;--bads:#F9E0DE;--res:#7A3E9D;--ress:#F0E4F7}
+*{box-sizing:border-box}[hidden]{display:none!important}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 130px;display:flex;flex-direction:column;gap:12px}
+h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-weight:700}
+.mu{color:var(--mu);font-size:13px}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
+.who{display:flex;gap:8px;align-items:center}.who input{flex:1;border:1px solid var(--ln);border-radius:8px;padding:8px 10px;background:var(--sf)}
+.bar{height:10px;background:#E3E6E0;border-radius:6px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok)}
+.dock{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
+.big{flex:1;max-width:260px;border:0;border-radius:14px;padding:15px 10px;font-weight:800;font-size:16px;background:var(--ac);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.big.sec{background:var(--sf);color:var(--fg);border:2px solid var(--fg);box-shadow:none}
+.btn{border:1px solid var(--ln);background:var(--sf);border-radius:10px;padding:10px 14px;font-weight:700}
+.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}
+.chips{display:flex;gap:6px;flex-wrap:wrap}.chip{border:1px solid var(--ln);background:var(--sf);border-radius:999px;padding:7px 12px;font-size:14px}
+.chip[aria-pressed=true]{background:var(--fg);color:var(--bg);border-color:var(--fg)}
+.loc{background:#1A211D;color:#fff;border-radius:5px;padding:1px 6px;font-weight:700;white-space:nowrap}
+.rs{background:var(--ress);color:var(--res);border-radius:5px;padding:1px 6px;font-weight:800;font-size:12px;letter-spacing:.04em}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:94vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px}.x{border:0;background:none;font-size:30px;line-height:1;padding:0 4px}
+.va{background:#1A211D;color:#fff;border-radius:14px;padding:14px;text-align:center}.va .t{font-size:12px;letter-spacing:.14em;text-transform:uppercase;opacity:.75;font-weight:700}
+.va .u{font-size:46px;font-weight:900;line-height:1.1;margin-top:2px}.va.res{background:var(--res)}
+.stp{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}.ctl{display:flex;align-items:center;gap:8px}
+.ctl button{width:48px;height:48px;border-radius:12px;border:1px solid var(--ln);background:var(--sf);font-size:24px;font-weight:800}
+.ctl input{width:70px;height:48px;text-align:center;font-size:22px;font-weight:800;border:1px solid var(--ln);border-radius:10px;background:var(--sf)}
+.tot{font-size:26px;font-weight:800;text-align:center}
+.inp{border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:18px;background:var(--sf);width:100%}
+.alert{border-radius:10px;padding:10px 12px;font-weight:600}.alert.bad{background:var(--bads);color:var(--bad)}.alert.wa{background:var(--was);color:var(--wa)}.alert.ok{background:var(--oks);color:var(--ok)}
+.ln{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-left:6px solid var(--wa);border-radius:10px;padding:10px 12px;text-align:left;width:100%}
+.ln.ok{border-left-color:var(--ok);opacity:.7}.ln.par{border-left-color:var(--ac)}.ln .q{font-weight:800;white-space:nowrap}
+.ln .loc{font-size:15px;padding:4px 8px}
+.res{display:flex;flex-direction:column;gap:6px}.res button{text-align:left;background:var(--sf);border:1px solid var(--ln);border-radius:10px;padding:10px 12px}
+#scan{position:fixed;inset:0;background:#000;z-index:30;display:flex;flex-direction:column}#scan video{flex:1;width:100%;object-fit:cover;min-height:0}
+#scan .guide{position:absolute;left:8%;right:8%;top:35%;height:22%;border:3px solid rgba(255,255,255,.85);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,.35);pointer-events:none}
+#scan .bot{padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:#111;display:flex;gap:8px}#scan .bot input{flex:1;padding:12px;border-radius:10px;border:0;font-size:18px;color:#000}
+#scan .msg{position:absolute;top:calc(14px + env(safe-area-inset-top));left:14px;right:14px;color:#fff;text-align:center;font-weight:700;text-shadow:0 1px 3px #000}
+.toast{position:fixed;left:50%;transform:translateX(-50%);top:calc(12px + env(safe-area-inset-top));background:var(--fg);color:var(--bg);padding:10px 16px;border-radius:10px;z-index:40;font-weight:700;max-width:90vw;text-align:center}
+</style></head><body>
+<div class="wrap">
+  <header style="display:flex;flex-direction:column;gap:4px">
+    <div class="eb" style="display:flex;justify-content:space-between"><span>Astillero · Depósito · Orden de ubicación</span><a href="./" style="color:var(--ac);text-decoration:none">← Tablero</a></div>
+    <h1 id="tit"></h1><div class="mu" id="sub"></div>
+  </header>
+  <div class="card who"><label for="op" style="font-weight:700">Soy:</label><input id="op" placeholder="Tu nombre"></div>
+  <div class="card"><div style="display:flex;justify-content:space-between;align-items:baseline"><b id="pl"></b><span class="mu" id="pb"></span></div><div class="bar" style="margin-top:6px"><i id="pbar" style="width:0"></i></div><div class="mu" id="sync" style="margin-top:6px"></div></div>
+  <div class="card mu">Desarmá el pallet de a una caja o producto: <b>escaneá</b> el código y la página te dice <b>a qué ubicación va</b> y cuánto falta ubicar de ese producto (corregí la cantidad si dejás menos). Al dejarlo, tocá <b>"Ubicado"</b>. Lo violeta es mercadería <b style="color:var(--res)">RESERVADA</b>. Lo que no tiene código, buscalo en la lista y tocá la línea.</div>
+  <div id="fin" hidden class="alert ok" style="font-size:17px">✅ Devolución ubicada completa. ¡Gracias!</div>
+  <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><div class="chips" id="fl"><button class="chip" data-f="p" aria-pressed="true">Pendientes</button><button class="chip" data-f="t" aria-pressed="false">Todas</button><button class="chip" data-f="h" aria-pressed="false">Ubicadas</button></div>
+    <input id="q" class="inp" style="flex:1;min-width:150px;padding:8px 10px;font-size:15px" placeholder="Buscar código o nombre" autocomplete="off"></div>
+  <div id="lista" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div class="eb" style="margin-top:8px">Mis últimos registros</div><div id="mios" class="mu"></div>
+</div>
+<div class="dock"><button class="big" id="bScan">▥ Escanear</button></div>
+<div id="root"></div><div id="toast" class="toast" hidden></div>
+<script src="movdata.js"></script>
+<script>
+const D={"titulo": "Devolución S00229 · BOREMIX", "cliente": "BOREMIX TRADE S.A. · ASTIL/IN/00111 + 00112 (reservado)", "tipo": "ubicar", "lineas": [{"c": "1615", "n": "VINO LEITZ EINS ZWEI ZERO CHARDONNAY 750 ML", "q": 30, "res": false, "loc": "1-1", "loc_m": "1-1", "nota": ""}, {"c": "94", "n": "VINO OPORTO SANDEMAN FINE TAWNY 750 ML", "q": 54, "res": false, "loc": "1-3", "loc_m": "1-3", "nota": ""}, {"c": "2354", "n": "VINO GARCES SILVA AMAYNA SAUVIGNON BLANC 2025 750 ML", "q": 12, "res": false, "loc": "1-3", "loc_m": "1-3", "nota": ""}, {"c": "3134", "n": "VINO ERRAZURIZ MAX RESERVA CABERNET SAUVIGNON 2022 750 ML", "q": 12, "res": false, "loc": "1-A", "loc_m": "1-A", "nota": ""}, {"c": "2897", "n": "VINO ANTINORI PIAN DELLE VIGNE BRUNELLO DI MONTALCINO 2021 750 ML", "q": 18, "res": false, "loc": "1-A", "loc_m": "1-A", "nota": ""}, {"c": "2766", "n": "VINO VALDIVIESO CABALLO LOCO SAGRADA FAMILIA ETIQUETA VERDE 2023 750 ML", "q": 42, "res": false, "loc": "2-A", "loc_m": "2-A", "nota": ""}, {"c": "1682", "n": "VINO GRATTAMACCO ROSSO BOLGHERI DOC 2020 750 ML", "q": 6, "res": false, "loc": "3-3", "loc_m": "3-3", "nota": ""}, {"c": "3252", "n": "VINO VIÑA TONDONIA RESERVA TINTO 2014 750 ML", "q": 18, "res": true, "loc": "3-3", "loc_m": "3-3", "nota": ""}, {"c": "3336", "n": "VINO LA RIOJA ALTA VIÑA ALBERDI RESERVA 2021 750 ML", "q": 12, "res": true, "loc": "3-3", "loc_m": "3-3", "nota": ""}, {"c": "1478", "n": "VINO MARQUES DE MURRIETA CASTILLO YGAY TINTO 2012 750 ML", "q": 6, "res": false, "loc": "5-1", "loc_m": "5-1", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "2776", "n": "VINO PLANETA ETNA BIANCO BIO 2023 750 ML", "q": 24, "res": false, "loc": "5-3", "loc_m": "5-3", "nota": ""}, {"c": "1617", "n": "VINO LEITZ ZERO POINT FIVE PINOT NOIR 750 ML", "q": 24, "res": false, "loc": "5-A", "loc_m": "5-A", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "2765", "n": "VINO VALDIVIESO CABALLO LOCO MAIPO ROJO 2023 750 ML", "q": 6, "res": false, "loc": "6-1", "loc_m": "6-1", "nota": ""}, {"c": "2972", "n": "VINO MARQUES DE MURRIETA GRAN RESERVA TINTO 2018 750 ML", "q": 6, "res": false, "loc": "7-3", "loc_m": "7-3", "nota": ""}, {"c": "2757", "n": "VINO RATTI LANGHE DOC NEBBIOLO OCHETTI 2023 750 ML", "q": 24, "res": false, "loc": "7-3", "loc_m": "7-3", "nota": ""}, {"c": "228", "n": "VINO TOKAJI OREMUS ASZU 5 PUTTONYOS 2017 500 ML", "q": 6, "res": false, "loc": "10-2", "loc_m": "10-2", "nota": ""}, {"c": "3179", "n": "VINO ALLEGRINI PALAZZO DELLA TORRE 2023 750 ML", "q": 6, "res": false, "loc": "10-4", "loc_m": "10-4", "nota": ""}, {"c": "2790", "n": "VINO LA RIOJA ALTA ASTER FINCA EL OTERO 2021 750 ML", "q": 12, "res": true, "loc": "11-1", "loc_m": "11-1", "nota": ""}, {"c": "1824", "n": "VINO MARQUES DE MURRIETA PRIMER ROSE CON ESTUCHE 2023 750 ML", "q": 6, "res": false, "loc": "11-4", "loc_m": "11-4", "nota": ""}, {"c": "1114", "n": "VINO GERARD BERTRAND HERITAGE LANGUEDOC 2021 750 ML", "q": 24, "res": false, "loc": "12-2", "loc_m": "12-2", "nota": ""}, {"c": "1903", "n": "VINO ARTADI VIÑA DE GAIN TINTO 2022 750 ML", "q": 3, "res": false, "loc": "12-2", "loc_m": "12-2", "nota": ""}, {"c": "2343", "n": "VINO PLANETA PLUMBAGO ROSSO 2022 750 ML", "q": 12, "res": false, "loc": "12-3", "loc_m": "12-3", "nota": ""}, {"c": "541", "n": "VINO LA CHABLISIENNE GRAND CRU CHATEAU GRENOUILLE 2022 750 ML", "q": 6, "res": false, "loc": "12-4", "loc_m": "12-4", "nota": ""}, {"c": "3176", "n": "VINO MASI CAMPOFIORIN ROSSO VERONA 2023 750 ML", "q": 6, "res": false, "loc": "13-3", "loc_m": "13-3", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "770", "n": "VINO IL BORRO 2020 750 ML", "q": 6, "res": false, "loc": "13-4", "loc_m": "13-4", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "1614", "n": "VINO LEITZ EINS ZWEI ZERO RIESLING 750 ML", "q": 24, "res": false, "loc": "14-1", "loc_m": "14-1", "nota": ""}, {"c": "3136", "n": "VINO ERRAZURIZ MAX RESERVA CHARDONNAY 2024 750 ML", "q": 18, "res": false, "loc": "14-3", "loc_m": "14-3", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "1616", "n": "VINO LEITZ ZERO POINT FIVE CABERNET SAUVIGNON 750 ML", "q": 24, "res": false, "loc": "15-1", "loc_m": "15-1", "nota": ""}, {"c": "1118", "n": "VINO HUGEL RIESLING CLASSIC 2023 750 ML", "q": 6, "res": false, "loc": "15-1", "loc_m": "15-1", "nota": ""}, {"c": "2895", "n": "VINO ANTINORI GUADO AL TASSO 2023 750 ML", "q": 18, "res": false, "loc": "17-1", "loc_m": "17-1", "nota": ""}, {"c": "2341", "n": "VINO GAJA IDDA BLANCO 2024 750 ML", "q": 6, "res": false, "loc": "17-1", "loc_m": "17-1", "nota": ""}, {"c": "2255", "n": "VINO DAL FORNO AMARONE DELLA VALPOLICELLA 2018 750 ML", "q": 6, "res": false, "loc": "17-3", "loc_m": "17-3", "nota": ""}, {"c": "3279", "n": "VINO CASANOVA DI NERI BRUNELLO DI MONTALCINO 2020 750 ML", "q": 36, "res": false, "loc": "21-2", "loc_m": "21-2", "nota": ""}, {"c": "3189", "n": "VINO ANTINORI TIGNANELLO 2023 750 ML", "q": 600, "res": true, "loc": "25-1", "loc_m": "25-1", "nota": ""}, {"c": "2456", "n": "VINO BARISTA PINOTAGE 2024 750 ML", "q": 24, "res": false, "loc": "25-2", "loc_m": "25-2", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "2730", "n": "VINO VALDUERO UNA CEPA 2020 750 ML", "q": 6, "res": false, "loc": "25-2", "loc_m": "25-2", "nota": ""}, {"c": "3431", "n": "VINO EL PRINCIPAL 2022 750 ML", "q": 30, "res": false, "loc": "26-1", "loc_m": "26-1", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "2225", "n": "VINO MASI MASIANCO PINOT GRIGIO 2024 750 ML", "q": 36, "res": false, "loc": "28-3", "loc_m": "28-3", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "2355", "n": "VINO GARCES SILVA AMAYNA PINOT NOIR 2023 750 ML", "q": 24, "res": false, "loc": "28-A", "loc_m": "28-A", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "3246", "n": "VINO CUNE IMPERIAL RESERVA 2020 750 ML", "q": 12, "res": false, "loc": "29-4", "loc_m": "29-4", "nota": ""}, {"c": "2552", "n": "VINO TOKAJI OREMUS MANDOLAS BLANCO 2023 750 ML", "q": 6, "res": false, "loc": "30-1", "loc_m": "30-1", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "839", "n": "VINO OPORTO NIEPOORT RUBY 750 ML", "q": 12, "res": false, "loc": "30-2", "loc_m": "30-2", "nota": ""}, {"c": "1839", "n": "VINO TOKAJI OREMUS ASZU 3 PUTTONYOS 2013 500 ML", "q": 12, "res": false, "loc": "30-3", "loc_m": "30-3", "nota": ""}, {"c": "2621", "n": "VINO NIEPOORT VERTENTE 2022 750 ML", "q": 6, "res": false, "loc": "30-3", "loc_m": "30-3", "nota": ""}, {"c": "3344", "n": "VINO SAN MARZANO ANNIVERSARIO 62 PRIMITIVO MANDURIA 2020 750 ML", "q": 18, "res": false, "loc": "30-A", "loc_m": "30-A", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "2684", "n": "VINO FLOR DE CRASTO DOURO BLANCO 2024 750 ML", "q": 12, "res": false, "loc": "31-2", "loc_m": "31-2", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "3153", "n": "VINO CASA FERREIRINHA ESTEVA DOURO 2024 750 ML", "q": 60, "res": false, "loc": "31-4", "loc_m": "31-4", "nota": "Última ubicación que tuvo: verificá que haya lugar"}, {"c": "3178", "n": "VINO ALLEGRINI AMARONE DELLA VALPOLICELLA CLASSICO 2021 750 ML", "q": 6, "res": false, "loc": "31-4", "loc_m": "31-4", "nota": ""}, {"c": "2446", "n": "VINO VALDUERO RESERVA 6 AÑOS 2016 750 ML", "q": 6, "res": false, "loc": "CAM 2-4", "loc_m": "CAM 2-4", "nota": "Ubicación llena: si no entra, elegí otra"}, {"c": "2685", "n": "VINO FLOR DE CRASTO DOURO TINTO 2023 750 ML", "q": 72, "res": false, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "2525", "n": "ACEITE DE OLIVA EXTRA VIRGEN AIRES DE JAEN OLEO MARTOS 500 ML", "q": 156, "res": false, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "1388", "n": "VINO OPORTO TAYLOR`S FINE RUBY 750 ML", "q": 6, "res": false, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "1022", "n": "LICOR BOTTEGA PISTACHO 500 ML", "q": 12, "res": false, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "2527", "n": "ACEITE DE OLIVA E.V. AIRES DE JAEN OLEO MARTOS LATA 5000 ML", "q": 48, "res": false, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "2556", "n": "CHAMPAGNE BILLECART SALMON LE RESERVE 750 ML", "q": 120, "res": true, "loc": "P11", "loc_m": "P11", "nota": ""}, {"c": "820", "n": "VERMUT YZAGUIRRE BLANCO 1 LITRO", "q": 30, "res": false, "loc": "P11 100-2", "loc_m": "P11 100-2", "nota": ""}, {"c": "818", "n": "VERMUT YZAGUIRRE ROJO 1 LITRO", "q": 30, "res": false, "loc": "P11 100-2", "loc_m": "P11 100-2", "nota": ""}, {"c": "2461", "n": "VINO ROBERTSON WINERY CHENIN BLANC 2025 750 ML", "q": 4, "res": false, "loc": "P11 100-2", "loc_m": "P11 100-2", "nota": ""}, {"c": "2398", "n": "VINO ERRAZURIZ ESTATE CARMENERE 2024 750 ML", "q": 12, "res": false, "loc": "P11 101-2", "loc_m": "P11 101-2", "nota": ""}, {"c": "595", "n": "LICOR BOTTEGA NEGRONI  700 ML", "q": 12, "res": false, "loc": "P11 102-1", "loc_m": "P11 102-1", "nota": ""}, {"c": "1522", "n": "VERMOUTH QUITAPENAS 750 ML", "q": 24, "res": false, "loc": "P11 102-2", "loc_m": "P11 102-2", "nota": ""}, {"c": "2465", "n": "VINO WOLFTRAP RED 2024 750 ML", "q": 18, "res": false, "loc": "P11 103-1", "loc_m": "P11 103-1", "nota": ""}, {"c": "75", "n": "LICOR BOTTEGA LIMONCELLO 500 ML", "q": 108, "res": false, "loc": "P11 104-1", "loc_m": "P11 104-1", "nota": ""}, {"c": "2389", "n": "VINO HARAS DE PIRQUE HUSSONET CABERNET SAUVIGNON 2021 750 ML", "q": 96, "res": false, "loc": "P11 107-2", "loc_m": "P11 107-2", "nota": ""}, {"c": "96", "n": "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML", "q": 18, "res": false, "loc": "P11 108-3", "loc_m": "P11 108-3", "nota": ""}, {"c": "332", "n": "GIN PUERTO DE INDIAS CLASSIC 700 ML + COPA", "q": 18, "res": false, "loc": "P11 109-1", "loc_m": "P11 109-1", "nota": ""}, {"c": "2558", "n": "CHAMPAGNE BILLECART SALMON LE RESERVE 3000 ML", "q": 1, "res": true, "loc": "P11 115-1", "loc_m": "P11 115-1", "nota": ""}, {"c": "2560", "n": "CHAMPAGNE BILLECART SALMON LE ROSE 750 ML", "q": 6, "res": true, "loc": "P11 115-1", "loc_m": "P11 115-1", "nota": ""}, {"c": "2566", "n": "CHAMPAGNE BILLECART SALMON CLOS ST HILAIRE 2009 750 ML", "q": 6, "res": true, "loc": "P11 115-1", "loc_m": "P11 115-1", "nota": ""}, {"c": "2565", "n": "CHAMPAGNE BILLECART SALMON LE SOUS BOIS 750 ML", "q": 12, "res": true, "loc": "P11 115-1", "loc_m": "P11 115-1", "nota": ""}, {"c": "2557", "n": "CHAMPAGNE BILLECART SALMON LE RESERVE 1500 ML", "q": 4, "res": true, "loc": "P11 115-1", "loc_m": "P11 115-1", "nota": ""}, {"c": "91", "n": "LICOR BOTTEGA BOCCA DI ROSA ROSOLIO 500 ML", "q": 18, "res": false, "loc": "P11 116-2", "loc_m": "P11 116-2", "nota": ""}, {"c": "3419", "n": "VINO CRASTO DOURO TINTO 2023 750 ML", "q": 36, "res": false, "loc": "P11", "loc_m": "P11", "nota": "Sin ubicación anterior: junto a 2685 Flor de Crasto tinto"}, {"c": "579", "n": "LICOR BOTTEGA POMEGRANATE 500 ML", "q": 18, "res": false, "loc": "P11", "loc_m": "P11", "nota": "Sin ubicación anterior: junto al resto de Bottega"}], "id": "ubicar-s00229-mwOYH2en"};
+const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('es-UY');
+const ls=(k,v)=>{try{if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v)}catch(e){return null}};
+function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2800)}
+const M=window.MOV||{productos:[],ubicaciones:[]};const PM={};(M.productos||[]).forEach(p=>PM[p.c]=p);
+const UBS=(M.ubicaciones||[]).map(x=>x.u);
+// líneas del plan + datos de códigos de barras de movdata
+const L=D.lineas.map(l=>{const p=PM[l.c]||{};return {...l,e:p.e||[],ce:p.ce||[],u:p.u||l.u||1,l:p.l||''}});
+$('tit').textContent=D.titulo;$('sub').textContent=D.cliente+' · '+L.length+' productos · '+fmt(L.reduce((a,l)=>a+l.q,0))+' botellas';
+document.title=D.titulo;
+/* ---- estado: movimientos (locales + del intermediario, compartidos entre celulares) ---- */
+const KEY='ubi_'+D.id;
+let MV=[];try{MV=JSON.parse(ls(KEY)||'[]')}catch(e){}
+const saveMV=()=>ls(KEY,JSON.stringify(MV));
+const hecho=c=>MV.filter(m=>m.code===c&&!m.anulado).reduce((a,m)=>a+m.cant,0);
+const pend=l=>Math.max(0,l.q-hecho(l.c));
+$('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
+async function pin(){let p=ls('arm_pin');if(!p){p=(prompt('PIN del depósito (se pide una sola vez en este celular):')||'').trim();if(p)ls('arm_pin',p)}return p}
+function nUb(t){let l=String(t||'').trim().toUpperCase().replace(/\s*-\s*/g,'-').replace(/\b0+(\d)/g,'$1');
+  if(!l)return '';let m=l.match(/^(\d+)\s*-?\s*A$/);if(m)return m[1]+'-A';
+  m=l.match(/^(\d+)[\s-](\d)$/);if(m&&+m[1]<100)return m[1]+'-'+m[2];
+  m=l.match(/^(?:P\s*-?11\s*)?\(?(1[0-2]\d)[\s-](\d)\)?$/);if(m)return 'P11 '+m[1]+'-'+m[2];
+  m=l.match(/^CAM(?:ARA)?\s*(\d+)(?:-(\d))?$/);if(m)return 'CAM '+m[1]+(m[2]?'-'+m[2]:'');
+  return l}
+function sug(q){const n=nUb(q);if(!n)return [];const k=n.replace(/[\s-]/g,'');return UBS.filter(u=>u.replace(/[\s-]/g,'').startsWith(k)).slice(0,8)}
+function locs(s){return (s||'').replace(/\[[^\]]*\]/g,'').split(/[;,]/).map(t=>t.trim()).filter(Boolean).map(t=>{const m=t.match(/^(.*?)\s*\((\d+)(?![\d-])[^)]*\)\s*$/);return m?{u:nUb(m[1]),q:+m[2]}:{u:nUb(t),q:null}}).filter(x=>!/^SIN UBIC/.test(x.u))}
+/* ---- lista ---- */
+let FL='p';
+function render(){
+  const tq=L.reduce((a,l)=>a+l.q,0),th=L.reduce((a,l)=>a+Math.min(l.q,hecho(l.c)),0),ok=L.filter(l=>!pend(l)).length;
+  $('pl').textContent=`${ok}/${L.length} productos ubicados`;$('pb').textContent=`${fmt(th)}/${fmt(tq)} bot.`;$('pbar').style.width=(tq?th/tq*100:0)+'%';
+  $('fin').hidden=ok<L.length;
+  const q=($('q').value||'').toLowerCase().trim();
+  const V=L.filter(l=>(FL==='t'||(FL==='p'?pend(l)>0:pend(l)===0))&&(!q||l.c===q||l.c.includes(q)||l.n.toLowerCase().includes(q)));
+  $('lista').innerHTML=V.length?V.map(l=>{const h=hecho(l.c),p=pend(l);
+    const dst=[...new Set(MV.filter(m=>m.code===l.c&&!m.anulado).map(m=>m.hacia))];
+    return `<button class="ln ${p?(h?'par':''):'ok'}" data-l="${esc(l.c)}"><span class="loc">${esc(p||!dst.length?l.loc:dst.join(' · '))}</span>
+      <span><b>${esc(l.c)}</b> ${esc(l.n)}${l.res?' <span class="rs">RESERVADO</span>':''}${l.nota?`<div class="mu">${esc(l.nota)}</div>`:''}</span>
+      <span class="q">${p?(h?fmt(h)+'/':'')+fmt(l.q):'✔ '+fmt(l.q)}</span></button>`}).join(''):`<div class="mu">${FL==='p'?'No queda nada pendiente.':'Sin resultados.'}</div>`;
+  const mine=MV.filter(m=>m.local).slice(-6).reverse();
+  $('mios').innerHTML=mine.length?mine.map(m=>`<div>${new Date(m.at).toTimeString().slice(0,5)} · <b>${esc(m.code)}</b> ${fmt(m.cant)} → <span class="loc">${esc(m.hacia)}</span> ${m.env?'✔':'⏳'}${m.anulado?' <s>anulado</s>':''}</div>`).join(''):'—';
+}
+$('q').oninput=render;
+/* ---- hoja de ubicar ---- */
+let F=null;
+function close(){F=null;$('root').innerHTML=''}
+function sheet(h){$('root').innerHTML=`<div class="scrim" id="scrim"><div class="sheet">${h}</div></div>`;$('scrim').addEventListener('click',e=>{if(e.target.id==='scrim')close()})}
+const hdr=t=>`<div class="sh"><h2 style="margin:0;font-size:20px">${t}</h2><button class="x" data-a="close">×</button></div>`;
+function abrir(l,caja){const p=pend(l),u=l.u||1;
+  let c=0,s=0;if(u>1){c=Math.floor(p/u);s=p%u}else s=p;if(!p&&caja)c=1;
+  F={l,cajas:c,sueltas:s,hacia:l.loc_m||'',otra:false};dibujar()}
+function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=locs(l.l).filter(x=>x.u!==l.loc_m);
+  sheet(hdr(esc(l.c))+`<div class="card"><b>${esc(l.n)}</b>${l.res?' <span class="rs">RESERVADO</span>':''}<div class="mu">Devolución: ${fmt(l.q)} · ya ubicadas ${fmt(hecho(l.c))} · <b>faltan ${fmt(p)}</b>${u>1?' · caja x'+u:''}</div></div>
+   ${p?'':`<div class="alert wa">Este producto ya está todo ubicado. Si es otra caja del mismo, revisá antes de guardar.</div>`}
+   <div class="va ${l.res?'res':''}"><div class="t">Va a</div><div class="u">${esc(F.hacia||l.loc)}</div>${l.nota?`<div style="font-size:13px;opacity:.85;margin-top:4px">${esc(l.nota)}</div>`:''}</div>
+   ${alt.length?`<div><div class="eb" style="margin-bottom:6px">También está en</div><div class="chips">${alt.map(x=>`<button class="chip" data-hacia="${esc(x.u)}" aria-pressed="${x.u===F.hacia}">${esc(x.u)}${x.q!=null?' ('+fmt(x.q)+')':''}</button>`).join('')}${l.loc_m&&F.hacia!==l.loc_m?`<button class="chip" data-hacia="${esc(l.loc_m)}">↩ ${esc(l.loc_m)}</button>`:''}</div></div>`:''}
+   ${u>1?`<div class="stp"><b>Cajas (x${u})</b><div class="ctl"><button data-q="c-">−</button><input id="qc" inputmode="numeric" value="${F.cajas}"><button data-q="c+">+</button></div></div>`:''}
+   <div class="stp"><b>${u>1?'Sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
+   <div class="tot"><span id="qt">${fmt(tot)}</span> <span class="mu">unid.</span></div>
+   <button class="btn ok" data-a="guardar" style="padding:16px;font-size:18px">✔ Ubicado en ${esc(F.hacia||'…')}</button>
+   ${F.otra?`<div><div class="eb" style="margin-bottom:6px">Lo dejé en otra ubicación</div><input id="hacia" class="inp" placeholder="Ej: 2A, 28-1, 117-3, CAM 4" autocomplete="off"><div class="chips" id="sug" style="margin-top:6px"></div><div class="mu" id="hn"></div></div>`
+     :`<button class="btn" data-a="otra">No entra / lo dejé en otro lugar</button>`}`);
+  const bind=(id,k)=>{const i=$(id);if(i)i.oninput=()=>{F[k]=Math.max(0,parseInt(i.value)||0);$('qt').textContent=fmt(F.cajas*u+F.sueltas)}};bind('qc','cajas');bind('qs','sueltas');
+  const h=$('hacia');if(h){const upd=()=>{const s=sug(h.value),n=nUb(h.value);$('sug').innerHTML=s.map(x=>`<button class="chip" data-hacia="${esc(x)}">${esc(x)}</button>`).join('');
+    $('hn').innerHTML=n?(UBS.includes(n)?`Tocá la sugerencia o <button class="btn" data-hacia="${esc(n)}" style="padding:4px 10px">usar ${esc(n)}</button>`:`<span style="color:var(--wa)">⚠️ "${esc(n)}" no está en el mapa.</span> <button class="btn" data-hacia="${esc(n)}" style="padding:4px 10px">usar igual</button>`):''};h.oninput=upd;upd();setTimeout(()=>h.focus(),50)}
+}
+function guardar(){const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
+  if(!($('op').value||'').trim()){toast('Poné tu nombre arriba ("Soy:")');close();$('op').focus();return}
+  if(!tot){toast('Poné la cantidad');return}if(!hacia){toast('Elegí la ubicación');return}
+  const p=pend(l);if(tot>p&&!confirm(p?`Faltan ${p} de este producto y vas a ubicar ${tot}. ¿Seguro?`:`Este producto ya estaba todo ubicado. ¿Registrar ${tot} más igual?`))return;
+  const mv={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),tipo:'ubicar',origen:D.titulo,orden:D.id,code:l.c,nombre:l.n,cant:tot,cajas:F.cajas,sueltas:F.sueltas,upc:u,desde:'LLEGADA',hacia,quien:$('op').value.trim(),at:new Date().toISOString(),hacia_en_mapa:UBS.includes(hacia),sugerida:l.loc_m||l.loc};
+  MV.push({...mv,local:true,env:false});saveMV();close();render();toast(`✔ ${l.c} · ${fmt(tot)} → ${hacia}`);enviar();sync();
+  setTimeout(()=>{if(!F&&!$('scan'))startScan()},700)}
+/* ---- envío: cada registro va como movimiento "Ubicar lo que llega" (se aplica solo en Odoo) + progreso compartido ---- */
+let enviando=false;
+async function enviar(){if(enviando)return;enviando=true;try{for(const m of MV.filter(x=>x.local&&!x.env)){
+    const {env,local,...mv}=m;const b64=btoa(unescape(encodeURIComponent(JSON.stringify(mv))));
+    const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'MOVIMIENTOS-'+mv.at.slice(0,10),nombre:mv.id+'.json',b64})});
+    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;m.env=true;saveMV();render()}}catch(e){}finally{enviando=false}}
+let _sy=false;
+async function sync(){if(_sy)return;_sy=true;try{
+  const r=await fetch(API+'/progreso/'+encodeURIComponent(D.id),{cache:'no-store'});const R=await r.json();
+  let nuevos=0;((R&&R.movs)||[]).forEach(m=>{if(!MV.some(x=>x.id===m.id)){MV.push({...m,local:false,env:true});nuevos++}});
+  if(nuevos){saveMV();render()}
+  const mios=MV.filter(m=>m.local&&m.env),faltan=mios.some(m=>!((R&&R.movs)||[]).some(x=>x.id===m.id));
+  if(faltan||!R){const movs=MV.filter(m=>m.env).map(({local,env,...m})=>m);
+    const lineas=L.map(l=>{const h=Math.min(l.q,hecho(l.c));return {code:l.c,q:l.q,s:h,st:h>=l.q?'ok':h?'par':''}});
+    const done=lineas.every(x=>x.st==='ok');
+    await fetch(API+'/progreso/'+encodeURIComponent(D.id),{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),estado:{tipo:'ubicar',movs,lineas,op:($('op').value||'').trim(),subido:done?new Date().toISOString():null}})})}
+  $('sync').textContent='Sincronizado con los demás celulares · '+new Date().toTimeString().slice(0,5);
+}catch(e){$('sync').textContent='Sin conexión: los registros quedan en este celular y se envían solos.'}finally{_sy=false}}
+render();enviar();sync();setInterval(()=>{enviar();sync()},15000);
+/* ---- escanear ---- */
+const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+/,'');const esLote=c=>{const d=String(c||'').replace(/\D/g,'');return d.length>16&&gs1(d)===d};
+function porCodigo(raw){const c=norm(raw);if(!c)return;
+  const lc=L.find(l=>l.ce.includes(c));if(lc){abrir(lc,true);toast('📦 Caja escaneada');return}
+  const h=L.filter(l=>l.e.includes(c)||l.c===String(raw).trim());
+  if(h.length===1)return abrir(h[0]);
+  if(h.length>1){sheet(hdr('¿Cuál es?')+`<div class="res">${h.map(l=>`<button data-l="${esc(l.c)}"><b>${esc(l.c)}</b> ${esc(l.n)}</button>`).join('')}</div>`);return}
+  const otro=(M.productos||[]).find(p=>(p.e||[]).includes(c)||(p.ce||[]).includes(c));
+  sheet(hdr('No es de esta devolución')+`<div class="alert bad">${otro?`<b>${esc(otro.c)}</b> ${esc(otro.n)}<br>`:`El código <span class="mono">${esc(c)}</span> `}no está en esta devolución.</div><div class="mu">Si es una caja sin código cargado, buscá el producto en la lista y tocá la línea.</div><button class="btn pri" data-a="scan">Escanear otro</button>`)}
+let scan=null;
+async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="msg" id="smsg">Escaneá la caja o la botella</div><div class="bot"><input id="man" inputmode="numeric" placeholder="o escribí el código"><button class="btn pri" data-a="mango">OK</button><button class="btn" data-a="scanoff">Cerrar</button></div></div>`;
+  const v=$('vid');try{if('BarcodeDetector' in window){const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);const want=['ean_13','ean_8','upc_a','upc_e','code_128','itf'].filter(f=>fm.includes(f));
+      if(want.length){const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});v.srcObject=st;await v.play();const bd=new BarcodeDetector({formats:want});scan={stop:()=>st.getTracks().forEach(t=>t.stop())};
+        const loop=async()=>{if(!scan)return;try{const r=await bd.detect(v);if(r.length&&scan){found(r[0].rawValue);return}}catch(e){}requestAnimationFrame(loop)};loop();return}}
+    await new Promise((ok,ko)=>{if(window.ZXingBrowser)return ok();const s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
+    const rd=new ZXingBrowser.BrowserMultiFormatReader();const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,res=>{if(res&&scan)found(res.getText())});scan={stop:()=>ctl.stop()};
+  }catch(e){const m=$('smsg');if(m)m.textContent='No se pudo abrir la cámara. Escribí el código abajo.'}}
+function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA. Escaneá el otro código (el del producto).',5000);setTimeout(startScan,1200);return}porCodigo(raw)}
+$('bScan').onclick=startScan;
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.f){FL=b.dataset.f;document.querySelectorAll('#fl .chip').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===FL));render();return}
+  if(b.dataset.l){const l=L.find(x=>x.c===b.dataset.l);if(l)abrir(l);return}
+  if(b.dataset.hacia){F.hacia=nUb(b.dataset.hacia);F.otra=false;dibujar();return}
+  if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));dibujar();return}
+  switch(b.dataset.a){case 'close':close();break;case 'scanoff':stopScan();close();break;case 'mango':found($('man').value);break;
+    case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break}
+});
+</script></body></html>
