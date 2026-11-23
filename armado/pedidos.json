@@ -1159,15 +1159,6 @@
   "creado": "2026-11-23T14:16:38.275518+00:00"
  },
  {
-  "id": "A2695-64R5pfBR",
-  "titulo": "Factura A2695",
-  "cliente": "BAH FREE SHOP LTDA",
-  "entrega": "BAH FREE SHOP",
-  "lineas": 55,
-  "botellas": 4892,
-  "creado": "2026-11-23T17:52:51.031259+00:00"
- },
- {
   "id": "S00161-IeCFCMCz",
   "titulo": "Pedido S00161",
   "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
@@ -1175,5 +1166,14 @@
   "lineas": 84,
   "botellas": 5835,
   "creado": "2026-11-23T19:56:34.910017+00:00"
+ },
+ {
+  "id": "A2695-64R5pfBR",
+  "titulo": "Factura A2695",
+  "cliente": "BAH FREE SHOP LTDA",
+  "entrega": "BAH FREE SHOP",
+  "lineas": 55,
+  "botellas": 4892,
+  "creado": "2026-11-23T19:58:27.242433+00:00"
  }
 ]
