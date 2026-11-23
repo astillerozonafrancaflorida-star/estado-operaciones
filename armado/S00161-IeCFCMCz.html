@@ -510,7 +510,7 @@ async function subirRespaldo(soloFotos){
     for(const [nm,k] of items){const b=await fGet(k);if(!b){prog('falta '+nm);continue}let ok=false,err;for(let t=0;t<3&&!ok;t++){try{await api('/foto',{carpeta:nom,nombre:nm,b64:await b64blob(b)});ok=true}catch(e){err=e;if(e.message==='PIN')throw e;await new Promise(r=>setTimeout(r,1500))}}if(!ok)throw err;prog(nm)}
     if(soloFotos){S.fotosEnv={nom,at:Date.now(),n:items.length};save();sheet(hdr('Fotos enviadas ✅')+`<div class="alert ok">Se sumaron ${items.length} fotos tuyas a <b>${esc(nom)}</b>.</div><button class="btn" data-a="close">Cerrar</button>`);renderF();return}
     await api('/foto',{carpeta:nom,nombre:'resumen.txt',b64:await b64txt(resumen())});prog('resumen');
-    const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y '),fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,cajasN:S.cajasN,lotes:Object.keys(S.lotes||{}),fotos:items.map(x=>x[0])};
+    const dat={nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:[...new Set([...S.ents.map(e=>e.op).filter(Boolean),S.op].filter(Boolean))].join(' y '),fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,cajasN:S.cajasN,salt:S.salt||{},lotes:Object.keys(S.lotes||{}),fotos:items.map(x=>x[0])};
     await api('/foto',{carpeta:nom,nombre:'datos.json',b64:await b64txt(JSON.stringify(dat,null,1))});prog('datos');
     await api('/listo',{carpeta:nom});prog('listo');
     S.subido={nom,at:Date.now(),por:S.op};save();pushProg();
@@ -547,7 +547,7 @@ async function armarZip(){
   for(const e of S.ents.filter(e=>e.foto)){const b=await fGet(e.id);if(b)z.file(`producto_${e.code}_${e.pallet}_${e.id.slice(-3)}.jpg`,b)}
   for(const [c,k] of Object.entries(S.lotes||{})){const b=await fGet(k);if(b)z.file(`lote_${c}.jpg`,b)}
   z.file('resumen.txt',resumen());
-  z.file('datos.json',JSON.stringify({nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:S.op,fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos},null,1));
+  z.file('datos.json',JSON.stringify({nombre:nom,pedido:D.nombres,cliente:D.cliente,entrega:D.entrega,armo:S.op,fecha:new Date().toISOString(),lineas:L.map(l=>({code:l.code,name:l.name,qty:l.qty,upc:l.upc,armado:sumC(l.code)})),ents:S.ents.map(e=>({code:e.code,total:e.total,pallet:e.pallet,via:e.via,at:e.at})),nuevos:S.nuevos,salt:S.salt||{}},null,1));
   const blob=await z.generateAsync({type:'blob',compression:'STORE'});
   ZIPF=new File([blob],nom.replace(/[^A-Z0-9 _-]/g,'')+'.zip',{type:'application/zip'});return ZIPF;
 }
