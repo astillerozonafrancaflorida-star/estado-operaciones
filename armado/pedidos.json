@@ -1150,15 +1150,6 @@
   "creado": "2026-11-19T18:36:45.297383+00:00"
  },
  {
-  "id": "A5550-A5551-hOmmRkQt",
-  "titulo": "Facturas A5550 · A5551 · A5552",
-  "cliente": "MARIO H VIDALES Y CIA SC",
-  "entrega": "MARIO FREE SHOP",
-  "lineas": 24,
-  "botellas": 1298,
-  "creado": "2026-11-23T14:16:38.275518+00:00"
- },
- {
   "id": "S00161-IeCFCMCz",
   "titulo": "Pedido S00161",
   "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
@@ -1175,5 +1166,14 @@
   "lineas": 55,
   "botellas": 4892,
   "creado": "2026-11-23T19:58:27.242433+00:00"
+ },
+ {
+  "id": "A5550-A5551-hOmmRkQt",
+  "titulo": "Facturas A5550 · A5551",
+  "cliente": "MARIO H VIDALES Y CIA SC",
+  "entrega": "MARIO FREE SHOP",
+  "lineas": 24,
+  "botellas": 1298,
+  "creado": "2026-11-23T20:00:14.756337+00:00"
  }
 ]
