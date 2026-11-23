@@ -1150,15 +1150,6 @@
   "creado": "2026-11-19T18:36:45.297383+00:00"
  },
  {
-  "id": "A2695-64R5pfBR",
-  "titulo": "Factura A2695",
-  "cliente": "BAH FREE SHOP LTDA",
-  "entrega": "BAH FREE SHOP",
-  "lineas": 55,
-  "botellas": 4892,
-  "creado": "2026-11-23T19:58:27.242433+00:00"
- },
- {
   "id": "A5550-A5551-hOmmRkQt",
   "titulo": "Facturas A5550 · A5551 · A5552",
   "cliente": "MARIO H VIDALES Y CIA SC",
@@ -1339,5 +1330,14 @@
   "lineas": 84,
   "botellas": 5835,
   "creado": "2026-11-23T20:11:13.235294+00:00"
+ },
+ {
+  "id": "A2695-64R5pfBR",
+  "titulo": "Factura A2695",
+  "cliente": "BAH FREE SHOP LTDA",
+  "entrega": "BAH FREE SHOP",
+  "lineas": 55,
+  "botellas": 4892,
+  "creado": "2026-11-23T20:13:01.825969+00:00"
  }
 ]
