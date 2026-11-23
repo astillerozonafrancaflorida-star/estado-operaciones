@@ -100,7 +100,7 @@ td.r,th.r{text-align:right}
   <section class="card prog">
     <div><div class="n" id="pLin">–</div><div class="l">líneas OK</div></div>
     <div><div class="n" id="pBot">–</div><div class="l">botellas</div></div>
-    <div><div class="n" id="pPal">–</div><div class="l">pallets</div></div>
+    <div><div class="n" id="pPal">–</div><div class="l" id="pPalL">pallets</div></div>
     <div class="bar" id="pBar"></div>
   </section>
   <nav class="tabs" role="tablist">
@@ -145,6 +145,8 @@ if(!S.cajasN)S.cajasN={};
 for(const k in S.pal){if(S.pal[k]===true)S.pal[k]=['pal_'+k]}
 const CARAS=['Cara 1','Cara 2','Cara 3','Cara 4'];
 const palKeys=p=>(S.pal[p]||[]).filter(Boolean);
+const SUELTO='SUELTO';const isOrig=p=>/^O\d+$/.test(p);const nCaras=p=>isOrig(p)?1:4;const caraNom=(p,i)=>isOrig(p)?'Etiqueta':CARAS[i];
+function nuevoNom(pre){const P=pallets();let n=1;while(P.includes(pre+n))n++;return pre+n}
 function save(){lsSet(KEY,JSON.stringify(S))}
 
 /* ---- fotos en IndexedDB ---- */
@@ -171,7 +173,7 @@ const sumC=c=>S.ents.filter(e=>e.code===c).reduce((a,e)=>a+e.total,0);
 function st(l){const s=sumC(l.code);if(!s)return 'pen';return s===l.qty?'ok':s<l.qty?'par':'exc'}
 const ST={pen:['Pendiente','s-pen'],ok:['OK','s-ok'],par:['Falta','s-par'],exc:['Sobra','s-exc']};
 const SINPAL='ÁREA DE ARMADO';
-function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>a.localeCompare(b,'es',{numeric:true}))}
+function pallets(){const p=new Set(S.ents.map(e=>e.pallet).filter(x=>x&&x!==SINPAL&&x!==SUELTO));Object.keys(S.pal).forEach(k=>p.add(k));return [...p].sort((a,b)=>(isOrig(a)-isOrig(b))||a.localeCompare(b,'es',{numeric:true}))}
 /* ---- modo recorrido (piloto 18/11, solo pedidos con D.recorrido) ---- */
 const REC=!!D.recorrido;
 const rutaOrd=(a,b)=>(!a.loc)-(!b.loc)||String(a.loc||'').localeCompare(String(b.loc||''),'es',{numeric:true});
@@ -189,7 +191,7 @@ function render(){
   document.title='Armado '+D.nombres.map(n=>n.replace(/-EF.*$/,'')).join(' ');
   const tot=L.reduce((a,l)=>a+l.qty,0),ctl=S.ents.reduce((a,e)=>a+e.total,0);
   const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
-  $('pLin').textContent=cnt.ok+'/'+L.length;$('pBot').textContent=fmt(ctl)+'/'+fmt(tot);$('pPal').textContent=pallets().length;
+  $('pLin').textContent=cnt.ok+'/'+L.length;$('pBot').textContent=fmt(ctl)+'/'+fmt(tot);{const P=pallets(),nO=P.filter(isOrig).length,nA=P.length-nO,nS=S.ents.some(e=>e.pallet===SUELTO);$('pPal').textContent=nA;$('pPalL').textContent='pallets'+(nO?' + '+nO+' origen':'')+(nS?' + suelto':'')}
   const w=k=>cnt[k]/L.length*100;
   $('pBar').innerHTML=`<i style="width:${w('ok')}%;background:var(--ok)"></i><i style="width:${w('par')}%;background:var(--wa)"></i><i style="width:${w('exc')}%;background:var(--bad)"></i>`;
   const show=L.filter(l=>{const s=st(l);return flt==='todas'||(flt==='pen'&&s==='pen')||(flt==='ok'&&s==='ok')||(flt==='dif'&&(s==='par'||s==='exc'))});
@@ -204,12 +206,12 @@ function render(){
 /* ---- fase 2 (piloto): del ÁREA DE ARMADO al pallet ---- */
 const enArea=c=>S.ents.filter(e=>e.code===c&&e.pallet===SINPAL).reduce((a,e)=>a+e.total,0);
 let PZ=null;
-function palSheet(code){const l=L.find(x=>x.code===code),max=enArea(code);const P=pallets();if(!PZ||PZ.code!==code)PZ={code,cajas:l.upc>1?Math.floor(max/l.upc):0,sueltas:l.upc>1?max%l.upc:max,pallet:S.last&&P.includes(S.last)?S.last:(P[P.length-1]||'P1')};
-  const pals=P.includes(PZ.pallet)?P:[...P,PZ.pallet];const t=PZ.cajas*l.upc+PZ.sueltas;
+function palSheet(code){const l=L.find(x=>x.code===code),max=enArea(code);const P=pallets();if(!PZ||PZ.code!==code)PZ={code,cajas:l.upc>1?Math.floor(max/l.upc):0,sueltas:l.upc>1?max%l.upc:max,pallet:S.last&&!isOrig(S.last)&&(P.includes(S.last)||S.last===SUELTO)?S.last:(P.filter(x=>!isOrig(x)).slice(-1)[0]||'P1')};
+  const pals=(P.includes(PZ.pallet)||PZ.pallet===SUELTO)?P:[...P,PZ.pallet];const t=PZ.cajas*l.upc+PZ.sueltas;
   sheet(hdr('Paso 2 · Armar pallet')+`<div class="card"><div style="font-weight:800">${esc(l.name)}</div><div class="mu">En ÁREA DE ARMADO: <b>${cj(l,max)}</b></div></div>
   ${l.upc>1?`<div class="stp"><b>Cajas (x${l.upc})</b><div class="ctl"><button data-z="c-">−</button><input id="zc" inputmode="numeric" value="${PZ.cajas}"><button data-z="c+">+</button></div></div>`:''}
   <div class="stp"><b>${l.upc>1?'Unidades sueltas':'Unidades'}</b><div class="ctl"><button data-z="s-">−</button><input id="zs" inputmode="numeric" value="${PZ.sueltas}"><button data-z="s+">+</button></div></div>
-  <div><div class="eb" style="margin-bottom:6px">¿A qué pallet va?</div><div class="chips">${pals.map(p=>`<button class="chip" data-zpal="${esc(p)}" aria-pressed="${p===PZ.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="znew">+ Nuevo</button></div></div>
+  <div><div class="eb" style="margin-bottom:6px">¿A dónde va?</div><div class="chips">${pals.map(p=>`<button class="chip" data-zpal="${esc(p)}" aria-pressed="${p===PZ.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="znew">+ Nuevo pallet</button><button class="chip" data-zpal="SUELTO" aria-pressed="${PZ.pallet===SUELTO}">SUELTO</button><button class="chip" data-a="zorig">+ Pallet de origen</button></div>${PZ.pallet===SUELTO?'<div class="mu" style="margin-top:4px">Va sin pallet (cajas sueltas). No lleva fotos de caras.</div>':isOrig(PZ.pallet)?'<div class="mu" style="margin-top:4px">Pallet de origen: sale tal cual llegó. Solo pide 1 foto de la etiqueta.</div>':''}</div>
   ${t>max?`<div class="alert bad">Es más de lo que hay en el área (${fmt(max)}).</div>`:''}
   <button class="btn ok" data-a="zsave" style="padding:14px" ${t&&t<=max?'':'disabled'}>Poner ${fmt(t)} en ${esc(PZ.pallet)}</button>`);
   const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('change',()=>{PZ[k]=Math.max(0,parseInt(i.value)||0);palSheet(code)})};bind('zc','cajas');bind('zs','sueltas')}
@@ -220,14 +222,16 @@ function palSave(){const l=L.find(x=>x.code===PZ.code);let n=PZ.cajas*l.upc+PZ.s
 function renderP(){
   const P=pallets();
   const AR=REC?L.filter(l=>enArea(l.code)>0):[];
-  const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya está en pallets.</div>'}</div>`:'';
-  if(!P.length){$('vP').innerHTML=area+(REC?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');return}
+  const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya tiene destino (pallet o suelto).</div>'}${AR.length?'<button class="btn" data-a="areasuelto">Todo lo del área → SUELTO (sin pallet)</button>':''}</div>`:'';
+  const SU={};S.ents.filter(e=>e.pallet===SUELTO).forEach(e=>{SU[e.code]=(SU[e.code]||0)+e.total});
+  const suel=Object.keys(SU).length?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px dashed var(--ln)"><div class="sh"><h2>SUELTO</h2><span class="mu">${fmt(Object.values(SU).reduce((a,b)=>a+b,0))} unid. · sin pallet</span></div><table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(SU).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,SU[c])}</td></tr>`}).join('')}</tbody></table><div class="mu">Va sin pallet. No lleva fotos de caras.</div></div>`:'';
+  if(!P.length){$('vP').innerHTML=area+suel+(REC||suel?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');return}
   $('vP').innerHTML=area+P.map(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});
     const tu=Object.values(R).reduce((a,b)=>a+b,0);
-    return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="sh"><h2>${esc(p)}</h2><span class="mu">${fmt(tu)} unid.</span></div>
-    <div class="caras">${CARAS.map((c,i)=>{const kk=(S.pal[p]||[])[i];return `<button class="cara" data-palfoto="${esc(p)}" data-cara="${i}">${kk?`<img data-k="${kk}" alt="${c}">`:'<span>📷</span>'}<small>${kk?'✔ ':''}${c}</small></button>`}).join('')}</div>
+    return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="sh"><h2>${esc(p)}${isOrig(p)?' · de origen':''}</h2><span class="mu">${fmt(tu)} unid.</span></div>
+    <div class="caras">${(isOrig(p)?['Etiqueta']:CARAS).map((c,i)=>{const kk=(S.pal[p]||[])[i];return `<button class="cara" data-palfoto="${esc(p)}" data-cara="${i}">${kk?`<img data-k="${kk}" alt="${c}">`:'<span>📷</span>'}<small>${kk?'✔ ':''}${c}</small></button>`}).join('')}</div>
     <table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,R[c])}</td></tr>`}).join('')||'<tr><td colspan=3 class="mu">Vacío</td></tr>'}</tbody></table>
-    <div class="mu">Fotos del pallet terminado: ${palKeys(p).length}/4 caras. Tocá una cara para sacar o cambiar la foto.</div></div>`}).join('');
+    <div class="mu">${isOrig(p)?`Pallet de origen (sale tal cual llegó): ${palKeys(p).length}/1 foto de la etiqueta.`:`Fotos del pallet terminado: ${palKeys(p).length}/4 caras. Tocá una cara para sacar o cambiar la foto.`}</div></div>`}).join('')+suel;
   hydrate();
 }
 function resumen(){
@@ -240,7 +244,8 @@ function resumen(){
   const dif=L.filter(l=>st(l)!=='ok');
   if(dif.length){t+='\n*Diferencias:*\n';dif.forEach(l=>{const s=sumC(l.code);t+=`• ${l.code} ${l.name}: pedido ${fmt(l.qty)}, armado ${fmt(s)} → ${s===0?'NO ARMADO':s<l.qty?'FALTAN '+fmt(l.qty-s):'SOBRAN '+fmt(s-l.qty)}${(S.salt||{})[l.code]?' ('+S.salt[l.code].m+')':''}\n`})}
   const P=pallets();
-  if(P.length){t+='\n*Pallets:*\n';P.forEach(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});t+=`*${p}:* `+Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{upc:1};return `${c} (${cj(l,R[c])})`}).join(' · ')+` · 📷 ${palKeys(p).length}/4`+'\n'})}
+  if(P.length){t+='\n*Pallets:*\n';P.forEach(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});t+=`*${p}${isOrig(p)?' (de origen)':''}:* `+Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{upc:1};return `${c} (${cj(l,R[c])})`}).join(' · ')+` · 📷 ${palKeys(p).length}/${nCaras(p)}`+'\n'})}
+  {const SU={};S.ents.filter(e=>e.pallet===SUELTO).forEach(e=>{SU[e.code]=(SU[e.code]||0)+e.total});if(Object.keys(SU).length)t+=(P.length?'':'\n')+`*Suelto (sin pallet):* `+Object.keys(SU).map(c=>{const l=L.find(x=>x.code===c)||{upc:1};return `${c} (${cj(l,SU[c])})`}).join(' · ')+'\n'}
   if(D.fotoLote){const fl=L.filter(l=>!(S.lotes||{})[l.code]);t+=`\n🏷️ Fotos de lote: ${L.length-fl.length}/${L.length}`+(fl.length?` · faltan: ${fl.map(l=>l.code).join(', ')}`:'')+'\n'}
   if(REC){const ar=L.filter(l=>enArea(l.code)>0);if(ar.length)t+=`\n⚠️ Quedan en ÁREA DE ARMADO sin paletizar: ${ar.map(l=>l.code+' ('+cj(l,enArea(l.code))+')').join(', ')}\n`}
   const nv=Object.entries(S.nuevos||{});
@@ -294,7 +299,7 @@ function openLine(code,via,aviso,cajas0){
   const l=L.find(x=>x.code===code);if(!l)return;
   if(REC&&!(S.verif||{})[code]){F=null;S.openCode=null;return verifSheet(l)}
   const falta=Math.max(0,l.qty-sumC(code));
-  const pals=pallets();const p=S.last&&pals.includes(S.last)?S.last:(pals[pals.length-1]||'P1');
+  const pals=pallets(),pa=pals.filter(x=>!isOrig(x));const p=S.last&&!isOrig(S.last)&&(pals.includes(S.last)||S.last===SUELTO)?S.last:(pa[pa.length-1]||'P1');
   const d=(S.drafts||{})[code];
   F={code,via:via||'lista',cajas:cajas0||0,sueltas:0,pallet:REC?SINPAL:p,foto:null,aviso};
   if(d){F.cajas=(d.cajas||0)+(via==='caja'&&cajas0&&d.cajas?cajas0:0)||F.cajas;F.sueltas=d.sueltas||0;if(d.pallet)F.pallet=d.pallet;if(via==='lista'&&d.via)F.via=d.via;
@@ -303,7 +308,7 @@ function openLine(code,via,aviso,cajas0){
 }
 function showQ(){
   const l=L.find(x=>x.code===F.code),sm=sumC(F.code),falta=Math.max(0,l.qty-sm),tot=F.cajas*l.upc+F.sueltas;
-  const pals=pallets();if(!pals.includes(F.pallet))pals.push(F.pallet);
+  const pals=pallets();if(!pals.includes(F.pallet)&&F.pallet!==SUELTO)pals.push(F.pallet);
   const ents=S.ents.filter(e=>e.code===F.code);
   sheet(hdr(esc(l.code))+(F.aviso?`<div class="alert wa">${F.aviso}</div>`:'')+`
   ${REC?`<div class="recf">${l.img?`<figure><img src="${esc(l.img)}" alt="Botella"><figcaption>Botella</figcaption></figure>`:''}${l.imgc?`<figure><img src="${esc(l.imgc)}" alt="Caja"><figcaption>Caja</figcaption></figure>`:'<figure class="nof"><span>📦</span><figcaption>Sin foto de caja</figcaption></figure>'}</div>
@@ -314,7 +319,7 @@ function showQ(){
   <div class="stp"><b>${l.upc>1?'Unidades sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
   <div class="tot"><span id="qtot">${fmt(tot)}</span> <span class="mu" style="font-size:15px">unid.</span></div>
   ${falta&&!tot?`<button class="btn" data-a="todo">Poner lo que falta (${cj(l,falta)})</button>`:''}
-  ${REC?'<div class="mu">El pallet se arma después: lo que sacás queda en el ÁREA DE ARMADO.</div>':''}<div ${REC?'hidden':''}><div class="eb" style="margin-bottom:6px">Pallet</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo</button></div></div>
+  ${REC?'<div class="mu">El pallet se arma después: lo que sacás queda en el ÁREA DE ARMADO.</div>':''}<div ${REC?'hidden':''}><div class="eb" style="margin-bottom:6px">¿A dónde va?</div><div class="chips">${pals.map(p=>`<button class="chip" data-pal="${esc(p)}" aria-pressed="${p===F.pallet}">${esc(p)}</button>`).join('')}<button class="chip" data-a="newpal">+ Nuevo pallet</button><button class="chip" data-pal="SUELTO" aria-pressed="${F.pallet===SUELTO}">SUELTO</button><button class="chip" data-a="neworig">+ Pallet de origen</button></div>${F.pallet===SUELTO?'<div class="mu" style="margin-top:4px">Va sin pallet (cajas sueltas).</div>':isOrig(F.pallet)?'<div class="mu" style="margin-top:4px">Pallet de origen: sale tal cual llegó (1 foto de la etiqueta).</div>':''}</div>
   <button class="btn" data-a="foto">${F.foto?'✔ Foto tomada (cambiar)':'📷 Foto (opcional)'}</button>
   ${D.fotoLote?`<button class="btn ${((S.lotes||{})[F.code])?'':'pri'}" data-a="lote">${((S.lotes||{})[F.code])?'✔ Foto del LOTE tomada (cambiar)':'🏷️ Sacar foto del código de LOTE'}</button>${((S.lotes||{})[F.code])?`<img data-k="${(S.lotes||{})[F.code]}" alt="Lote" style="max-height:120px;object-fit:contain;border-radius:8px">`:''}`:''}
   ${tieneBot(l)?'':`<button class="btn" data-a="botcod">🍾 Escanear código de la BOTELLA</button>`}
@@ -453,7 +458,7 @@ let lastEtq=null;
 const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
 const getPin=()=>lsGet('arm_pin')||'';
 function pedirPin(msg){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<div class="mu">${msg||'Poné el PIN que te pasó Mario. Se pide una sola vez en este celular.'}</div><input id="pinIn" inputmode="numeric" type="password" style="border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:22px;text-align:center"><button class="btn pri" id="pinOk" style="padding:14px">Guardar</button>`);
-  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()};setTimeout(()=>$('pinIn').focus(),50)})}
+  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()};setTimeout(()=>{const i=$('pinIn');if(i)i.focus()},50)})}
 async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
 function estadoVivo(){const P={};S.ents.forEach(e=>{P[e.pallet]=P[e.pallet]||{u:0,c:{}};P[e.pallet].u+=e.total;P[e.pallet].c[e.code]=(P[e.pallet].c[e.code]||0)+e.total});
   Object.keys(S.pal).forEach(p=>{P[p]=P[p]||{u:0,c:{}};P[p].f=palKeys(p).length});
@@ -594,9 +599,12 @@ document.addEventListener('click',async e=>{
     case 'scan':close();startScan();break;
     case 'mango':{const v=$('man').value;found(v);break}
     case 'todo':{const l=L.find(x=>x.code===F.code),f=Math.max(0,l.qty-sumC(F.code));F.cajas=l.upc>1?Math.floor(f/l.upc):0;F.sueltas=l.upc>1?f%l.upc:f;showQ();break}
-    case 'znew':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;PZ.pallet='P'+n;palSheet(PZ.code);break}
+    case 'znew':{PZ.pallet=nuevoNom('P');palSheet(PZ.code);break}
+    case 'zorig':{PZ.pallet=nuevoNom('O');palSheet(PZ.code);break}
+    case 'neworig':{F.pallet=nuevoNom('O');showQ();break}
+    case 'areasuelto':{const b2=document.querySelector('[data-a=areasuelto]');if(b2&&!b2.dataset.sure){b2.dataset.sure=1;b2.textContent='¿Seguro? Todo lo del ÁREA DE ARMADO pasa a SUELTO. Tocá de nuevo';break}let k=0;S.ents.forEach(e=>{if(e.pallet===SINPAL){e.pallet=SUELTO;k++}});S.last=SUELTO;save();render();renderP();pushProg();toast('📦 '+k+(k===1?' carga pasada':' cargas pasadas')+' a SUELTO');break}
     case 'zsave':palSave();break;
-    case 'newpal':{const P=pallets();let n=P.length+1;while(P.includes('P'+n))n++;F.pallet='P'+n;showQ();break}
+    case 'newpal':{F.pallet=nuevoNom('P');showQ();break}
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
     case 'lote':camFor='lote';$('cam').value='';$('cam').click();break;
     case 'verif':case 'verifbot':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;MODO={verif:c,bot:b.dataset.a==='verifbot'};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent=MODO&&MODO.bot?'Apuntá al código de la BOTELLA':'Apuntá al código de barras de la CAJA'},300);break}
@@ -626,7 +634,7 @@ $('cam').addEventListener('change',async e=>{
   if(camFor==='line'&&F){F.foto=b;try{await fPut('d_'+F.code,b)}catch(e){}showQ()}
   else if(camFor==='lote'&&F){const k='lote_'+F.code+'_'+Date.now().toString(36);try{await fPut(k,b);S.lotes=S.lotes||{};if(S.lotes[F.code])fDel(S.lotes[F.code]);S.lotes[F.code]=k;save();showQ();render();toast('🏷️ Foto del lote guardada')}catch(x){toast('No se pudo guardar la foto')}}
   else if(camFor&&camFor.startsWith('pal:')){const [p,ci]=camFor.slice(4).split('|');const i=+ci||0;const k='pal_'+p+'_'+i+'_'+Date.now().toString(36);
-    try{await fPut(k,b);const arr=S.pal[p]||[];if(arr[i])fDel(arr[i]);arr[i]=k;S.pal[p]=arr;save();renderP();pushProg();toast(p+': '+CARAS[i]+' guardada ('+palKeys(p).length+'/4)')}catch(x){toast('No se pudo guardar la foto')}}
+    try{await fPut(k,b);const arr=S.pal[p]||[];if(arr[i])fDel(arr[i]);arr[i]=k;S.pal[p]=arr;save();renderP();pushProg();toast(p+': '+caraNom(p,i)+' guardada ('+palKeys(p).length+'/'+nCaras(p)+')')}catch(x){toast('No se pudo guardar la foto')}}
   camFor=null;
 });
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='zipNom'){ZIPF=null;clearTimeout(window._zt);window._zt=setTimeout(()=>armarZip().catch(()=>{}),600)}});
