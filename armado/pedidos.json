@@ -1058,5 +1058,14 @@
   "lineas": 15,
   "botellas": 590,
   "creado": "2026-11-23T14:16:38.275518+00:00"
+ },
+ {
+  "id": "A5552-3AfwceS8",
+  "titulo": "Factura A5552",
+  "cliente": "MARIO H VIDALES Y CIA SC",
+  "entrega": "MARIO FREE SHOP",
+  "lineas": 9,
+  "botellas": 708,
+  "creado": "2026-11-23T14:26:38.755534+00:00"
  }
 ]
