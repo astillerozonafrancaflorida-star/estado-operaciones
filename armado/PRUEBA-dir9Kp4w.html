@@ -117,7 +117,7 @@ td.r,th.r{text-align:right}
     </div>
     <div class="list" id="list"></div>
   </section>
-  <section id="vP" class="list" hidden></section>
+  <section id="vP" class="list" hidden><div class="card" style="display:flex;gap:8px;align-items:center;padding:10px 12px;position:sticky;top:0;z-index:5"><span>🔎</span><input id="pq" type="text" enterkeyhint="search" placeholder="Buscar producto o código" autocomplete="off" style="flex:1;border:1px solid var(--ln);border-radius:8px;padding:10px;background:var(--sf);font-size:16px"><button class="chip" id="pqx" hidden>✕</button></div><div id="pqn" class="mu" hidden style="text-align:center"></div><div id="vPc" class="list"></div></section>
   <section id="vF" class="fin" hidden></section>
 </div>
 <div class="dock"><button class="big" id="bScan"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 5v14M7 5v14M10 5v14M14 5v14M16 5v14M20 5v14"/></svg>Código</button><button class="big" id="bEtq"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8a2 2 0 0 1 2-2h2.2l1.4-2h6.8l1.4 2H19a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="13" r="4"/></svg>Etiqueta</button><button class="big sec" id="bLista">Lista</button></div>
@@ -225,15 +225,29 @@ function renderP(){
   const area=REC?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px solid var(--wa)"><div class="sh"><h2>ÁREA DE ARMADO</h2><span class="mu">${AR.length} producto${AR.length===1?'':'s'} para paletizar</span></div>${AR.length?AR.map(l=>`<button class="ln" data-zcode="${esc(l.code)}"><div><div class="nm">${esc(l.name)}</div><div class="meta"><span class="mono">${esc(l.code)}</span></div></div><div class="q">${cj(l,enArea(l.code))}</div></button>`).join(''):'<div class="mu">No hay mercadería esperando: todo lo recolectado ya tiene destino (pallet o suelto).</div>'}${AR.length?'<button class="btn" data-a="areasuelto">Todo lo del área → SUELTO (sin pallet)</button>':''}</div>`:'';
   const SU={};S.ents.filter(e=>e.pallet===SUELTO).forEach(e=>{SU[e.code]=(SU[e.code]||0)+e.total});
   const suel=Object.keys(SU).length?`<div class="card" style="display:flex;flex-direction:column;gap:8px;border:2px dashed var(--ln)"><div class="sh"><h2>SUELTO</h2><span class="mu">${fmt(Object.values(SU).reduce((a,b)=>a+b,0))} unid. · sin pallet</span></div><table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(SU).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,SU[c])}</td></tr>`}).join('')}</tbody></table><div class="mu">Va sin pallet. No lleva fotos de caras.</div></div>`:'';
-  if(!P.length){$('vP').innerHTML=area+suel+(REC||suel?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');return}
-  $('vP').innerHTML=area+P.map(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});
+  if(!P.length){$('vPc').innerHTML=area+suel+(REC||suel?'':'<div class="empty">Todavía no hay pallets. Se crean al guardar el primer producto.</div>');filtP();return}
+  $('vPc').innerHTML=area+P.map(p=>{const R={};S.ents.filter(e=>e.pallet===p).forEach(e=>{R[e.code]=(R[e.code]||0)+e.total});
     const tu=Object.values(R).reduce((a,b)=>a+b,0);
     return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="sh"><h2>${esc(p)}${isOrig(p)?' · de origen':''}</h2><span class="mu">${fmt(tu)} unid.</span></div>
     <div class="caras">${(isOrig(p)?['Etiqueta']:CARAS).map((c,i)=>{const kk=(S.pal[p]||[])[i];return `<button class="cara" data-palfoto="${esc(p)}" data-cara="${i}">${kk?`<img data-k="${kk}" alt="${c}">`:'<span>📷</span>'}<small>${kk?'✔ ':''}${c}</small></button>`}).join('')}</div>
     <table><thead><tr><th>Cód.</th><th>Producto</th><th class="r">Cant.</th></tr></thead><tbody>${Object.keys(R).map(c=>{const l=L.find(x=>x.code===c)||{name:c,upc:1};return `<tr><td class="mono">${esc(c)}</td><td>${esc(l.name)}</td><td class="r">${cj(l,R[c])}</td></tr>`}).join('')||'<tr><td colspan=3 class="mu">Vacío</td></tr>'}</tbody></table>
     <div class="mu">${isOrig(p)?`Pallet de origen (sale tal cual llegó): ${palKeys(p).length}/1 foto de la etiqueta.`:`Fotos del pallet terminado: ${palKeys(p).length}/4 caras. Tocá una cara para sacar o cambiar la foto.`}</div></div>`}).join('')+suel;
-  hydrate();
+  hydrate();filtP();
 }
+const nq=s=>String(s||'').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'');
+function filtP(){
+  const i=$('pq'),c=$('vPc');if(!i||!c)return;const q=nq(i.value).trim(),w=q.split(/\s+/).filter(Boolean);$('pqx').hidden=!q;
+  const hit=t=>w.every(x=>nq(t).includes(x));let n=0;
+  c.querySelectorAll(':scope > .card').forEach(card=>{
+    const items=[...card.querySelectorAll('[data-zcode], tbody tr')];
+    if(!w.length){items.forEach(e=>e.hidden=false);card.hidden=false;return}
+    let k=0;items.forEach(e=>{const m=hit(e.textContent);e.hidden=!m;if(m)k++});n+=k;
+    card.hidden=!k});
+  c.querySelectorAll(':scope > .empty').forEach(e=>e.hidden=!!w.length);
+  const m=$('pqn');m.hidden=!w.length;m.textContent=w.length?(n?n+' resultado'+(n===1?'':'s'):'Sin resultados para "'+i.value.trim()+'"'):'';
+}
+document.addEventListener('input',e=>{if(e.target&&e.target.id==='pq')filtP()});
+document.addEventListener('click',e=>{if(e.target&&e.target.id==='pqx'){$('pq').value='';filtP();$('pq').focus()}});
 function resumen(){
   const n=D.nombres.map(x=>x.replace(/-EF.*$/,'')).join(' · ');
   const cnt={ok:0,par:0,exc:0,pen:0};L.forEach(l=>cnt[st(l)]++);
