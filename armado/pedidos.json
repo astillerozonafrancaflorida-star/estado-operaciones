@@ -1058,5 +1058,14 @@
   "lineas": 24,
   "botellas": 1298,
   "creado": "2026-11-23T14:16:38.275518+00:00"
+ },
+ {
+  "id": "A2695-64R5pfBR",
+  "titulo": "Factura A2695",
+  "cliente": "BAH FREE SHOP LTDA",
+  "entrega": "BAH FREE SHOP",
+  "lineas": 55,
+  "botellas": 4892,
+  "creado": "2026-11-23T17:52:51.031259+00:00"
  }
 ]
