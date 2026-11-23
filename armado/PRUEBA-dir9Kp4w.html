@@ -280,7 +280,7 @@ function verifSheet(l,msg){
   <button class="btn ok" data-a="verif" style="padding:16px;font-size:17px">📦 Escanear el código de barras de la CAJA</button>
   ${tc?'':'<div class="alert wa">Este producto todavía no tiene código de caja cargado: el que escanees queda registrado para la próxima vez.</div>'}
   <button class="btn" data-a="verifbot">La caja no tiene código → escanear la botella</button>
-  ${l.eans.length?'':'<button class="btn" data-a="verifman">Tampoco tiene código la botella → confirmo con la foto</button>'}
+  <button class="btn" data-a="verifman">${l.eans.length?'No tiene código o no lo lee → confirmo con una foto':'Tampoco tiene código la botella → confirmo con una foto'}</button>
   ${REC?`<div class="eb" style="margin:6px 0">⏭️ ¿No está o no alcanza? Pasá al siguiente (este queda pendiente)</div><div class="chips"><button class="chip" data-salt="No llegó" data-code="${esc(l.code)}">No llegó</button><button class="chip" data-salt="En el otro depósito" data-code="${esc(l.code)}">Está en el otro depósito</button><button class="chip" data-salt="No alcanza" data-code="${esc(l.code)}">No alcanza / falta parte</button></div>`:''}`);hydrate()}
 function verifCode(raw,code,bot){
   const c=norm(raw),l=L.find(x=>x.code===code);if(!l||!c){toast('Código vacío');return}
@@ -608,7 +608,7 @@ document.addEventListener('click',async e=>{
     case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
     case 'lote':camFor='lote';$('cam').value='';$('cam').click();break;
     case 'verif':case 'verifbot':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;MODO={verif:c,bot:b.dataset.a==='verifbot'};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent=MODO&&MODO.bot?'Apuntá al código de la BOTELLA':'Apuntá al código de barras de la CAJA'},300);break}
-    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');break}
+    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');if(F&&F.code===c&&!F.foto){camFor='line';$('cam').value='';$('cam').click()}break}
     case 'verifreg':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.cajasN=S.cajasN||{};S.cajasN[b.dataset.ean]=c;S.verif=S.verif||{};S.verif[c]='caja';save();render();pushProg();toast('📦 Código registrado y producto confirmado');openLine(c,'caja');break}
     case 'save':saveE();break;
     case 'bajarfotos':bajarFotos();break;
