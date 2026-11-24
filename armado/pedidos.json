@@ -1389,5 +1389,14 @@
   "lineas": 20,
   "botellas": 426,
   "creado": "2026-11-24T11:23:27.709796+00:00"
+ },
+ {
+  "id": "A5561-AsgNRTsN",
+  "titulo": "Factura A5561",
+  "cliente": "ALFACOR INTERNATIONAL SA",
+  "entrega": "LIBERTY DUTY FREE",
+  "lineas": 1,
+  "botellas": 480,
+  "creado": "2026-11-24T12:22:33.484403+00:00"
  }
 ]
