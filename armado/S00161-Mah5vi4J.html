@@ -342,7 +342,7 @@ function showQ(){
   ${REC?`<div class="eb" style="margin:6px 0">⏭️ ¿No está o no alcanza? Pasá al siguiente (este queda pendiente)</div><div class="chips"><button class="chip" data-salt="No llegó" data-code="${esc(l.code)}">No llegó</button><button class="chip" data-salt="En el otro depósito" data-code="${esc(l.code)}">Está en el otro depósito</button><button class="chip" data-salt="No alcanza" data-code="${esc(l.code)}">No alcanza / falta parte</button></div>`:''}
   <button class="btn ok" id="bSave" data-a="save" style="padding:14px" ${tot&&F.foto?'':'disabled'}>${!F.foto?'📷 Sacá la foto para guardar':REC?'✔ Saqué '+fmt(tot):'Guardar '+fmt(tot)+' en '+esc(F.pallet)}</button>
   ${tot||F.foto?'<div class="mu" style="text-align:center">✏️ Lo que vas cargando queda guardado aunque cierres o cambies de producto. Tocá Guardar cuando esté completo.</div>':''}
-  ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><button class="btn dan" data-del="${e.id}">Borrar</button></div>`).join(''):''}`);
+  ${ents.length?`<div class="eb">Ya cargado</div>`+ents.map(e=>`<div class="ent">${e.foto?`<img data-k="${e.id}" alt="">`:'<div class="ni"></div>'}<div><b>${cj(l,e.total)}</b> · ${esc(e.pallet)}<div class="mu">${new Date(e.at).toTimeString().slice(0,5)} · ${e.via==='codigo'?'escaneado':e.via==='caja'?'caja escaneada':e.via==='etiqueta'?'por etiqueta':'de la lista'}</div></div><div style="display:flex;flex-direction:column;gap:4px"><button class="btn" data-edit="${e.id}">Editar</button><button class="btn dan" data-del="${e.id}">Borrar</button></div></div>`).join(''):''}`);
   hydrate();dsave();
   const bind=(id,k)=>{const i=$(id);if(i)i.addEventListener('input',()=>{F[k]=Math.max(0,parseInt(i.value)||0);upd()})};bind('qc','cajas');bind('qs','sueltas');
 }
@@ -624,6 +624,15 @@ document.addEventListener('click',async e=>{
   if(b.dataset.zpal){PZ.pallet=b.dataset.zpal;palSheet(PZ.code);return}
   if(b.dataset.z){const k=b.dataset.z[0]==='c'?'cajas':'sueltas';PZ[k]=Math.max(0,PZ[k]+(b.dataset.z[1]==='+'?1:-1));palSheet(PZ.code);return}
   if(b.dataset.palfoto){camFor='pal:'+b.dataset.palfoto+'|'+(b.dataset.cara||0);$('cam').value='';$('cam').click();return}
+  if(b.dataset.edit){const e=S.ents.find(x=>x.id===b.dataset.edit);if(!e)return;const l=L.find(x=>x.code===e.code);const back=F?F.code:null;
+    sheet(hdr('Corregir cantidad')+`<div class="card"><div style="font-weight:800">${esc(l?l.name:e.code)}</div><div class="mu">${esc(e.pallet)} · la foto se mantiene</div></div>
+      <div class="stp"><b>Cajas${l&&l.upc>1?' (x'+l.upc+')':''}</b><input id="edC" type="number" inputmode="numeric" min="0" value="${e.cajas||0}" style="font-size:22px;width:110px;padding:8px;border:1px solid var(--ln);border-radius:8px"></div>
+      <div class="stp"><b>Sueltas</b><input id="edS" type="number" inputmode="numeric" min="0" value="${e.sueltas||0}" style="font-size:22px;width:110px;padding:8px;border:1px solid var(--ln);border-radius:8px"></div>
+      <button class="btn ok" data-edok="${esc(e.id)}" data-back="${esc(back||'')}" style="padding:14px">Guardar corrección</button>`);return}
+  if(b.dataset.edok){const e=S.ents.find(x=>x.id===b.dataset.edok);if(!e)return;const l=L.find(x=>x.code===e.code),u=(l&&l.upc)||1;
+    const c=Math.max(0,parseInt($('edC').value)||0),sl=Math.max(0,parseInt($('edS').value)||0),t=c*u+sl;if(!t){toast('Para dejarlo en 0 usá Borrar');return}
+    e.editado={antes:e.total,at:Date.now(),op:S.op};e.cajas=c;e.sueltas=sl;e.total=t;save();close();render();pushProg();toast('Corregido: '+fmt(t));
+    if(b.dataset.back)setTimeout(()=>openLine(b.dataset.back),200);return}  // editar carga sin perder la foto (Mario 24/11)
   if(b.dataset.del){if(b.dataset.sure){const i=S.ents.findIndex(x=>x.id===b.dataset.del);if(i>=0){if(S.ents[i].foto)fDel(S.ents[i].id);S.ents.splice(i,1);save();render();showQ();toast('Borrado');pushProg()}}else{b.dataset.sure=1;b.textContent='¿Seguro?'}return}
   switch(b.dataset.a){
     case 'close':close();break;
