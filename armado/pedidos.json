@@ -1618,5 +1618,14 @@
   "lineas": 11,
   "botellas": 576,
   "creado": "2026-11-24T13:56:12.787302+00:00"
+ },
+ {
+  "id": "S00359-LIVRAMENTO-rAVAfvBR",
+  "titulo": "Factura S00359-LIVRAMENTO",
+  "cliente": "BRASIL FREE SHOP",
+  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
+  "lineas": 14,
+  "botellas": 1811,
+  "creado": "2026-11-24T13:58:04.583571+00:00"
  }
 ]
