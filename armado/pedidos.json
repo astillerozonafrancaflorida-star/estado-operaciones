@@ -1723,48 +1723,53 @@
  },
  {
   "id": "S00359-URUGUAIANA-7fwGARWs",
-  "titulo": "Factura S00359-URUGUAIANA",
+  "titulo": "Factura A2696 · Uruguaiana",
   "cliente": "BRASIL FREE SHOP SAO JOAO",
   "entrega": "BRASIL FREE SHOP SAO JOAO (URUGUAIANA)",
   "lineas": 12,
   "botellas": 1188,
-  "creado": "2026-11-24T13:50:41.740993+00:00"
+  "creado": "2026-11-24T13:50:41.740993+00:00",
+  "clave": "S00359-URUGUAIANA"
  },
  {
   "id": "S00359-SAO-BORJA-OgrV9WrW",
-  "titulo": "Factura S00359-SAO-BORJA",
+  "titulo": "Factura A2697 · São Borja",
   "cliente": "BRASIL FREE SHOP SAO BORJA",
   "entrega": "BRASIL FREE SHOP SAO BORJA",
   "lineas": 14,
   "botellas": 1818,
-  "creado": "2026-11-24T13:52:33.619435+00:00"
+  "creado": "2026-11-24T13:52:33.619435+00:00",
+  "clave": "S00359-SAO-BORJA"
  },
  {
   "id": "S00359-ITAQUI-n0OwXyul",
-  "titulo": "Factura S00359-ITAQUI",
+  "titulo": "Factura A2698 · Itaqui",
   "cliente": "BRASIL FREE SHOP ITAQUI",
   "entrega": "BRASIL FREE SHOP ITAQUI",
   "lineas": 13,
   "botellas": 720,
-  "creado": "2026-11-24T13:54:24.391651+00:00"
+  "creado": "2026-11-24T13:54:24.391651+00:00",
+  "clave": "S00359-ITAQUI"
  },
  {
   "id": "S00359-QUARAI-ei8yY1pL",
-  "titulo": "Factura S00359-QUARAI",
+  "titulo": "Factura A2699 · Quaraí",
   "cliente": "BRASIL FREE SHOP QUARAI",
   "entrega": "BRASIL FREE SHOP QUARAI",
   "lineas": 11,
   "botellas": 576,
-  "creado": "2026-11-24T13:56:12.787302+00:00"
+  "creado": "2026-11-24T13:56:12.787302+00:00",
+  "clave": "S00359-QUARAI"
  },
  {
   "id": "S00359-LIVRAMENTO-rAVAfvBR",
-  "titulo": "Factura S00359-LIVRAMENTO",
+  "titulo": "Factura A2700 · Livramento",
   "cliente": "BRASIL FREE SHOP LIVRAMENTO",
   "entrega": "BRASIL FREE SHOP LIVRAMENTO",
   "lineas": 14,
   "botellas": 1811,
-  "creado": "2026-11-24T14:00:09.147479+00:00"
+  "creado": "2026-11-24T14:00:09.147479+00:00",
+  "clave": "S00359-LIVRAMENTO"
  },
  {
   "id": "A5566-hmNj0Io6",
