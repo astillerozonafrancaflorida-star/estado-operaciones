@@ -1358,5 +1358,14 @@
   "lineas": 21,
   "botellas": 666,
   "creado": "2026-11-24T11:13:57.100017+00:00"
+ },
+ {
+  "id": "A5558-eZom626O",
+  "titulo": "Factura A5558",
+  "cliente": "ALFACOR INTERNATIONAL SA",
+  "entrega": "LIBERTY DUTY FREE",
+  "lineas": 21,
+  "botellas": 660,
+  "creado": "2026-11-24T11:15:49.629247+00:00"
  }
 ]
