@@ -11,6 +11,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
 .mu{color:var(--mu);font-size:13px}.mono{font-family:ui-monospace,Menlo,Consolas,monospace}
 .card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
 .who{display:flex;gap:8px;align-items:center}.who input{flex:1;border:1px solid var(--ln);border-radius:8px;padding:8px 10px;background:var(--sf)}
+#ordIng:not([hidden]){display:flex}
 .modo{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .modo button{border:2px solid var(--ln);background:var(--sf);border-radius:12px;padding:12px 8px;font-weight:800}
 .modo button[aria-pressed=true]{border-color:var(--ac);background:#E5EEF5;color:var(--ac)}
@@ -48,7 +49,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
   </header>
   <div class="card who"><label for="op" style="font-weight:700">Soy:</label><input id="op" placeholder="Tu nombre"></div>
   <div class="modo"><button id="mR" aria-pressed="true">↔️ Reubicar<br><span class="mu" style="font-weight:400">de un lugar a otro</span></button><button id="mL" aria-pressed="false">📥 Ubicar lo que llega<br><span class="mu" style="font-weight:400">contenedor / sin ubicación</span></button></div>
-  <div id="ordIng" style="display:flex;flex-direction:column;gap:8px"></div>
+  <div id="ordIng" hidden style="flex-direction:column;gap:8px"></div>
   <div class="eb" style="display:flex;justify-content:space-between"><span>Últimos 5 movimientos de este celular</span><button id="verT" style="border:0;background:none;color:var(--ac);font:inherit;font-weight:700">Ver todos</button></div>
   <div id="hoy" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
@@ -65,7 +66,8 @@ async function ordenes(){const box=document.getElementById('ordIng');if(!box)ret
   const fm=n=>Number(n||0).toLocaleString('es-UY'),es=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
   const L=P.map(p=>{const g=(E[p.id]||{}).prog,fin=g&&g.n&&g.ok===g.n;return {p,g,fin}}).filter(x=>!(x.fin&&x.g.recibido&&Date.now()-x.g.recibido>3*86400000));
   L.sort((a,b)=>(a.fin-b.fin)||(b.p.creado||'').localeCompare(a.p.creado||''));
-  box.innerHTML=L.length?'<div class="eb">📥 Órdenes de ingreso para ubicar</div>'+L.map(({p,g,fin})=>{const pct=g&&g.q?Math.round(g.s/g.q*100):0;
+  const pend=L.filter(x=>!x.fin).length,sb=document.querySelector('#mL .mu');if(sb)sb.innerHTML='contenedor / sin ubicación'+(pend?` · <b style="color:var(--ac)">${pend} ${pend>1?'órdenes':'orden'}</b>`:'');
+  box.innerHTML=L.length?'<div class="eb">📥 Órdenes de ingreso para ubicar</div><div class="mu">Abrí la orden del contenedor o devolución. Para algo suelto sin orden, usá ▥ Código o Buscar producto abajo.</div>'+L.map(({p,g,fin})=>{const pct=g&&g.q?Math.round(g.s/g.q*100):0;
     return `<div class="card" style="border-left:6px solid ${fin?'var(--ok)':g&&g.s?'var(--wa)':'var(--ac)'}"><b>${es(String(p.titulo||'').replace(/^📥\s*Ubicar\s*·\s*/,''))}</b><div class="mu">${es(p.cliente||'')} · ${p.lineas} líneas · ${fm(p.botellas)} bot.</div>${g?`<div style="height:6px;border-radius:3px;background:var(--ln);overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:${pct}%;background:${fin?'var(--ok)':'var(--wa)'}"></i></div><div class="mu">${fin?'✅ Todo ubicado':`${fm(g.s)}/${fm(g.q)} bot. ubicadas · ${g.ok}/${g.n} líneas`}${g.op?' · '+es(g.op):''}</div>`:''}<div style="margin-top:8px"><a class="btn ${fin?'':'pri'}" style="display:inline-block;text-decoration:none" href="${es(p.id)}.html">${fin?'Ver':g&&g.s?'Continuar':'Abrir'}</a></div></div>`}).join(''):'';
 }
 ordenes();setInterval(ordenes,30000);
@@ -82,7 +84,7 @@ const saveH=()=>{H=H.slice(0,100);ls('mov_hist',JSON.stringify(H))};saveH();
 let verTodos=false;
 let modo='R';
 $('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
-function setModo(m){modo=m;$('mR').setAttribute('aria-pressed',m==='R');$('mL').setAttribute('aria-pressed',m==='L')}
+function setModo(m){modo=m;$('mR').setAttribute('aria-pressed',m==='R');$('mL').setAttribute('aria-pressed',m==='L');const oi=document.getElementById('ordIng');if(oi)oi.hidden=m!=='L'}
 $('mR').onclick=()=>setModo('R');$('mL').onclick=()=>setModo('L');
 const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+/,'');const esLote=c=>{const d=String(c||'').replace(/\D/g,'');return d.length>16&&gs1(d)===d};
 // ubicaciones del producto: "28-A (120); P11 117-3; SIN UBICACIÓN (6)" (las notas [..] se ignoran)
