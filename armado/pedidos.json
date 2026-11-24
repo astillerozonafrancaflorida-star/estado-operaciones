@@ -1336,15 +1336,6 @@
   }
  },
  {
-  "id": "S00161-IeCFCMCz",
-  "titulo": "Pedido S00161",
-  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
-  "entrega": "BONNO FREE SHOP",
-  "lineas": 84,
-  "botellas": 5835,
-  "creado": "2026-11-23T20:11:13.235294+00:00"
- },
- {
   "id": "A5557-9fXvPW1h",
   "titulo": "Factura A5557",
   "cliente": "ALFACOR INTERNATIONAL SA",
@@ -2322,5 +2313,14 @@
    "fin_txt": "24/11 00:50",
    "activo_txt": "24 min"
   }
+ },
+ {
+  "id": "S00161-IeCFCMCz",
+  "titulo": "Pedido S00161",
+  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
+  "entrega": "BONNO FREE SHOP",
+  "lineas": 97,
+  "botellas": 14907,
+  "creado": "2026-11-24T19:45:52.133195+00:00"
  }
 ]
