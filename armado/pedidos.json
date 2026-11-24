@@ -1397,6 +1397,33 @@
   "entrega": "LIBERTY DUTY FREE",
   "lineas": 1,
   "botellas": 480,
-  "creado": "2026-11-24T12:22:33.484403+00:00"
+  "creado": "2026-11-24T12:22:33.484403+00:00",
+  "listo": {
+   "carpeta": "ALFACOR-A5561-24NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-24T12:33:20.533Z",
+   "ok": 1,
+   "n": 1,
+   "bot": 480,
+   "lin": [
+    [
+     "2",
+     "MOSCATO BOTTEGA PETALO AMORE 750 ML",
+     480,
+     480
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795523400391,
+   "fin": 1795523493924,
+   "activo_min": 1.6,
+   "lab_min": 1.6,
+   "lineas": 1,
+   "min_linea": 1.6,
+   "seg_bot": 0.2,
+   "inicio_txt": "24/11 09:30",
+   "fin_txt": "24/11 09:31",
+   "activo_txt": "2 min"
+  }
  }
 ]
