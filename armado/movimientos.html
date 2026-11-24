@@ -48,6 +48,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
   </header>
   <div class="card who"><label for="op" style="font-weight:700">Soy:</label><input id="op" placeholder="Tu nombre"></div>
   <div class="modo"><button id="mR" aria-pressed="true">↔️ Reubicar<br><span class="mu" style="font-weight:400">de un lugar a otro</span></button><button id="mL" aria-pressed="false">📥 Ubicar lo que llega<br><span class="mu" style="font-weight:400">contenedor / sin ubicación</span></button></div>
+  <div id="ordIng" style="display:flex;flex-direction:column;gap:8px"></div>
   <div class="eb" style="display:flex;justify-content:space-between"><span>Últimos 5 movimientos de este celular</span><button id="verT" style="border:0;background:none;color:var(--ac);font:inherit;font-weight:700">Ver todos</button></div>
   <div id="hoy" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
@@ -56,6 +57,18 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
 <script src="movdata.js"></script>
 <script>
 const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+/* órdenes de ingreso / devolución para ubicar (Mario 24/11: van acá y no en el tablero de armado) */
+async function ordenes(){const box=document.getElementById('ordIng');if(!box)return;
+  let P=[];try{P=(await (await fetch('pedidos.json?t='+Date.now(),{cache:'no-store'})).json()).filter(p=>p.tipo==='ubicar')}catch(e){}
+  if(!P.length){box.innerHTML='';return}
+  let E={};try{E=await (await fetch(API+'/tablero?ids='+P.map(p=>encodeURIComponent(p.id)).join(','),{cache:'no-store'})).json()}catch(e){}
+  const fm=n=>Number(n||0).toLocaleString('es-UY'),es=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+  const L=P.map(p=>{const g=(E[p.id]||{}).prog,fin=g&&g.n&&g.ok===g.n;return {p,g,fin}}).filter(x=>!(x.fin&&x.g.recibido&&Date.now()-x.g.recibido>3*86400000));
+  L.sort((a,b)=>(a.fin-b.fin)||(b.p.creado||'').localeCompare(a.p.creado||''));
+  box.innerHTML=L.length?'<div class="eb">📥 Órdenes de ingreso para ubicar</div>'+L.map(({p,g,fin})=>{const pct=g&&g.q?Math.round(g.s/g.q*100):0;
+    return `<div class="card" style="border-left:6px solid ${fin?'var(--ok)':g&&g.s?'var(--wa)':'var(--ac)'}"><b>${es(String(p.titulo||'').replace(/^📥\s*Ubicar\s*·\s*/,''))}</b><div class="mu">${es(p.cliente||'')} · ${p.lineas} líneas · ${fm(p.botellas)} bot.</div>${g?`<div style="height:6px;border-radius:3px;background:var(--ln);overflow:hidden;margin:6px 0"><i style="display:block;height:100%;width:${pct}%;background:${fin?'var(--ok)':'var(--wa)'}"></i></div><div class="mu">${fin?'✅ Todo ubicado':`${fm(g.s)}/${fm(g.q)} bot. ubicadas · ${g.ok}/${g.n} líneas`}${g.op?' · '+es(g.op):''}</div>`:''}<div style="margin-top:8px"><a class="btn ${fin?'':'pri'}" style="display:inline-block;text-decoration:none" href="${es(p.id)}.html">${fin?'Ver':g&&g.s?'Continuar':'Abrir'}</a></div></div>`}).join(''):'';
+}
+ordenes();setInterval(ordenes,30000);
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('es-UY');

@@ -1937,6 +1937,39 @@
   "entrega": "BRASIL FREE SHOP",
   "lineas": 2,
   "botellas": 4,
-  "creado": "2026-11-24T17:56:32.512733+00:00"
+  "creado": "2026-11-24T17:56:32.512733+00:00",
+  "listo": {
+   "carpeta": "GEMISTER-A5564-24NOV26",
+   "armo": "Mario",
+   "fecha": "2026-11-24T18:08:55.259Z",
+   "ok": 2,
+   "n": 2,
+   "bot": 4,
+   "lin": [
+    [
+     "1703",
+     "VINO VEGA SICILIA UNICO 2005 750 ML",
+     2,
+     2
+    ],
+    [
+     "1708",
+     "VINO VEGA SICILIA UNICO 2010 750 ML",
+     2,
+     2
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795542956563,
+   "fin": 1795543271028,
+   "activo_min": 5.2,
+   "lab_min": 5.2,
+   "lineas": 2,
+   "min_linea": 2.6,
+   "seg_bot": 78.6,
+   "inicio_txt": "24/11 14:55",
+   "fin_txt": "24/11 15:01",
+   "activo_txt": "5 min"
+  }
  }
 ]

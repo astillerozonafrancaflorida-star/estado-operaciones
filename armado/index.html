@@ -55,7 +55,7 @@ function render(){
     ${p.tipo==="ubicar"?`<a class="btn sm" href="${esc(p.id)}.html">Ver</a>`:`<a class="btn sm" href="vivo.html?p=${encodeURIComponent(p.id)}&t=${Date.now()}">${p.listo?"Ver detalle":"Ver en vivo"}</a>`}${i===1&&mio?`<button class="btn sm" data-soltar="${esc(p.id)}">Soltar</button>`:''}</div></div>`}).join(''):'<div class="empty">—</div>'});
 }
 async function cargar(){
-  try{P=await (await fetch('pedidos.json?t='+Date.now(),{cache:'no-store'})).json();P.sort((a,b)=>(b.creado||'').localeCompare(a.creado||''))}catch(e){P=[]}
+  try{P=await (await fetch('pedidos.json?t='+Date.now(),{cache:'no-store'})).json();P=P.filter(p=>p.tipo!=='ubicar');P.sort((a,b)=>(b.creado||'').localeCompare(a.creado||''))}catch(e){P=[]}  // las órdenes de ubicar van en Movimientos (24/11)
   if(P.length){try{E=await (await fetch(API+'/tablero?ids='+P.map(p=>encodeURIComponent(p.id)).join(','),{cache:'no-store'})).json();$('upd').textContent='Se actualiza solo cada 10 segundos · '+new Date().toTimeString().slice(0,5)}catch(e){$('upd').textContent='Sin conexión con el intermediario. Reintentando…'}}
   else $('upd').textContent='No hay pedidos cargados.';
   render();
