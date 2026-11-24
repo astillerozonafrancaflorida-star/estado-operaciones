@@ -40,7 +40,8 @@ let P=[],E={};
 $('op').value=ls('arm_op')||'';$('op').addEventListener('input',e=>ls('arm_op',e.target.value.trim()));
 async function pin(){let p=ls('arm_pin');if(!p){p=(prompt('PIN del depósito (se pide una sola vez en este celular):')||'').trim();if(p)ls('arm_pin',p)}return p}
 async function post(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){ls('arm_pin','');throw new Error('PIN incorrecto')}return {ok:r.ok,status:r.status,j}}
-function estado(p){if(p.listo)return 2;const e=E[p.id]||{},g=e.prog;if(g&&g.subido)return 2;if(e.tomado||(g&&g.s>0))return 1;return 0}  // completo sin respaldo subido sigue EN ARMADO (Mario 19/11)
+function estado(p){const e=E[p.id]||{},g=e.prog;if(p.listo){if(p.listo.ok<p.listo.n&&g&&g.recibido&&p.listo.fecha&&g.recibido>Date.parse(p.listo.fecha)+120000&&g.s!==p.listo.bot)return 1;return 2}  // respaldo parcial y siguen armando: sigue EN ARMADO (24/11)
+  if(g&&g.subido)return 2;if(e.tomado||(g&&g.s>0))return 1;return 0}  // completo sin respaldo subido sigue EN ARMADO (Mario 19/11)
 function ago(t){if(!t)return'';const m=Math.round((Date.now()-t)/60000);return m<1?'recién':m<60?`hace ${m} min`:m<1440?`hace ${Math.round(m/60)} h`:`hace ${Math.round(m/1440)} d`}
 function render(){
   const yo=($('op').value||'').trim().toLowerCase();const C=[[],[],[]];
