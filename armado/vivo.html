@@ -6,14 +6,23 @@ main{max-width:900px;margin:auto;padding:12px 16px 40px;display:flex;flex-direct
 .n{font-size:26px;font-weight:800}.l{font-size:12px;color:#5E6862}.bar{grid-column:1/-1;height:8px;border-radius:4px;background:#D9DDD6;overflow:hidden;display:flex}.bar i{height:100%}
 table{width:100%;border-collapse:collapse;font-size:14px}th,td{padding:7px 6px;border-bottom:1px solid #E4E7EC;text-align:left}td.r,th.r{text-align:right}
 tr.ok td{background:#CFEBD4}tr.par td{background:#FBEFD6}tr.exc td{background:#F9E0DE}.loc{background:#1A211D;color:#fff;border-radius:5px;padding:1px 6px;font-size:12px;font-weight:700}
-.mu{color:#5E6862;font-size:13px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}</style></head>
-<body><header><a href="./" style="color:#cfd8ea;text-decoration:none;font-weight:700;font-size:13px">← Tablero de pedidos</a><h1 id="t">Armado en vivo</h1><div class="sub" id="s">Conectando…</div></header><main id="m"><div class="card mu">Esperando datos del celular…</div></main>
+.mu{color:#5E6862;font-size:13px}.fts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}.ft{width:132px;font-size:11px;color:#5E6862}.ft img{width:132px;height:132px;object-fit:cover;border-radius:8px;border:1px solid #D9DDD6;background:#E4E7EC;display:block;cursor:zoom-in}#zoom{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;align-items:center;justify-content:center;z-index:9}#zoom img{max-width:96vw;max-height:92vh;border-radius:6px}.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px;vertical-align:1px}</style></head>
+<body><header><a href="./" style="color:#cfd8ea;text-decoration:none;font-weight:700;font-size:13px">← Tablero de pedidos</a><h1 id="t">Armado en vivo</h1><div class="sub" id="s">Conectando…</div></header><div id="zoom" onclick="this.style.display='none'"><img alt=""></div><main id="m"><div class="card mu">Esperando datos del celular…</div></main>
 <script>
 const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
 const id=new URLSearchParams(location.search).get('p')||'';
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('es-UY');
 const ST={pen:'Pendiente',ok:'OK',par:'Falta',exc:'Sobra'};
+const RAW='https://raw.githubusercontent.com/astillerozonafrancaflorida-star/armados-fotos/main/';
+const IMGT={};  // nombre → marca de tiempo para reintentar si todavía no está publicada
+function furl(c,n){return RAW+encodeURIComponent(c)+'/'+encodeURIComponent(n)+(IMGT[n]?'?t='+IMGT[n]:'')}
+function freint(im){const n=im.dataset.n;if((+im.dataset.r||0)>12)return;im.dataset.r=(+im.dataset.r||0)+1;setTimeout(()=>{IMGT[n]=Date.now();im.src=furl(im.dataset.c,n)},15000)}
+function fzoom(im){const z=document.getElementById('zoom');z.querySelector('img').src=im.src;z.style.display='flex'}
+function fotosHTML(d){const F=(d.fotos||[]).slice().sort((a,b)=>b.at-a.at);if(!F.length&&!d.fpend)return '';
+  const et=f=>f.t==='pallet'?'📦 '+f.n.replace(/\.jpg$/,'').replace('_cara',' · cara '):f.t==='lote'?'🏷️ lote '+f.r:'🍾 '+f.r;
+  return `<section class="card"><b>📷 Fotos (${F.length})</b>${d.fpend?` <span class="mu">· ${d.fpend} subiendo desde el celular…</span>`:''}<div class="mu">Las más nuevas primero. Pueden tardar 1-2 minutos en aparecer. Tocá una para agrandarla.</div><div class="fts">`+
+   F.map(f=>`<div class="ft"><img loading="lazy" data-c="${esc(d.viv)}" data-n="${esc(f.n)}" src="${furl(d.viv,f.n)}" onerror="freint(this)" onclick="fzoom(this)" alt=""><div>${esc(et(f))}</div><div>${new Date(f.at).toTimeString().slice(0,5)}</div></div>`).join('')+`</div></section>`}
 let LISTO=null;
 async function listo(){try{const pj=await (await fetch('pedidos.json',{cache:'no-store'})).json();const e=pj.find(x=>x.id===id);if(!e||!e.listo||!e.listo.lin)return false;LISTO=e;const t=e.listo,L=t.lin;
  const f=t.fecha?new Date(t.fecha).toLocaleString('es-UY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):'';
@@ -35,9 +44,10 @@ async function tick(){
     let h=`<section class="card prog"><div><div class="n">${cnt.ok}/${L.length}</div><div class="l">líneas OK</div></div><div><div class="n">${fmt(ctl)}/${fmt(tot)}</div><div class="l">botellas</div></div><div><div class="n">${Object.keys(d.pallets||{}).filter(k=>k!=='SUELTO'&&k!=='ÁREA DE ARMADO').length}</div><div class="l">pallets</div></div><div class="bar"><i style="width:${w('ok')}%;background:#2F7A3F"></i><i style="width:${w('par')}%;background:#9A6400"></i><i style="width:${w('exc')}%;background:#B3261E"></i></div></section>`;
     h+=`<section class="card"><table><thead><tr><th>Producto</th><th>Ubic.</th><th class="r">Armado</th><th class="r">Estado</th></tr></thead><tbody>`+L.map(l=>`<tr class="${l.st}"><td><b>${esc(l.c)}</b> ${esc(l.n)}</td><td><span class="loc">${esc(l.loc)}</span></td><td class="r">${fmt(l.s)}/${fmt(l.q)}</td><td class="r">${ST[l.st]}${l.st==='par'?' '+fmt(l.q-l.s):l.st==='exc'?' '+fmt(l.s-l.q):''}</td></tr>`).join('')+`</tbody></table></section>`;
     const P=d.pallets||{};h+=`<section class="card"><b>Pallets</b>`+Object.keys(P).sort((a,b)=>{const g=k=>k==='ÁREA DE ARMADO'?3:k==='SUELTO'?2:/^O\d+$/.test(k)?1:0;return (g(a)-g(b))||a.localeCompare(b,'es',{numeric:true})}).map(p=>`<div style="margin-top:6px"><b>${esc(p)}${/^O\d+$/.test(p)?' (de origen)':''}</b> · ${fmt(P[p].u)} unid.${p==='SUELTO'?' · sin pallet':p==='ÁREA DE ARMADO'?' · sin paletizar':' · 📷 '+(P[p].f||0)+'/'+(/^O\d+$/.test(p)?1:4)}<div class="mu">${Object.entries(P[p].c||{}).map(([c,u])=>esc(c)+' ('+fmt(u)+')').join(' · ')}</div></div>`).join('')+`</section>`;
+    if(d.viv)h+=fotosHTML(d);
     const cn=Object.entries(d.cajasN||{});if(cn.length)h+=`<section class="card"><b>Códigos de CAJA nuevos</b>`+cn.map(([e,c])=>`<div class="mu">${esc(e)} → ${esc(c)}</div>`).join('')+`</section>`;
     const nv=Object.entries(d.nuevos||{});if(nv.length)h+=`<section class="card"><b>Códigos de barras nuevos</b>`+nv.map(([e,c])=>`<div class="mu">${esc(e)} → ${esc(c)}</div>`).join('')+`</section>`;
-    document.getElementById('m').innerHTML=h;
+    if(h!==tick._h){tick._h=h;document.getElementById('m').innerHTML=h}
   }catch(e){document.getElementById('s').textContent='Sin conexión con el intermediario. Reintentando…'}
 }
 listo().then(ok=>{if(!ok){tick();setInterval(tick,5000)}});
