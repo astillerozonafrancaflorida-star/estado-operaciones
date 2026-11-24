@@ -1582,5 +1582,14 @@
   "lineas": 74,
   "botellas": 2274,
   "creado": "2026-11-23T21:07:48.205367+00:00"
+ },
+ {
+  "id": "S00359-URUGUAIANA-7fwGARWs",
+  "titulo": "Factura S00359-URUGUAIANA",
+  "cliente": "BRASIL FREE SHOP SAO JOAO",
+  "entrega": "BRASIL FREE SHOP SAO JOAO (URUGUAIANA)",
+  "lineas": 12,
+  "botellas": 1188,
+  "creado": "2026-11-24T13:50:41.740993+00:00"
  }
 ]
