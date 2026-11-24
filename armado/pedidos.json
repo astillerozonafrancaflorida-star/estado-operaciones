@@ -1929,5 +1929,14 @@
    "fin_txt": "24/11 11:44",
    "activo_txt": "22 min"
   }
+ },
+ {
+  "id": "A5564-MCeq2lZL",
+  "titulo": "Factura A5564",
+  "cliente": "GEMISTER S.A",
+  "entrega": "BRASIL FREE SHOP",
+  "lineas": 2,
+  "botellas": 4,
+  "creado": "2026-11-24T15:34:54.490939+00:00"
  }
 ]
