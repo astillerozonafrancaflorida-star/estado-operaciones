@@ -1345,15 +1345,6 @@
   "creado": "2026-11-23T20:11:13.235294+00:00"
  },
  {
-  "id": "A2695-64R5pfBR",
-  "titulo": "Factura A2695",
-  "cliente": "BAH FREE SHOP LTDA",
-  "entrega": "BAH FREE SHOP",
-  "lineas": 55,
-  "botellas": 4892,
-  "creado": "2026-11-23T20:13:01.825969+00:00"
- },
- {
   "id": "A5557-9fXvPW1h",
   "titulo": "Factura A5557",
   "cliente": "ALFACOR INTERNATIONAL SA",
@@ -1971,5 +1962,14 @@
    "fin_txt": "24/11 15:01",
    "activo_txt": "5 min"
   }
+ },
+ {
+  "id": "A2695-64R5pfBR",
+  "titulo": "Factura A2695",
+  "cliente": "BAH FREE SHOP LTDA",
+  "entrega": "BAH FREE SHOP",
+  "lineas": 55,
+  "botellas": 4892,
+  "creado": "2026-11-24T18:59:54.705637+00:00"
  }
 ]
