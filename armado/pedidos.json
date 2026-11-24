@@ -1370,7 +1370,154 @@
   "entrega": "LIBERTY BARRACÃO",
   "lineas": 21,
   "botellas": 666,
-  "creado": "2026-11-24T11:19:46.386907+00:00"
+  "creado": "2026-11-24T11:19:46.386907+00:00",
+  "listo": {
+   "carpeta": "ALFACOR-A5557-24NOV26",
+   "armo": "Sebastian",
+   "fecha": "2026-11-24T13:19:27.152Z",
+   "ok": 21,
+   "n": 21,
+   "bot": 666,
+   "lin": [
+    [
+     "43",
+     "LICOR BOTTEGA ESPRESSO 500 ML",
+     24,
+     24
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     36,
+     36
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     12,
+     12
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     12,
+     12
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     36,
+     36
+    ],
+    [
+     "393",
+     "LICOR BOTTEGA SAMBUCA 700 ML",
+     6,
+     6
+    ],
+    [
+     "595",
+     "LICOR BOTTEGA NEGRONI  700 ML",
+     24,
+     24
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     48,
+     48
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     48,
+     48
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     36,
+     36
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     60,
+     60
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     48,
+     48
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     12,
+     12
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     48,
+     48
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     48,
+     48
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     36,
+     36
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     48,
+     48
+    ],
+    [
+     "159",
+     "LICOR BOTTEGA GINGER 500 ML",
+     12,
+     12
+    ],
+    [
+     "1028",
+     "ESPUMANTE MILLESIMATO BOTTEGA BRUT 750 ML",
+     24,
+     24
+    ],
+    [
+     "577",
+     "LICOR BOTTEGA GIANDUIA FONDENTE 500 ML",
+     24,
+     24
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795520300126,
+   "fin": 1795524769703,
+   "activo_min": 74.5,
+   "lab_min": 74.5,
+   "lineas": 21,
+   "min_linea": 3.5,
+   "seg_bot": 6.7,
+   "inicio_txt": "24/11 08:38",
+   "fin_txt": "24/11 09:52",
+   "activo_txt": "1 h 14 min"
+  }
  },
  {
   "id": "A5558-eZom626O",
@@ -1425,5 +1572,15 @@
    "fin_txt": "24/11 09:31",
    "activo_txt": "2 min"
   }
+ },
+ {
+  "id": "ubicar-usa-26-00595-6RpXfRkH",
+  "tipo": "ubicar",
+  "titulo": "📥 Ubicar · Ingreso contenedor USA 26/00595",
+  "cliente": "ONE PARANA · Silver Oak · Opus One · Duckhorn · Paul Hobbs · Belle Glos",
+  "entrega": "",
+  "lineas": 13,
+  "botellas": 3460,
+  "creado": "2026-11-24T13:18:09.389972+00:00"
  }
 ]
