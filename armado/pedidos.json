@@ -1351,15 +1351,6 @@
   "creado": "2026-11-23T21:07:48.205367+00:00"
  },
  {
-  "id": "A5559-KBIkYaVk",
-  "titulo": "Factura A5559",
-  "cliente": "ALFACOR INTERNATIONAL SA",
-  "entrega": "LIBERTY DUTY FREE",
-  "lineas": 20,
-  "botellas": 426,
-  "creado": "2026-11-24T11:17:40.978264+00:00"
- },
- {
   "id": "A5557-9fXvPW1h",
   "titulo": "Factura A5557",
   "cliente": "ALFACOR INTERNATIONAL SA",
@@ -1376,5 +1367,14 @@
   "lineas": 21,
   "botellas": 660,
   "creado": "2026-11-24T11:21:35.277890+00:00"
+ },
+ {
+  "id": "A5559-KBIkYaVk",
+  "titulo": "Factura A5559",
+  "cliente": "ALFACOR INTERNATIONAL SA",
+  "entrega": "LIBERTY GUAIRA",
+  "lineas": 20,
+  "botellas": 426,
+  "creado": "2026-11-24T11:23:27.709796+00:00"
  }
 ]
