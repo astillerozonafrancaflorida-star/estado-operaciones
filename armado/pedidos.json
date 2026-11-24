@@ -1974,10 +1974,10 @@
   "listo": {
    "carpeta": "BAH-FREE-A2695-24NOV26",
    "armo": "Natalia y Denis Pecora",
-   "fecha": "2026-11-24T05:12:54.542Z",
-   "ok": 46,
+   "fecha": "2026-11-24T19:20:11.113620Z",
+   "ok": 54,
    "n": 55,
-   "bot": 4604,
+   "bot": 5372,
    "lin": [
     [
      "2518",
@@ -2013,7 +2013,7 @@
      "2525",
      "ACEITE DE OLIVA EXTRA VIRGEN AIRES DE JAEN OLEO MARTOS 500 ML",
      480,
-     0
+     480
     ],
     [
      "453",
@@ -2025,43 +2025,43 @@
      "622",
      "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML",
      60,
-     0
+     60
     ],
     [
      "49",
      "LICOR BOTTEGA CANNELLA 500 ML",
      12,
-     0
+     12
     ],
     [
      "1581",
      "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
      36,
-     0
+     36
     ],
     [
      "1022",
      "LICOR BOTTEGA PISTACHO 500 ML",
      96,
-     0
+     96
     ],
     [
      "133",
      "LICOR BOTTEGA PESCA 500 ML",
      36,
-     0
+     36
     ],
     [
      "90",
      "LICOR BOTTEGA MELONCINO 500 ML",
      24,
-     0
+     24
     ],
     [
      "1388",
      "VINO OPORTO TAYLOR`S FINE RUBY 750 ML",
      24,
-     0
+     24
     ],
     [
      "1434",
@@ -2313,14 +2313,14 @@
    "pal": 5,
    "inicio": 1795459656701,
    "fin": 1795492217486,
-   "activo_min": 8.2,
+   "activo_min": 24.1,
    "lab_min": 132.4,
    "lineas": 55,
-   "min_linea": 0.1,
-   "seg_bot": 0.1,
+   "min_linea": 0.4,
+   "seg_bot": 0.3,
    "inicio_txt": "23/11 15:47",
    "fin_txt": "24/11 00:50",
-   "activo_txt": "8 min"
+   "activo_txt": "24 min"
   }
  }
 ]
