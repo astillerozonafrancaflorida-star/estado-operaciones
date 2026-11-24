@@ -1782,6 +1782,147 @@
   "entrega": "LIBERTY GUAIRA",
   "lineas": 20,
   "botellas": 426,
-  "creado": "2026-11-24T14:59:12.766086+00:00"
+  "creado": "2026-11-24T14:59:12.766086+00:00",
+  "listo": {
+   "carpeta": "ALFACOR-A5559-24NOV26",
+   "armo": "Sebastian",
+   "fecha": "2026-11-24T14:53:35.000Z",
+   "ok": 20,
+   "n": 20,
+   "bot": 426,
+   "lin": [
+    [
+     "43",
+     "LICOR BOTTEGA ESPRESSO 500 ML",
+     24,
+     24
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     12,
+     12
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     12,
+     12
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     12,
+     12
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     24,
+     24
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     24,
+     24
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     12,
+     12
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     12,
+     12
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     12,
+     12
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     12,
+     12
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     36,
+     36
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     36,
+     36
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     12,
+     12
+    ],
+    [
+     "590",
+     "GRAPPA PROSECCO BOTTEGA ALEXANDER 700 ML",
+     6,
+     6
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     48,
+     48
+    ],
+    [
+     "159",
+     "LICOR BOTTEGA GINGER 500 ML",
+     12,
+     12
+    ],
+    [
+     "1028",
+     "ESPUMANTE MILLESIMATO BOTTEGA BRUT 750 ML",
+     48,
+     48
+    ],
+    [
+     "577",
+     "LICOR BOTTEGA GIANDUIA FONDENTE 500 ML",
+     24,
+     24
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795530138783,
+   "fin": 1795531467420,
+   "activo_min": 22.1,
+   "lab_min": 22.1,
+   "lineas": 20,
+   "min_linea": 1.1,
+   "seg_bot": 3.1,
+   "inicio_txt": "24/11 11:22",
+   "fin_txt": "24/11 11:44",
+   "activo_txt": "22 min"
+  }
  }
 ]
