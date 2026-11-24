@@ -2306,15 +2306,6 @@
   }
  },
  {
-  "id": "S00161-Mah5vi4J",
-  "titulo": "Pedido S00161",
-  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
-  "entrega": "BONNO FREE SHOP",
-  "lineas": 84,
-  "botellas": 5835,
-  "creado": "2026-11-24T20:04:38.204741+00:00"
- },
- {
   "id": "S00364-utx8zsrp",
   "titulo": "Pedido S00364",
   "cliente": "LETRA L SRL, LETRA L SRL",
@@ -2322,5 +2313,14 @@
   "lineas": 18,
   "botellas": 1687,
   "creado": "2026-11-24T20:40:47.161321+00:00"
+ },
+ {
+  "id": "S00161-Mah5vi4J",
+  "titulo": "Pedido S00161",
+  "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
+  "entrega": "BONNO FREE SHOP",
+  "lineas": 83,
+  "botellas": 2835,
+  "creado": "2026-11-24T20:45:59.398375+00:00"
  }
 ]
