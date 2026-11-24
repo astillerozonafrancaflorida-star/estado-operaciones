@@ -2316,11 +2316,12 @@
  },
  {
   "id": "S00161-Mah5vi4J",
-  "titulo": "Pedido S00161",
+  "titulo": "Factura A2701",
   "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
   "entrega": "BONNO FREE SHOP",
   "lineas": 83,
   "botellas": 2835,
-  "creado": "2026-11-24T20:45:59.398375+00:00"
+  "creado": "2026-11-24T20:45:59.398375+00:00",
+  "clave": "S00161"
  }
 ]
