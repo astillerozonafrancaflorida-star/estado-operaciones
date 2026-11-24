@@ -1516,7 +1516,154 @@
   "entrega": "LIBERTY FOZ",
   "lineas": 21,
   "botellas": 660,
-  "creado": "2026-11-24T11:21:35.277890+00:00"
+  "creado": "2026-11-24T11:21:35.277890+00:00",
+  "listo": {
+   "carpeta": "ALFACOR-A5558-24NOV26",
+   "armo": "Sebastian",
+   "fecha": "2026-11-24T14:18:44.310Z",
+   "ok": 21,
+   "n": 21,
+   "bot": 660,
+   "lin": [
+    [
+     "43",
+     "LICOR BOTTEGA ESPRESSO 500 ML",
+     12,
+     12
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     36,
+     36
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     12,
+     12
+    ],
+    [
+     "133",
+     "LICOR BOTTEGA PESCA 500 ML",
+     12,
+     12
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     36,
+     36
+    ],
+    [
+     "595",
+     "LICOR BOTTEGA NEGRONI  700 ML",
+     12,
+     12
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     60,
+     60
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     48,
+     48
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     12,
+     12
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     60,
+     60
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     24,
+     24
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     24,
+     24
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     60,
+     60
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     48,
+     48
+    ],
+    [
+     "2696",
+     "LICOR BOTTEGA LIMONCELLO 1000 ML",
+     12,
+     12
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     60,
+     60
+    ],
+    [
+     "159",
+     "LICOR BOTTEGA GINGER 500 ML",
+     12,
+     12
+    ],
+    [
+     "1028",
+     "ESPUMANTE MILLESIMATO BOTTEGA BRUT 750 ML",
+     60,
+     60
+    ],
+    [
+     "13",
+     "PROSECCO BOTTEGA WHITE GOLD VENEZIA 750 ML",
+     12,
+     12
+    ],
+    [
+     "577",
+     "LICOR BOTTEGA GIANDUIA FONDENTE 500 ML",
+     24,
+     24
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795526642163,
+   "fin": 1795529079834,
+   "activo_min": 40.6,
+   "lab_min": 40.6,
+   "lineas": 21,
+   "min_linea": 1.9,
+   "seg_bot": 3.7,
+   "inicio_txt": "24/11 10:24",
+   "fin_txt": "24/11 11:04",
+   "activo_txt": "41 min"
+  }
  },
  {
   "id": "A5559-KBIkYaVk",
