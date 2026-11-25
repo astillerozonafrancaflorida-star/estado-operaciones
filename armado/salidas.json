@@ -5,7 +5,7 @@
   "nota": "Facturas A5555 · A5551 · A5556",
   "fecha": "25/11",
   "creado": "2026-11-25T09:41-03:00",
-  "estado": "abierta",
+  "estado": "cerrada",
   "grupos": [
    {
     "clave": "A5550-A5551",
@@ -159,6 +159,16 @@
     ],
     "sueltos": 0
    }
-  ]
+  ],
+  "cerrada": "2026-11-25T14:22:23.315Z",
+  "resultado": {
+   "matricula": "OTP2870",
+   "chofer": "De Maria",
+   "op": "Natalia",
+   "ok": 3,
+   "total": 3,
+   "faltan": [],
+   "motivo": ""
+  }
  }
 ]
