@@ -2750,15 +2750,6 @@
   "creado": "2026-11-23T21:07:48.205367+00:00"
  },
  {
-  "id": "A5576-A5580-A5577-7uhCQ7fs",
-  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583 · A5585",
-  "cliente": "HIPER T Y N SRL",
-  "entrega": "HIPER FREE SHOP",
-  "lineas": 15,
-  "botellas": 2052,
-  "creado": "2026-11-25T13:39:57.588527+00:00"
- },
- {
   "id": "S00161-Mah5vi4J",
   "titulo": "Factura A2701",
   "cliente": "BONNO FREE SHOP LTDA, BONNO FREE SHOP",
@@ -3304,5 +3295,14 @@
   "lineas": 18,
   "botellas": 1687,
   "creado": "2026-11-24T20:40:47.161321+00:00"
+ },
+ {
+  "id": "A5576-A5580-A5577-7uhCQ7fs",
+  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583 · A5585",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 15,
+  "botellas": 2052,
+  "creado": "2026-11-25T13:39:57.588527+00:00"
  }
 ]
