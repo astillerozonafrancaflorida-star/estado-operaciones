@@ -2982,16 +2982,6 @@
   }
  },
  {
-  "id": "S00359-ITAQUI-n0OwXyul",
-  "titulo": "Factura A2704 · Itaqui",
-  "cliente": "BRASIL FREE SHOP ITAQUI",
-  "entrega": "BRASIL FREE SHOP ITAQUI",
-  "lineas": 12,
-  "botellas": 540,
-  "creado": "2026-11-24T13:54:24.391651+00:00",
-  "clave": "S00359-ITAQUI"
- },
- {
   "id": "S00359-QUARAI-ei8yY1pL",
   "titulo": "Factura A2705 · Quaraí",
   "cliente": "BRASIL FREE SHOP QUARAI",
@@ -3118,5 +3108,15 @@
   "lineas": 18,
   "botellas": 1687,
   "creado": "2026-11-24T20:40:47.161321+00:00"
+ },
+ {
+  "id": "S00359-ITAQUI-n0OwXyul",
+  "titulo": "Factura A2704 · Itaqui",
+  "cliente": "BRASIL FREE SHOP ITAQUI",
+  "entrega": "BRASIL FREE SHOP ITAQUI",
+  "lineas": 12,
+  "botellas": 540,
+  "creado": "2026-11-24T13:54:24.391651+00:00",
+  "clave": "S00359-ITAQUI"
  }
 ]
