@@ -3091,16 +3091,6 @@
   "creado": "2026-11-24T20:40:47.161321+00:00"
  },
  {
-  "id": "S00359-LIVRAMENTO-rAVAfvBR",
-  "titulo": "Factura A2706 · Livramento",
-  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
-  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
-  "lineas": 13,
-  "botellas": 1211,
-  "creado": "2026-11-24T14:00:09.147479+00:00",
-  "clave": "S00359-LIVRAMENTO"
- },
- {
   "id": "A5576-A5580-A5577-7uhCQ7fs",
   "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582",
   "cliente": "HIPER T Y N SRL",
@@ -3117,6 +3107,202 @@
   "lineas": 11,
   "botellas": 480,
   "creado": "2026-11-24T13:54:24.391651+00:00",
-  "clave": "S00359-ITAQUI"
+  "clave": "S00359-ITAQUI",
+  "listo": {
+   "carpeta": "BRASIL-S00359-ITAQUI-25NOV26",
+   "armo": "Sebastian",
+   "fecha": "2026-11-25T15:13:09.435Z",
+   "ok": 11,
+   "n": 11,
+   "bot": 480,
+   "lin": [
+    [
+     "2518",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO ALBAHACA MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2520",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO CHILE MARASCA 250 ML",
+     36,
+     36
+    ],
+    [
+     "2522",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO LIMON MARASCA 250 ML",
+     36,
+     36
+    ],
+    [
+     "2516",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO TRUFA BLANCA MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "622",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML",
+     6,
+     6
+    ],
+    [
+     "3174",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT COFFRET ARROW SAO PAULO 750 ML",
+     6,
+     6
+    ],
+    [
+     "1104",
+     "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "2224",
+     "DULCE DE LECHE LOS NIETITOS CON AVELLANAS 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "942",
+     "DULCE DE LECHE LOS NIETITOS CON COCO 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "941",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 780 GRAMOS",
+     48,
+     48
+    ],
+    [
+     "188",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
+     120,
+     120
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795611516590,
+   "fin": 1795618209092,
+   "activo_min": 20.6,
+   "lab_min": 111.5,
+   "lineas": 11,
+   "min_linea": 1.9,
+   "seg_bot": 2.6,
+   "inicio_txt": "25/11 09:58",
+   "fin_txt": "25/11 11:50",
+   "activo_txt": "21 min"
+  }
+ },
+ {
+  "id": "S00359-LIVRAMENTO-rAVAfvBR",
+  "titulo": "Factura A2708 · Livramento",
+  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
+  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
+  "lineas": 13,
+  "botellas": 1175,
+  "creado": "2026-11-24T14:00:09.147479+00:00",
+  "clave": "S00359-LIVRAMENTO",
+  "listo": {
+   "carpeta": "BRASIL-S00359-LIVRAMENTO-25NOV26",
+   "armo": "Gaston",
+   "fecha": "2026-11-25T15:42:17.896Z",
+   "ok": 13,
+   "n": 13,
+   "bot": 1175,
+   "lin": [
+    [
+     "2519",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO AJO MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2518",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO ALBAHACA MARASCA 250 ML",
+     60,
+     60
+    ],
+    [
+     "2520",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO CHILE MARASCA 250 ML",
+     60,
+     60
+    ],
+    [
+     "2522",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO LIMON MARASCA 250 ML",
+     60,
+     60
+    ],
+    [
+     "2516",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO TRUFA BLANCA MARASCA 250 ML",
+     60,
+     60
+    ],
+    [
+     "622",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML",
+     24,
+     24
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     215,
+     215
+    ],
+    [
+     "3174",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT COFFRET ARROW SAO PAULO 750 ML",
+     24,
+     24
+    ],
+    [
+     "1104",
+     "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
+     120,
+     120
+    ],
+    [
+     "2224",
+     "DULCE DE LECHE LOS NIETITOS CON AVELLANAS 400 GRAMOS",
+     120,
+     120
+    ],
+    [
+     "942",
+     "DULCE DE LECHE LOS NIETITOS CON COCO 400 GRAMOS",
+     120,
+     120
+    ],
+    [
+     "941",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 780 GRAMOS",
+     48,
+     48
+    ],
+    [
+     "188",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
+     240,
+     240
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795612987416,
+   "fin": 1795620992587,
+   "activo_min": 37.9,
+   "lab_min": 133.4,
+   "lineas": 13,
+   "min_linea": 2.9,
+   "seg_bot": 1.9,
+   "inicio_txt": "25/11 10:23",
+   "fin_txt": "25/11 12:36",
+   "activo_txt": "38 min"
+  }
  }
 ]
