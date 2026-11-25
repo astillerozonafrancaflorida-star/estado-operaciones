@@ -124,7 +124,7 @@ function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=lo
    <div class="stp"><b>${u>1?'Sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
    <div class="tot"><span id="qt">${fmt(tot)}</span> <span class="mu">unid.</span></div>
    ${datosProd(l)}
-   ${F.hacia?(FN[l.c]?`<button class="btn ok" data-a="guardar" style="padding:16px;font-size:18px">✔ Ubicado en ${esc(F.hacia)}</button>`:`<div class="alert wa">🍾 Este producto no tiene ninguna foto de la etiqueta: sacá una abajo en "Datos del producto" (obligatoria) y después ubicalo.</div>`):''}
+   ${F.hacia?(!faltanF(l).length?`<button class="btn ok" data-a="guardar" style="padding:16px;font-size:18px">✔ Ubicado en ${esc(F.hacia)}</button>`:`<div class="alert wa">📸 Faltan fotos del producto (abajo, en "Datos del producto"): son obligatorias. Sacalas y después ubicalo.</div>`):''}
    ${F.otra?`<div><div class="eb" style="margin-bottom:6px">${F.hacia?'Lo dejé en otra ubicación':'¿Dónde lo dejás?'}</div><input id="hacia" class="inp" placeholder="Ej: 2A, 28-1, 117-3, CAM 4" autocomplete="off"><div class="chips" id="sug" style="margin-top:6px"></div>${(D.libres||[]).length&&!F.hacia?`<div class="mu" style="margin-top:8px">Ubicaciones libres o con lugar:</div><div class="chips" style="margin-top:4px">${D.libres.map(u=>`<button class="chip" data-hacia="${esc(u)}">${esc(u)}</button>`).join('')}</div>`:''}<div class="mu" id="hn"></div></div>`
      :`<button class="btn" data-a="otra">No entra / lo dejé en otro lugar</button>`}`);
   const bind=(id,k)=>{const i=$(id);if(i)i.oninput=()=>{F[k]=Math.max(0,parseInt(i.value)||0);$('qt').textContent=fmt(F.cajas*u+F.sueltas)}};bind('qc','cajas');bind('qs','sueltas');
@@ -135,18 +135,22 @@ function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=lo
 let CB=[];try{CB=JSON.parse(ls('ubi_cods_'+D.id)||'[]')}catch(e){}const saveCB=()=>ls('ubi_cods_'+D.id,JSON.stringify(CB));
 let FQ=[];const FOK={};let FN={};try{FN=JSON.parse(ls('ubi_fotos')||'{}')||{}}catch(e){FN={}}
 const saveFN=()=>ls('ubi_fotos',JSON.stringify(FN));
-Object.entries(window.FP||{}).forEach(([k,v])=>{if((FN[k]||0)<v.length)FN[k]=v.length});  // índice publicado (25/11)
+// 3 fotos por producto: botella, código de barras, caja (Mario 25/11). FN['code|tipo'] = cantidad
+const TIPF=[['botella','🍾 Botella','de frente, que se lea la etiqueta'],['codigo','▥ Código de barras','de cerca, el código de la botella'],['caja','📦 Caja','con su etiqueta y código']];
+const tiposP=l=>TIPF.filter(t=>t[0]!=='caja'||(l.u||1)>1);const faltanF=l=>tiposP(l).filter(t=>!FN[l.c+'|'+t[0]]);
+const tipoDe=n=>{const p=String(n).replace(/\.jpg$/i,'').split('_');return p.length>2&&['botella','codigo','caja'].includes(p[1])?p[1]:'otra'};
+Object.entries(window.FP||{}).forEach(([c,o])=>{if(Array.isArray(o))o={otra:o};Object.entries(o).forEach(([t,a])=>{const k=c+'|'+t;if((FN[k]||0)<a.length)FN[k]=a.length})});
 /* fotos ya subidas (de cualquier celular): lista de la carpeta PRODUCTOS-FOTOS del repo, guardada 5 min */
 async function contarFotos(forzar){try{let c=null;try{c=JSON.parse(ls('ubi_fotos_srv')||'null')}catch(e){}
-  if(forzar||!c||Date.now()-c.at>300000){const r=await fetch('https://api.github.com/repos/astillerozonafrancaflorida-star/armados-fotos/contents/PRODUCTOS-FOTOS',{cache:'no-store'});if(!r.ok)return;const j=await r.json();const n={};j.forEach(f=>{const k=String(f.name).split('_')[0];n[k]=(n[k]||0)+1});c={at:Date.now(),n};ls('ubi_fotos_srv',JSON.stringify(c))}
+  if(forzar||!c||Date.now()-c.at>300000){const r=await fetch('https://api.github.com/repos/astillerozonafrancaflorida-star/armados-fotos/contents/PRODUCTOS-FOTOS',{cache:'no-store'});if(!r.ok)return;const j=await r.json();const n={};j.forEach(f=>{const k=String(f.name).split('_')[0]+'|'+tipoDe(f.name);n[k]=(n[k]||0)+1});c={at:Date.now(),n};ls('ubi_fotos_srv',JSON.stringify(c))}
   let cambio=false;Object.entries(c.n).forEach(([k,v])=>{if((FN[k]||0)<v){FN[k]=v;cambio=true}});if(cambio){saveFN();if(F)dibujar()}}catch(e){}}
 contarFotos();let MODO=null;
 function datosProd(l){const nf=FN[l.c]||0,u=l.u||1;
   return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Datos del producto</div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🍾 Botella: ${l.e.length?'<b style="color:var(--ok)">✔ …'+esc(l.e[l.e.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="cbot">${l.e.length?'Otro código':'Escanear botella'}</button></div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📦 Caja${u>1?' x'+u:''}: ${l.ce.length?'<b style="color:var(--ok)">✔ …'+esc(l.ce[l.ce.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="ccaja">${l.ce.length?'Otro código':'Escanear caja'}</button></div>
-   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📸 Fotos: ${nf?'<b style="color:var(--ok)">'+nf+' subida'+(nf>1?'s':'')+'</b>':'ninguna'}</span><span style="display:flex;gap:6px"><button class="btn" data-a="fprod">📷 Sacar foto</button><button class="btn" data-a="fgal" title="Elegir de la galería">🖼</button></span></div>
-   <div class="mu">Sacá foto de la etiqueta de adelante y de atrás (añada, graduación, código). Los códigos se cargan solos en Odoo.</div></div>`}
+   <div class="eb" style="margin-top:4px">Fotos del producto ${faltanF(l).length?'<span style="color:var(--wa)">· faltan '+faltanF(l).length+' (obligatorias)</span>':'· ✔ completas'}</div>
+   ${tiposP(l).map(t=>{const n=FN[l.c+'|'+t[0]]||0;return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${t[1]}: ${n?'<b style="color:var(--ok)">✔ '+n+'</b>':'<b style="color:var(--wa)">falta</b> <span class="mu">'+t[2]+'</span>'}</span><span style="display:flex;gap:6px"><button class="btn ${n?'':'pri'}" data-a="fprod" data-tipo="${t[0]}">📷</button><button class="btn" data-a="fgal" data-tipo="${t[0]}" title="Galería">🖼</button></span></div>`}).join('')}</div></div>`}
 function registrar(c,cr,l,tipo){
   const otro=(M.productos||[]).find(p=>p.c!==l.c&&((p.e||[]).includes(c)||(p.ce||[]).includes(c)));
   if(otro){toast(`❌ Ese código ya es de ${otro.c} ${otro.n}`,5000);abrir(l);return}
@@ -164,24 +168,24 @@ function achicar(file){return new Promise((ok,ko)=>{const im=new Image();im.onlo
 /* cámara dentro de la página (25/11): en celulares con poca memoria, abrir la app de cámara hace que el navegador
    cierre la página ("memoria insuficiente"); así la foto se saca sin salir de la página */
 let camS=null;
-async function camFoto(l){const code=l.c;let n=0;
-  $('root').innerHTML=`<div id="scan"><video id="cvid" playsinline muted autoplay></video><div class="msg" id="cmsg">Foto de la etiqueta de ${esc(code)} · adelante y atrás</div>
+async function camFoto(l,tipo){tipo=tipo||'botella';const code=l.c,tn=(TIPF.find(t=>t[0]===tipo)||TIPF[0])[1];let n=0;
+  $('root').innerHTML=`<div id="scan"><video id="cvid" playsinline muted autoplay></video><div class="msg" id="cmsg">${tn} · ${esc(code)}</div>
    <div class="bot" style="justify-content:space-between;align-items:center"><button class="btn" id="cgal">🖼 Galería</button><button id="cdisp" style="width:74px;height:74px;border-radius:50%;border:5px solid #fff;background:#B3261E"></button><button class="btn pri" id="clisto">Listo</button></div></div>`;
   const fin=()=>{if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}abrir(l)};
-  $('clisto').onclick=fin;$('cgal').onclick=()=>{if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}FOTOCOD=code;$('camP').removeAttribute('capture');$('camP').value='';$('camP').click();abrir(l)};
+  $('clisto').onclick=fin;$('cgal').onclick=()=>{if(camS){camS.getTracks().forEach(t=>t.stop());camS=null}FOTOCOD=code;FOTOTIPO=tipo;$('camP').removeAttribute('capture');$('camP').value='';$('camP').click();abrir(l)};
   try{camS=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=$('cvid');v.srcObject=camS;await v.play()}
   catch(e){$('cmsg').textContent='No se pudo abrir la cámara: usá Galería';return}
   $('cdisp').onclick=()=>{const v=$('cvid');if(!v||!v.videoWidth)return;const k=Math.min(1,1600/Math.max(v.videoWidth,v.videoHeight));const c=document.createElement('canvas');c.width=Math.round(v.videoWidth*k);c.height=Math.round(v.videoHeight*k);c.getContext('2d').drawImage(v,0,0,c.width,c.height);
-    const b64=c.toDataURL('image/jpeg',.8).split(',')[1];FQ.push({code,b64,nombre:code+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'_'+(++n)+'.jpg'});FN[code]=(FN[code]||0)+1;saveFN();
+    const b64=c.toDataURL('image/jpeg',.8).split(',')[1];FQ.push({code,b64,nombre:code+'_'+tipo+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'_'+(++n)+'.jpg'});FN[code+'|'+tipo]=(FN[code+'|'+tipo]||0)+1;saveFN();
     try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}v.style.opacity=.3;setTimeout(()=>{if(v)v.style.opacity=1},150);$('cmsg').textContent=`📸 ${n} foto${n>1?'s':''} de ${code} · subiendo…`;subirFotos()}}
-let FOTOCOD=null;$('camP').onchange=async e=>{const f=e.target.files[0];if(!f||!FOTOCOD)return;const code=FOTOCOD;
-  try{const b64=await achicar(f);FQ.push({code,b64,nombre:code+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'.jpg'});FN[code]=(FN[code]||0)+1;saveFN();toast('📸 Foto guardada, subiendo…');subirFotos();const l=L.find(x=>x.c===code);if(l&&F&&F.l===l)dibujar()}catch(er){toast('No se pudo leer la foto')}};
+let FOTOCOD=null,FOTOTIPO='botella';$('camP').onchange=async e=>{const f=e.target.files[0];if(!f||!FOTOCOD)return;const code=FOTOCOD,tipo=FOTOTIPO;
+  try{const b64=await achicar(f);FQ.push({code,b64,nombre:code+'_'+tipo+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'.jpg'});FN[code+'|'+tipo]=(FN[code+'|'+tipo]||0)+1;saveFN();toast('📸 Foto guardada, subiendo…');subirFotos();const l=L.find(x=>x.c===code);if(l&&F&&F.l===l)dibujar()}catch(er){toast('No se pudo leer la foto')}};
 let envF=false;async function subirFotos(){if(envF)return;envF=true;try{while(FQ.length){const q=FQ[0];
     const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'PRODUCTOS-FOTOS',nombre:q.nombre,b64:q.b64})});
     if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;FQ.shift();FOK[q.code]=(FOK[q.code]||0)+1;const cm=$('cmsg');if(cm)cm.textContent=`✅ ${FOK[q.code]} foto${FOK[q.code]>1?'s':''} de ${q.code} subida${FOK[q.code]>1?'s':''}`+(FQ.length?` · subiendo ${FQ.length}…`:' · podés sacar otra o tocar Listo')}}catch(e){}envF=false;if(FQ.length)setTimeout(subirFotos,8000)}
 enviarCods();setInterval(enviarCods,30000);
 window.addEventListener('beforeunload',e=>{if(FQ.length){e.preventDefault();e.returnValue=''}});
-function guardar(){if(!FN[F.l.c]){toast('Falta la foto de la etiqueta');return}const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
+function guardar(){if(faltanF(F.l).length){toast('Faltan fotos del producto');return}const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
   if(!($('op').value||'').trim()){toast('Poné tu nombre arriba ("Soy:")');close();$('op').focus();return}
   if(!tot){toast('Poné la cantidad');return}if(!hacia){toast('Elegí la ubicación');return}
   const p=pend(l);if(tot>p&&!confirm(p?`Faltan ${p} de este producto y vas a ubicar ${tot}. ¿Seguro?`:`Este producto ya estaba todo ubicado. ¿Registrar ${tot} más igual?`))return;
@@ -240,8 +244,8 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
     case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break;
     case 'cbot':MODO={l:F.l,tipo:'bot'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la BOTELLA de '+MODO.l.c},300);break;
     case 'ccaja':MODO={l:F.l,tipo:'caja'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la CAJA de '+MODO.l.c},300);break;
-    case 'fprod':camFoto(F.l);break;
-    case 'fgal':FOTOCOD=F.l.c;$('camP').removeAttribute('capture');$('camP').value='';$('camP').click();break;
+    case 'fprod':camFoto(F.l,b.dataset.tipo);break;
+    case 'fgal':FOTOCOD=F.l.c;FOTOTIPO=b.dataset.tipo||'botella';$('camP').removeAttribute('capture');$('camP').value='';$('camP').click();break;
     case 'asig':{const ean=b.dataset.ean,raw=b.dataset.raw;sheet(hdr('¿De qué producto es?')+`<input id="qa" class="inp" placeholder="Buscar código o nombre"><div class="res" id="ra"></div>`);
       const pint=()=>{const q=($('qa').value||'').toLowerCase();$('ra').innerHTML=L.filter(l=>!q||l.c.includes(q)||l.n.toLowerCase().includes(q)).slice(0,40).map(l=>`<button data-asigl="${esc(l.c)}" data-ean="${esc(ean)}" data-raw="${esc(raw)}"><b>${esc(l.c)}</b> ${esc(l.n)}${l.e.length?'':' <span class="mu">· sin código</span>'}</button>`).join('')};$('qa').oninput=pint;pint();break}
     case 'asigtipo':{const l=L.find(x=>x.c===b.dataset.code);registrar(b.dataset.ean,b.dataset.raw,l,b.dataset.tipo);break}}
