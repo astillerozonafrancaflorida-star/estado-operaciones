@@ -1695,15 +1695,6 @@
   "creado": "2026-11-23T21:07:48.205367+00:00"
  },
  {
-  "id": "A5566-hmNj0Io6",
-  "titulo": "Factura A5566",
-  "cliente": "PROMEDICO S.A.",
-  "entrega": "BARAO FREE SHOP",
-  "lineas": 19,
-  "botellas": 2322,
-  "creado": "2026-11-24T14:40:19.555654+00:00"
- },
- {
   "id": "A5559-KBIkYaVk",
   "titulo": "Factura A5559",
   "cliente": "ALFACOR INTERNATIONAL SA",
@@ -3118,5 +3109,14 @@
   "lineas": 7,
   "botellas": 1380,
   "creado": "2026-11-25T13:39:57.588527+00:00"
+ },
+ {
+  "id": "A5566-hmNj0Io6",
+  "titulo": "Factura A5566",
+  "cliente": "PROMEDICO S.A.",
+  "entrega": "BARAO FREE SHOP",
+  "lineas": 19,
+  "botellas": 2322,
+  "creado": "2026-11-24T14:40:19.555654+00:00"
  }
 ]
