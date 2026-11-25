@@ -133,7 +133,7 @@ function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=lo
 }
 /* ---- datos del producto: códigos de botella/caja y fotos (Mario 25/11: vinos nuevos sin datos en el sistema) ---- */
 let CB=[];try{CB=JSON.parse(ls('ubi_cods_'+D.id)||'[]')}catch(e){}const saveCB=()=>ls('ubi_cods_'+D.id,JSON.stringify(CB));
-let FQ=[];const FN={};let MODO=null;
+let FQ=[];const FN={},FOK={};let MODO=null;
 function datosProd(l){const nf=FN[l.c]||0,u=l.u||1;
   return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Datos del producto</div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🍾 Botella: ${l.e.length?'<b style="color:var(--ok)">✔ …'+esc(l.e[l.e.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="cbot">${l.e.length?'Otro código':'Escanear botella'}</button></div>
@@ -171,7 +171,7 @@ let FOTOCOD=null;$('camP').onchange=async e=>{const f=e.target.files[0];if(!f||!
   try{const b64=await achicar(f);FQ.push({code,b64,nombre:code+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'.jpg'});FN[code]=(FN[code]||0)+1;toast('📸 Foto guardada, subiendo…');subirFotos();const l=L.find(x=>x.c===code);if(l&&F&&F.l===l)dibujar()}catch(er){toast('No se pudo leer la foto')}};
 let envF=false;async function subirFotos(){if(envF)return;envF=true;try{while(FQ.length){const q=FQ[0];
     const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'PRODUCTOS-FOTOS',nombre:q.nombre,b64:q.b64})});
-    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;FQ.shift()}}catch(e){}envF=false;if(FQ.length)setTimeout(subirFotos,8000)}
+    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;FQ.shift();FOK[q.code]=(FOK[q.code]||0)+1;const cm=$('cmsg');if(cm)cm.textContent=`✅ ${FOK[q.code]} foto${FOK[q.code]>1?'s':''} de ${q.code} subida${FOK[q.code]>1?'s':''}`+(FQ.length?` · subiendo ${FQ.length}…`:' · podés sacar otra o tocar Listo')}}catch(e){}envF=false;if(FQ.length)setTimeout(subirFotos,8000)}
 enviarCods();setInterval(enviarCods,30000);
 window.addEventListener('beforeunload',e=>{if(FQ.length){e.preventDefault();e.returnValue=''}});
 function guardar(){const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
