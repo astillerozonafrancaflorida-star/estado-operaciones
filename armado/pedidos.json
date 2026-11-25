@@ -3277,15 +3277,6 @@
   }
  },
  {
-  "id": "A5576-A5580-A5577-7uhCQ7fs",
-  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583",
-  "cliente": "HIPER T Y N SRL",
-  "entrega": "HIPER FREE SHOP",
-  "lineas": 14,
-  "botellas": 1938,
-  "creado": "2026-11-25T13:39:57.588527+00:00"
- },
- {
   "id": "ubicar-s00229-mwOYH2en",
   "tipo": "ubicar",
   "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
@@ -3304,5 +3295,14 @@
   "lineas": 16,
   "botellas": 4944,
   "creado": "2026-11-24T13:18:09.389972+00:00"
+ },
+ {
+  "id": "A5576-A5580-A5577-7uhCQ7fs",
+  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583 · A5585",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 15,
+  "botellas": 2052,
+  "creado": "2026-11-25T13:39:57.588527+00:00"
  }
 ]
