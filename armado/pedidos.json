@@ -2385,7 +2385,7 @@
    "armo": "Brian",
    "fecha": "2026-11-25T13:15:00.564Z",
    "ok": 13,
-   "n": 14,
+   "n": 13,
    "bot": 1218,
    "lin": [
     [
@@ -2437,12 +2437,6 @@
      24
     ],
     [
-     "3273",
-     "LICOR SHERIDANS 700 ML",
-     600,
-     0
-    ],
-    [
      "1104",
      "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
      120,
@@ -2478,8 +2472,8 @@
    "fin": 1795610324038,
    "activo_min": 45.5,
    "lab_min": 45.5,
-   "lineas": 14,
-   "min_linea": 3.3,
+   "lineas": 13,
+   "min_linea": 3.5,
    "seg_bot": 2.2,
    "inicio_txt": "25/11 08:53",
    "fin_txt": "25/11 09:38",
