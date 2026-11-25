@@ -57,7 +57,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
   <div class="eb" style="margin-top:8px">Mis últimos registros</div><div id="mios" class="mu"></div>
 </div>
 <div class="dock"><button class="big" id="bScan">▥ Escanear</button></div>
-<div id="root"></div><div id="toast" class="toast" hidden></div>
+<div id="root"></div><div id="toast" class="toast" hidden></div><input type="file" id="camP" accept="image/*" capture="environment" hidden>
 <script src="movdata.js"></script>
 <script>
 const D={"titulo": "Ingreso contenedor USA 26/00595", "cliente": "ONE PARANA · Silver Oak · Opus One · Duckhorn · Paul Hobbs · Belle Glos", "lineas": [{"c": "2097", "n": "VINO BELLE GLOS CLARK & TELEPHONE PINOT NOIR  2024 750 ML", "q": 118, "res": false, "loc": "26-1", "loc_m": "26-1", "nota": ""}, {"c": "3482", "n": "VINO DUCKHORN 50TH ANNIV THREE PALMS MERLOT 2023 750 ML ", "q": 6, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3469", "n": "VINO DUCKHORN NAPA VALLEY CABERNET SAUVIGNON 2023 750 ML", "q": 420, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3470", "n": "VINO DUCKHORN NAPA VALLEY MERLOT 2022 750 ML", "q": 1284, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "2850", "n": "VINO OPUS ONE 2022 1500 ML", "q": 36, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "2849", "n": "VINO OPUS ONE 2022 750 ML", "q": 660, "res": false, "loc": "22-1", "loc_m": "22-1", "nota": ""}, {"c": "3477", "n": "VINO PAUL HOBBS COOMBSVILLE NAPA VALLEY CABERNET SAUVIGNON 2022 750 ML ", "q": 102, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "1273", "n": "VINO PAUL HOBBS CROSSBARN NAPA VALLEY CABERNET SAUVIGNON 2021 750 ML", "q": 192, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3478", "n": "VINO PAUL HOBBS CROSSBARN SONOMA COAST CHARDONNAY 2024 750 ML ", "q": 54, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3479", "n": "VINO PAUL HOBBS RUSSIAN RIVER VALLEY  SONOMA COUNTY PINOT NOIR  2023 750 ML ", "q": 12, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3474", "n": "VINO SILVER OAK ALEXANDER VALLEY CABERNET SAUVIGNON 2021 750 ML ", "q": 372, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3475", "n": "VINO SILVER OAK NAPA VALLEY CABERNET SAUVIGNON 2021 750 ML ", "q": 132, "res": false, "loc": "", "loc_m": "", "nota": ""}, {"c": "3568", "n": "VINO YACOUBIAN HOBBS ARENI 2022 750 ML", "q": 72, "res": false, "loc": "", "loc_m": "", "nota": "En Odoo figura en tránsito (P00142)"}], "libres": ["36-2", "31-1", "18-2", "24-1", "23-1", "5-1", "30-2", "3-1"], "id": "ubicar-usa-26-00595-6RpXfRkH"};
@@ -123,6 +123,7 @@ function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=lo
    ${u>1?`<div class="stp"><b>Cajas (x${u})</b><div class="ctl"><button data-q="c-">−</button><input id="qc" inputmode="numeric" value="${F.cajas}"><button data-q="c+">+</button></div></div>`:''}
    <div class="stp"><b>${u>1?'Sueltas':'Unidades'}</b><div class="ctl"><button data-q="s-">−</button><input id="qs" inputmode="numeric" value="${F.sueltas}"><button data-q="s+">+</button></div></div>
    <div class="tot"><span id="qt">${fmt(tot)}</span> <span class="mu">unid.</span></div>
+   ${datosProd(l)}
    ${F.hacia?`<button class="btn ok" data-a="guardar" style="padding:16px;font-size:18px">✔ Ubicado en ${esc(F.hacia)}</button>`:''}
    ${F.otra?`<div><div class="eb" style="margin-bottom:6px">${F.hacia?'Lo dejé en otra ubicación':'¿Dónde lo dejás?'}</div><input id="hacia" class="inp" placeholder="Ej: 2A, 28-1, 117-3, CAM 4" autocomplete="off"><div class="chips" id="sug" style="margin-top:6px"></div>${(D.libres||[]).length&&!F.hacia?`<div class="mu" style="margin-top:8px">Ubicaciones libres o con lugar:</div><div class="chips" style="margin-top:4px">${D.libres.map(u=>`<button class="chip" data-hacia="${esc(u)}">${esc(u)}</button>`).join('')}</div>`:''}<div class="mu" id="hn"></div></div>`
      :`<button class="btn" data-a="otra">No entra / lo dejé en otro lugar</button>`}`);
@@ -130,6 +131,36 @@ function dibujar(){const l=F.l,u=l.u||1,p=pend(l),tot=F.cajas*u+F.sueltas,alt=lo
   const h=$('hacia');if(h){const upd=()=>{const s=sug(h.value),n=nUb(h.value);$('sug').innerHTML=s.map(x=>`<button class="chip" data-hacia="${esc(x)}">${esc(x)}</button>`).join('');
     $('hn').innerHTML=n?(UBS.includes(n)?`Tocá la sugerencia o <button class="btn" data-hacia="${esc(n)}" style="padding:4px 10px">usar ${esc(n)}</button>`:`<span style="color:var(--wa)">⚠️ "${esc(n)}" no está en el mapa.</span> <button class="btn" data-hacia="${esc(n)}" style="padding:4px 10px">usar igual</button>`):''};h.oninput=upd;upd();setTimeout(()=>h.focus(),50)}
 }
+/* ---- datos del producto: códigos de botella/caja y fotos (Mario 25/11: vinos nuevos sin datos en el sistema) ---- */
+let CB=[];try{CB=JSON.parse(ls('ubi_cods_'+D.id)||'[]')}catch(e){}const saveCB=()=>ls('ubi_cods_'+D.id,JSON.stringify(CB));
+let FQ=[];const FN={};let MODO=null;
+function datosProd(l){const nf=FN[l.c]||0,u=l.u||1;
+  return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Datos del producto</div>
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🍾 Botella: ${l.e.length?'<b style="color:var(--ok)">✔ …'+esc(l.e[l.e.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="cbot">${l.e.length?'Otro código':'Escanear botella'}</button></div>
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📦 Caja${u>1?' x'+u:''}: ${l.ce.length?'<b style="color:var(--ok)">✔ …'+esc(l.ce[l.ce.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="ccaja">${l.ce.length?'Otro código':'Escanear caja'}</button></div>
+   <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📸 Fotos: ${nf?'<b style="color:var(--ok)">'+nf+' subida'+(nf>1?'s':'')+'</b>':'ninguna'}</span><button class="btn" data-a="fprod">Sacar foto</button></div>
+   <div class="mu">Sacá foto de la etiqueta de adelante y de atrás (añada, graduación, código). Los códigos se cargan solos en Odoo.</div></div>`}
+function registrar(c,cr,l,tipo){
+  const otro=(M.productos||[]).find(p=>p.c!==l.c&&((p.e||[]).includes(c)||(p.ce||[]).includes(c)));
+  if(otro){toast(`❌ Ese código ya es de ${otro.c} ${otro.n}`,5000);abrir(l);return}
+  if(tipo==='bot'&&c.length===14){toast('❌ Ese código es de 14 dígitos: es de CAJA, no de botella',5000);abrir(l);return}
+  if(tipo==='bot'&&l.ce.includes(c)||tipo==='caja'&&l.e.includes(c)){toast('❌ Ese código ya está cargado como '+(tipo==='bot'?'caja':'botella')+' de este producto',5000);abrir(l);return}
+  if((tipo==='bot'?l.e:l.ce).includes(c)){toast('Ese código ya estaba cargado');abrir(l);return}
+  if(!dvok(c)&&!confirm(`El código ${cr} no parece válido (dígito verificador). ¿Guardarlo igual?`)){abrir(l);return}
+  (tipo==='bot'?l.e:l.ce).push(c);CB.push({tipo,ean:c,raw:cr,code:l.c,nombre:l.n,quien:($('op').value||'').trim(),at:new Date().toISOString(),orden:D.id,env:false});saveCB();
+  toast((tipo==='bot'?'🍾 Código de botella':'📦 Código de caja')+' guardado para '+l.c);abrir(l);enviarCods()}
+let envB=false;async function enviarCods(){if(envB)return;envB=true;try{for(const k of CB.filter(x=>!x.env)){
+    const {env,...o}=k;const b64=btoa(unescape(encodeURIComponent(JSON.stringify(o))));
+    const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:k.tipo==='bot'?'CODIGOS-BOTELLA':'CODIGOS-CAJA',nombre:k.ean+'-'+k.code+'.json',b64})});
+    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;k.env=true;saveCB()}}catch(e){}envB=false}
+function achicar(file){return new Promise((ok,ko)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.78).split(',')[1])};im.onerror=ko;im.src=URL.createObjectURL(file)})}
+let FOTOCOD=null;$('camP').onchange=async e=>{const f=e.target.files[0];if(!f||!FOTOCOD)return;const code=FOTOCOD;
+  try{const b64=await achicar(f);FQ.push({code,b64,nombre:code+'_'+new Date().toISOString().replace(/\D/g,'').slice(0,14)+'.jpg'});FN[code]=(FN[code]||0)+1;toast('📸 Foto guardada, subiendo…');subirFotos();const l=L.find(x=>x.c===code);if(l&&F&&F.l===l)dibujar()}catch(er){toast('No se pudo leer la foto')}};
+let envF=false;async function subirFotos(){if(envF)return;envF=true;try{while(FQ.length){const q=FQ[0];
+    const r=await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'PRODUCTOS-FOTOS',nombre:q.nombre,b64:q.b64})});
+    if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;FQ.shift()}}catch(e){}envF=false;if(FQ.length)setTimeout(subirFotos,8000)}
+enviarCods();setInterval(enviarCods,30000);
+window.addEventListener('beforeunload',e=>{if(FQ.length){e.preventDefault();e.returnValue=''}});
 function guardar(){const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
   if(!($('op').value||'').trim()){toast('Poné tu nombre arriba ("Soy:")');close();$('op').focus();return}
   if(!tot){toast('Poné la cantidad');return}if(!hacia){toast('Elegí la ubicación');return}
@@ -164,7 +195,7 @@ function porCodigo(raw){const c=norm(raw);if(!c)return;
   if(h.length===1)return abrir(h[0]);
   if(h.length>1){sheet(hdr('¿Cuál es?')+`<div class="res">${h.map(l=>`<button data-l="${esc(l.c)}"><b>${esc(l.c)}</b> ${esc(l.n)}</button>`).join('')}</div>`);return}
   const otro=(M.productos||[]).find(p=>(p.e||[]).includes(c)||(p.ce||[]).includes(c));
-  sheet(hdr('No es de esta orden')+`<div class="alert bad">${otro?`<b>${esc(otro.c)}</b> ${esc(otro.n)}<br>`:`El código <span class="mono">${esc(c)}</span> `}no está en esta orden.</div><div class="mu">Si es una caja sin código cargado, buscá el producto en la lista y tocá la línea.</div><button class="btn pri" data-a="scan">Escanear otro</button>`)}
+  sheet(hdr('No es de esta orden')+`<div class="alert bad">${otro?`<b>${esc(otro.c)}</b> ${esc(otro.n)}<br>`:`El código <span class="mono">${esc(c)}</span> `}no está en esta orden.</div><div class="mu">Si es un producto de esta orden que todavía no tiene el código cargado, asignáselo:</div>${otro?'':`<button class="btn pri" data-a="asig" data-ean="${esc(c)}" data-raw="${esc(String(raw||'').replace(/\D/g,''))}">🔗 Es un producto de esta orden → elegir cuál</button>`}<button class="btn" data-a="scan">Escanear otro</button>`)}
 let scan=null;
 async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="msg" id="smsg">Escaneá la caja o la botella</div><div class="bot"><input id="man" inputmode="numeric" placeholder="o escribí el código"><button class="btn pri" data-a="mango">OK</button><button class="btn" data-a="scanoff">Cerrar</button></div></div>`;
   const v=$('vid');try{if('BarcodeDetector' in window){const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);const want=['ean_13','ean_8','upc_a','upc_e','code_128','itf'].filter(f=>fm.includes(f));
@@ -174,14 +205,24 @@ async function startScan(){$('root').innerHTML=`<div id="scan"><video id="vid" p
     const rd=new ZXingBrowser.BrowserMultiFormatReader();const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,res=>{if(res&&scan)found(res.getText())});scan={stop:()=>ctl.stop()};
   }catch(e){const m=$('smsg');if(m)m.textContent='No se pudo abrir la cámara. Escribí el código abajo.'}}
 function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}}
-function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA. Escaneá el otro código (el del producto).',5000);setTimeout(startScan,1200);return}porCodigo(raw)}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}if(esLote(raw)){toast('Ese código largo es el de LOTE/FECHA. Escaneá el otro código (el del producto).',5000);setTimeout(startScan,1200);return}if(MODO){const m=MODO;MODO=null;const cr=String(raw||'').replace(/\D/g,'');registrar(norm(raw),cr,m.l,m.tipo);return}porCodigo(raw)}
 $('bScan').onclick=startScan;
 document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
   if(b.dataset.f){FL=b.dataset.f;document.querySelectorAll('#fl .chip').forEach(x=>x.setAttribute('aria-pressed',x.dataset.f===FL));render();return}
+  if(b.dataset.asigl){const l=L.find(x=>x.c===b.dataset.asigl);const e=b.dataset.ean;const sug=e.length===14?'caja':'bot';
+    sheet(hdr(esc(l.c))+`<div class="card"><b>${esc(l.n)}</b><div class="mu mono">${esc(e)}</div></div><div class="mu">¿Ese código es de la botella o de la caja?</div>
+      <button class="btn ${sug==='bot'?'pri':''}" data-a="asigtipo" data-tipo="bot" data-code="${esc(l.c)}" data-ean="${esc(e)}" data-raw="${esc(b.dataset.raw)}" style="padding:14px">🍾 Botella</button>
+      <button class="btn ${sug==='caja'?'pri':''}" data-a="asigtipo" data-tipo="caja" data-code="${esc(l.c)}" data-ean="${esc(e)}" data-raw="${esc(b.dataset.raw)}" style="padding:14px">📦 Caja</button>`);return}
   if(b.dataset.l){const l=L.find(x=>x.c===b.dataset.l);if(l)abrir(l);return}
   if(b.dataset.hacia){F.hacia=nUb(b.dataset.hacia);F.otra=false;dibujar();return}
   if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));dibujar();return}
   switch(b.dataset.a){case 'close':close();break;case 'scanoff':stopScan();close();break;case 'mango':found($('man').value);break;
-    case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break}
+    case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break;
+    case 'cbot':MODO={l:F.l,tipo:'bot'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la BOTELLA de '+MODO.l.c},300);break;
+    case 'ccaja':MODO={l:F.l,tipo:'caja'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la CAJA de '+MODO.l.c},300);break;
+    case 'fprod':FOTOCOD=F.l.c;$('camP').value='';$('camP').click();break;
+    case 'asig':{const ean=b.dataset.ean,raw=b.dataset.raw;sheet(hdr('¿De qué producto es?')+`<input id="qa" class="inp" placeholder="Buscar código o nombre"><div class="res" id="ra"></div>`);
+      const pint=()=>{const q=($('qa').value||'').toLowerCase();$('ra').innerHTML=L.filter(l=>!q||l.c.includes(q)||l.n.toLowerCase().includes(q)).slice(0,40).map(l=>`<button data-asigl="${esc(l.c)}" data-ean="${esc(ean)}" data-raw="${esc(raw)}"><b>${esc(l.c)}</b> ${esc(l.n)}${l.e.length?'':' <span class="mu">· sin código</span>'}</button>`).join('')};$('qa').oninput=pint;pint();break}
+    case 'asigtipo':{const l=L.find(x=>x.c===b.dataset.code);registrar(b.dataset.ean,b.dataset.raw,l,b.dataset.tipo);break}}
 });
 </script></body></html>
