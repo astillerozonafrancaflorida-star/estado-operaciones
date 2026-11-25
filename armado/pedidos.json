@@ -2272,7 +2272,526 @@
   "lineas": 83,
   "botellas": 2835,
   "creado": "2026-11-24T21:11:08.160887+00:00",
-  "clave": "S00161"
+  "clave": "S00161",
+  "listo": {
+   "carpeta": "BONNO-S00161-24NOV26",
+   "armo": "Natalia",
+   "fecha": "2026-11-25T13:52:08.018Z",
+   "ok": 83,
+   "n": 83,
+   "bot": 2835,
+   "lin": [
+    [
+     "622",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT CON ESTUCHE 750 ML",
+     24,
+     24
+    ],
+    [
+     "49",
+     "LICOR BOTTEGA CANNELLA 500 ML",
+     12,
+     12
+    ],
+    [
+     "1581",
+     "LICOR BOTTEGA LIMONCELLO DI SORRENTO 500 ML",
+     60,
+     60
+    ],
+    [
+     "90",
+     "LICOR BOTTEGA MELONCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "1022",
+     "LICOR BOTTEGA PISTACHO 500 ML",
+     12,
+     12
+    ],
+    [
+     "1388",
+     "VINO OPORTO TAYLOR`S FINE RUBY 750 ML",
+     12,
+     12
+    ],
+    [
+     "1389",
+     "VINO OPORTO TAYLOR`S FINE TAWNY 750ML",
+     12,
+     12
+    ],
+    [
+     "3237",
+     "VODKA EXCLUSIV 2 CITRON 40% 0.200",
+     24,
+     24
+    ],
+    [
+     "3236",
+     "VODKA EXCLUSIV 2 CITRON 40% 0.75",
+     60,
+     60
+    ],
+    [
+     "3239",
+     "VODKA EXCLUSIV 3 RASPBERRY 37% 0.200",
+     24,
+     24
+    ],
+    [
+     "3241",
+     "VODKA EXCLUSIV 4 PEACH 35% 0.200",
+     24,
+     24
+    ],
+    [
+     "3240",
+     "VODKA EXCLUSIV 4 PEACH 35% 0.75",
+     60,
+     60
+    ],
+    [
+     "2461",
+     "VINO ROBERTSON WINERY CHENIN BLANC 2025 750 ML",
+     30,
+     30
+    ],
+    [
+     "2464",
+     "VINO PORCUPINE RIDGE SAUVIGNON BLANC 2024 750 ML",
+     12,
+     12
+    ],
+    [
+     "645",
+     "VINO MATEUS ORIGINAL ROSE 750 ML",
+     120,
+     120
+    ],
+    [
+     "2578",
+     "VINO CASA FERREIRINHA PAPA FIGOS ROSE 2022 750 ML",
+     120,
+     120
+    ],
+    [
+     "3238",
+     "VODKA EXCLUSIV 3 RASPBERRY 37% 0.75",
+     30,
+     30
+    ],
+    [
+     "2457",
+     "VINO KASTEELBERG SWARTLAND CHENIN BLANC 2025 750 ML",
+     36,
+     36
+    ],
+    [
+     "2458",
+     "VINO KASTEELBERG SWARTLAND SYRAH 2024 750 ML",
+     36,
+     36
+    ],
+    [
+     "966",
+     "LICOR COINTREAU 700 ML",
+     240,
+     240
+    ],
+    [
+     "1442",
+     "PONCHE KUBA 700 ML",
+     180,
+     180
+    ],
+    [
+     "2656",
+     "LICOR COINTREAU 1750 ML",
+     24,
+     24
+    ],
+    [
+     "1",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT SIN ESTUCHE 750 ML",
+     30,
+     30
+    ],
+    [
+     "15",
+     "CHAMPAGNE MOET CHANDON BRUT IMPERIAL SIN ESTUCHE 750 ML",
+     30,
+     30
+    ],
+    [
+     "3235",
+     "VODKA EXCLUSIV 1 40% 0.200",
+     24,
+     24
+    ],
+    [
+     "92",
+     "LICOR BOTTEGA GIANDUIA 500 ML",
+     24,
+     24
+    ],
+    [
+     "580",
+     "LICOR BOTTEGA CAPPUCCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "2361",
+     "LICOR BOTTEGA CREMA DI MELONCINO 500 ML",
+     24,
+     24
+    ],
+    [
+     "3234",
+     "VODKA EXCLUSIV 1 40% 0.75",
+     60,
+     60
+    ],
+    [
+     "96",
+     "LICOR BOTTEGA CREMA DE LIMONCINO 500 ML",
+     120,
+     120
+    ],
+    [
+     "1029",
+     "LICOR BOTTEGA LATTE MACCHIATO 500 ML",
+     60,
+     60
+    ],
+    [
+     "160",
+     "POETI PROSECCO DOC BOTTEGA 750 ML",
+     12,
+     12
+    ],
+    [
+     "1018",
+     "LICOR BOTTEGA NERO 500 ML",
+     36,
+     36
+    ],
+    [
+     "394",
+     "LICOR BOTTEGA PANNA COTTA 500 ML",
+     60,
+     60
+    ],
+    [
+     "327",
+     "ESPUMANTE BOTTEGA 0 WHITE  750 ML",
+     30,
+     30
+    ],
+    [
+     "219",
+     "ESPUMANTE BOTTEGA 0 ROSE  750 ML",
+     30,
+     30
+    ],
+    [
+     "3164",
+     "VINO MATEUS DRY ROSE 750 ML",
+     120,
+     120
+    ],
+    [
+     "712",
+     "VINO M. CHAPOUTIER L'ERMITE ERMITAGE 2011 750 ML",
+     12,
+     12
+    ],
+    [
+     "3422",
+     "VINO CRASTO SUPERIOR TINTO 2023 750 ML",
+     30,
+     30
+    ],
+    [
+     "640",
+     "VINO SAN MARZANO COLLEZIONE 50 VINO ROSSO D'ITALIA 750 ML",
+     60,
+     60
+    ],
+    [
+     "2897",
+     "VINO ANTINORI PIAN DELLE VIGNE BRUNELLO DI MONTALCINO 2021 750 ML",
+     6,
+     6
+    ],
+    [
+     "2463",
+     "VINO PORCUPINE RIDGE SYRAH 2024 750 ML",
+     6,
+     6
+    ],
+    [
+     "2766",
+     "VINO VALDIVIESO CABALLO LOCO SAGRADA FAMILIA ETIQUETA VERDE 2023 750 ML",
+     24,
+     24
+    ],
+    [
+     "2898",
+     "VINO ANTINORI PIAN DELLE VIGNE ROSSO DI MONTALCINO 2024 750 ML",
+     12,
+     12
+    ],
+    [
+     "2191",
+     "VINO JOSEPH DROUHIN PULIGNY MONTRACHET 2023 750 ML",
+     9,
+     9
+    ],
+    [
+     "1696",
+     "VINO TXOMIN ETXANNIZ BLANCO 750 ML",
+     12,
+     12
+    ],
+    [
+     "188",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
+     180,
+     180
+    ],
+    [
+     "3024",
+     "VINO EGON MULLER SCHARZHOF QUALITATSWEIN 2025 750 ML",
+     12,
+     12
+    ],
+    [
+     "3131",
+     "VINO VALDIVIESO CABALLO LOCO PIRQUE 2024 750 ML",
+     24,
+     24
+    ],
+    [
+     "186",
+     "VINO LE PUY BARTHELEMY 2019 750 ML",
+     6,
+     6
+    ],
+    [
+     "2547",
+     "VINO ANTINORI VILLA ANTINORI ROSSO 2023 750 ML",
+     12,
+     12
+    ],
+    [
+     "2602",
+     "VINO GERARD BERTRAND COTE DES ROSES BLANCO 2024 750 ML",
+     6,
+     6
+    ],
+    [
+     "1420",
+     "VINO GERARD BERTRAND ART DE VIVRE CLAIRETTE DU LANGUEDOC ROSE 2024 750 ML",
+     6,
+     6
+    ],
+    [
+     "2878",
+     "VINO SAN MARZANO IL PUMO MALVASIA SAUVIGNON 2025 750 ML",
+     60,
+     60
+    ],
+    [
+     "3097",
+     "VINO WIN TINTO 750 ML",
+     18,
+     18
+    ],
+    [
+     "2186",
+     "VINO JOSEPH DROUHIN POUILLY FUISSE 2023 750 ML",
+     12,
+     12
+    ],
+    [
+     "541",
+     "VINO LA CHABLISIENNE GRAND CRU CHATEAU GRENOUILLE 2022 750 ML",
+     6,
+     6
+    ],
+    [
+     "2601",
+     "VINO GERARD BERTRAND ART DE VIVRE CLAIRETTE DU LANGUEDOC BLANC 2024 750 ML",
+     6,
+     6
+    ],
+    [
+     "1080",
+     "VINO CASANOVA DI NERI IRROSSO 2021 750 ML",
+     12,
+     12
+    ],
+    [
+     "3067",
+     "VINO PIATTELLI RESERVA MALBEC SALTA 2024 750 ML",
+     12,
+     12
+    ],
+    [
+     "1081",
+     "VINO CASANOVA DI NERI IBBIANCO 2022 750 ML",
+     12,
+     12
+    ],
+    [
+     "1082",
+     "VINO CASANOVA DI NERI IRROSE 2022 750 ML",
+     12,
+     12
+    ],
+    [
+     "2129",
+     "VINO M. CHAPOUTIER BILA HAUT ROUGE 2021 750 ML",
+     12,
+     12
+    ],
+    [
+     "1112",
+     "VINO GERARD BERTRAND COTE DES ROSES ROSE 2024 750 ML",
+     6,
+     6
+    ],
+    [
+     "3399",
+     "VINO VALDIVIESO CABALLO LOCO APALTA ETIQUETA AZUL 2024 750 ML",
+     18,
+     18
+    ],
+    [
+     "3068",
+     "VINO PIATTELLI RESERVA MALBEC MENDOZA 2024 750 ML",
+     12,
+     12
+    ],
+    [
+     "569",
+     "VINO DOMAINE LAROCHE CHABLIS GRAND CRU LES BLANCHOTS 2022 750 ML",
+     6,
+     6
+    ],
+    [
+     "2755",
+     "VINO LA VITE LUCENTE 2023 750 ML",
+     6,
+     6
+    ],
+    [
+     "2459",
+     "VINO KASTEELBERG OLD WINE CHENIN BLANC 2025 750 ML",
+     36,
+     36
+    ],
+    [
+     "1600",
+     "VINO COMTE LAFOND SANCERRE BLANC 2023 750 ML",
+     12,
+     12
+    ],
+    [
+     "1968",
+     "VINO DE LADOUCETTE POUILLY FUME 2023 750 ML",
+     12,
+     12
+    ],
+    [
+     "1390",
+     "VINO OPORTO TAYLOR`S FINE WHITE 750 ML",
+     12,
+     12
+    ],
+    [
+     "2730",
+     "VINO VALDUERO UNA CEPA 2020 750 ML",
+     12,
+     12
+    ],
+    [
+     "53",
+     "VINO TOKAJI OREMUS ASZU 6 PUTTONYOS 2016 500 ML",
+     12,
+     12
+    ],
+    [
+     "2633",
+     "VINO EUGENIO ALMEIDA TINTO 750 ML",
+     12,
+     12
+    ],
+    [
+     "267",
+     "VINO MENDEL MALBEC 2021 750 ML",
+     12,
+     12
+    ],
+    [
+     "3156",
+     "VINO CASA FERREIRINHA PAPA FIGOS BLANCO 2025 750 ML",
+     60,
+     60
+    ],
+    [
+     "2735",
+     "VINO JOSEPH DROUHIN CHASSAGNE MONTRACHET 2023 750 ML",
+     12,
+     12
+    ],
+    [
+     "579",
+     "LICOR BOTTEGA POMEGRANATE 500 ML",
+     36,
+     36
+    ],
+    [
+     "3351",
+     "VINO JOSEPH DROUHIN BOURGOGNE ALIGOTE 2025 750 M",
+     12,
+     12
+    ],
+    [
+     "2726",
+     "VINO PAPALE ORO PRIMITIVO MANDURIA DOP 2021 750 ML",
+     60,
+     60
+    ],
+    [
+     "3531",
+     "VINO PRIMITIVO DEL SALENTO IGP 12 E MEZZO 2024 750 ML",
+     36,
+     36
+    ],
+    [
+     "3410",
+     "VINO ESPORAO BICO AMARELO BLANCO 2025 750 ML",
+     12,
+     12
+    ]
+   ],
+   "pal": 5,
+   "inicio": 1795550386040,
+   "fin": 1795614421843,
+   "activo_min": 130.8,
+   "lab_min": 227.3,
+   "lineas": 83,
+   "min_linea": 1.6,
+   "seg_bot": 2.8,
+   "inicio_txt": "24/11 16:59",
+   "fin_txt": "25/11 10:47",
+   "activo_txt": "2 h 11 min"
+  }
  },
  {
   "id": "S00359-URUGUAIANA-7fwGARWs",
