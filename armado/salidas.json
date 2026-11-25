@@ -1,0 +1,164 @@
+[
+ {
+  "id": "SAL-MARIO-3PLT-2511-702f",
+  "titulo": "MARIO 3PLT",
+  "nota": "Facturas A5555 · A5551 · A5556",
+  "fecha": "25/11",
+  "creado": "2026-11-25T09:41-03:00",
+  "estado": "abierta",
+  "grupos": [
+   {
+    "clave": "A5550-A5551",
+    "alias": [
+     "A5550",
+     "A5550-A5551",
+     "A5551",
+     "A5552",
+     "A5555",
+     "A5556"
+    ],
+    "nombre": "MARIO FREE SHOP · A5555 · A5551 · A5556",
+    "cliente": "MARIO H VIDALES Y CIA SC",
+    "entrega": "MARIO FREE SHOP",
+    "carpeta": "MARIO-A5550-A5551-A5552-23NOV26",
+    "armo": "Brian",
+    "pallets": [
+     {
+      "p": "P1",
+      "bot": 476,
+      "items": [
+       [
+        "2759",
+        "VINO RATTI BAROLO MARCENASCO DOCG 2020 750 ML",
+        222
+       ],
+       [
+        "3249",
+        "VINO VIÑA BOSCONIA RESERVA TINTO 2015 750 ML",
+        60
+       ],
+       [
+        "1839",
+        "VINO TOKAJI OREMUS ASZU 3 PUTTONYOS 2013 500 ML",
+        36
+       ],
+       [
+        "2870",
+        "VINO VIÑA CUBILLO CRIANZA TINTO 2018 750 ML",
+        30
+       ],
+       [
+        "3246",
+        "VINO CUNE IMPERIAL RESERVA 2020 750 ML",
+        30
+       ],
+       [
+        "1747",
+        "VINO 17 BY PINEA 2020 750 ML",
+        30
+       ],
+       [
+        "2792",
+        "VINO REMELLURI RESERVA 2017 750 ML",
+        18
+       ],
+       [
+        "1258",
+        "VINO POST & BEAM 2021 750 ML",
+        18
+       ],
+       [
+        "2095",
+        "VINO HARLAN ESTATE THE MASCOT 2020 750 ML",
+        12
+       ],
+       [
+        "2388",
+        "VINO EMILIO MORO FINCA RESALSO 2024 750 ML",
+        12
+       ],
+       [
+        "1260",
+        "VINO ENROUTE PINOT NOIR 2022 750 ML",
+        6
+       ],
+       [
+        "2092",
+        "VINO HARLAN ESTATE 2021 750 ML",
+        2
+       ]
+      ]
+     },
+     {
+      "p": "P2",
+      "bot": 435,
+      "items": [
+       [
+        "2969",
+        "VINO MACAN CLASICO 2022 750 ML",
+        180
+       ],
+       [
+        "2972",
+        "VINO MARQUES DE MURRIETA GRAN RESERVA TINTO 2018 750 ML",
+        60
+       ],
+       [
+        "1968",
+        "VINO DE LADOUCETTE POUILLY FUME 2023 750 ML",
+        51
+       ],
+       [
+        "2484",
+        "VINO ARZUAGA RESERVA ESPECIAL 2020 750 ML",
+        48
+       ],
+       [
+        "2734",
+        "VINO JOSEPH DROUHIN CHABLIS RESERVE DE VAUDON 2023 750 ML",
+        36
+       ],
+       [
+        "952",
+        "VINO MARQUES DE MURRIETA CASTILLO YGAY TINTO 2011 750 ML",
+        24
+       ],
+       [
+        "2454",
+        "VINO CORIMBO I 2018 750 ML",
+        18
+       ],
+       [
+        "2716",
+        "VINO POGGIO DI SOTTO BRUNELLO DI MONTALCINO 2020 750 ML",
+        18
+       ]
+      ]
+     },
+     {
+      "p": "P3",
+      "bot": 379,
+      "items": [
+       [
+        "1",
+        "CHAMPAGNE VEUVE CLICQUOT BRUT SIN ESTUCHE 750 ML",
+        300
+       ],
+       [
+        "3172",
+        "CHAMPAGNE DOM PERIGNON BLANC 2017 SIN ESTUCHE 750 ML",
+        55
+       ],
+       [
+        "820",
+        "VERMUT YZAGUIRRE BLANCO 1 LITRO",
+        24
+       ]
+      ]
+     }
+    ],
+    "sueltos": 0
+   }
+  ]
+ }
+]

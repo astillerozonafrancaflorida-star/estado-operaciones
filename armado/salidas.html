@@ -1,0 +1,216 @@
+<!doctype html>
+<html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex,nofollow">
+<title>Salida de mercadería</title>
+<style>
+:root{--bg:#F2F3EF;--sf:#fff;--fg:#1A211D;--mu:#5E6862;--ln:#D9DDD6;--ac:#1F5F8B;--ok:#2F7A3F;--oks:#E1F0E3;--wa:#9A6400;--was:#FBEFD6;--bad:#B3261E;--bads:#F9E0DE}
+*{box-sizing:border-box}[hidden]{display:none!important}html,body{margin:0}
+body{background:var(--bg);color:var(--fg);font:15px/1.4 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input{font:inherit;color:inherit}a{color:var(--ac)}
+.wrap{max-width:720px;margin:0 auto;padding:14px 14px 130px;display:flex;flex-direction:column;gap:12px}
+h1{font-size:23px;margin:0}h2{font-size:17px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mu);font-weight:700}
+.mu{color:var(--mu);font-size:13px}
+.card{background:var(--sf);border:1px solid var(--ln);border-radius:12px;padding:12px 14px}
+.who{display:flex;gap:8px;align-items:center}.who input{flex:1;border:1px solid var(--ln);border-radius:8px;padding:8px 10px;background:var(--sf)}
+.sal{display:flex;flex-direction:column;gap:6px;text-decoration:none;color:inherit}
+.bar{height:10px;background:#E6E9E3;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:var(--ok);border-radius:99px;transition:width .3s}
+.cnt{font-size:34px;font-weight:800;line-height:1}.cnt small{font-size:16px;color:var(--mu);font-weight:700}
+.grp{display:flex;flex-direction:column;gap:8px}
+.gh{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:4px 2px 0}
+.pal{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-left:6px solid var(--wa);border-radius:12px;padding:12px;text-align:left;width:100%}
+.pal.on{border-left-color:var(--ok);background:#F5FBF6}
+.pal .ck{width:40px;height:40px;border-radius:50%;border:3px solid var(--ln);display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:800;color:#fff}
+.pal.on .ck{background:var(--ok);border-color:var(--ok)}
+.pal .pn{font-size:22px;font-weight:800}.pal .r{text-align:right;font-size:12px;color:var(--mu)}
+.pal.sure{border-color:var(--bad);border-left-color:var(--bad)}
+.items{font-size:13px;color:var(--mu);padding:0 6px 4px 60px;margin-top:-4px}
+.ver{border:0;background:none;color:var(--ac);font-size:12px;font-weight:700;padding:2px 0}
+.dock{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:linear-gradient(to top,var(--bg) 70%,transparent);z-index:5}
+.big{flex:1;max-width:300px;border:0;border-radius:14px;padding:16px 10px;font-weight:800;font-size:17px;background:var(--ac);color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+.big.sec{background:var(--sf);color:var(--fg);border:2px solid var(--fg);box-shadow:none;max-width:170px}
+.btn{border:1px solid var(--ln);background:var(--sf);border-radius:10px;padding:10px 14px;font-weight:700}
+.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}.btn.ok{background:var(--ok);color:#fff;border-color:var(--ok)}.btn.bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.inp{border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:18px;background:var(--sf);width:100%}
+.alert{border-radius:10px;padding:10px 12px;font-weight:600}.alert.bad{background:var(--bads);color:var(--bad)}.alert.wa{background:var(--was);color:var(--wa)}.alert.ok{background:var(--oks);color:var(--ok)}
+.scrim{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:20;display:flex;align-items:flex-end;justify-content:center}
+.sheet{background:var(--bg);width:100%;max-width:720px;max-height:92vh;overflow:auto;border-radius:16px 16px 0 0;padding:14px 16px calc(18px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:12px}
+.sh{display:flex;justify-content:space-between;align-items:center;gap:10px}.x{border:0;background:none;font-size:30px;line-height:1;padding:0 4px}
+#scan{position:fixed;inset:0;background:#000;z-index:30;display:flex;flex-direction:column}#scan video{flex:1;width:100%;object-fit:cover;min-height:0}
+#scan .guide{position:absolute;left:18%;right:18%;top:26%;aspect-ratio:1;border:3px solid rgba(255,255,255,.85);border-radius:14px;box-shadow:0 0 0 2000px rgba(0,0,0,.3);pointer-events:none}
+#scan .res{position:absolute;left:12px;right:12px;top:calc(12px + env(safe-area-inset-top));border-radius:14px;padding:14px 16px;font-weight:800;font-size:20px;text-align:center;background:rgba(0,0,0,.6);color:#fff}
+#scan .res.ok{background:var(--ok)}#scan .res.bad{background:var(--bad)}#scan .res.wa{background:var(--wa)}
+#scan .res small{display:block;font-size:14px;font-weight:600;opacity:.9}
+#scan .bot{display:flex;gap:10px;padding:12px 14px calc(14px + env(safe-area-inset-bottom));background:#000;align-items:center}
+#scan .bot .c{color:#fff;font-weight:800;font-size:20px;flex:1}
+#flash{position:fixed;inset:0;z-index:40;pointer-events:none;opacity:0;transition:opacity .25s}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:var(--fg);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;z-index:50;max-width:90vw;text-align:center}
+.fotos{display:flex;gap:8px;flex-wrap:wrap}.fotos img{width:90px;height:90px;object-fit:cover;border-radius:8px;border:1px solid var(--ln)}
+.sync{font-size:12px;color:var(--mu)}
+</style></head><body>
+<div class="wrap" id="root"></div>
+<div id="flash"></div><div id="toast" hidden></div>
+<input type="file" id="cam" accept="image/*" capture="environment" hidden>
+<script>
+const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const fmt=n=>Number(n||0).toLocaleString('es-UY');
+function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+const getPin=()=>lsGet('arm_pin')||'';
+let OP=lsGet('arm_op')||'';
+let DEV=lsGet('arm_dev');if(!DEV){DEV=Math.random().toString(36).slice(2,6);lsSet('arm_dev',DEV)}
+// Una sola persona y un solo celular por salida (Mario 25/11): el que la toma es el único que escanea y cierra.
+let TOM=null;const yo=()=>(OP||'')+' -'+DEV;const nomT=q=>String(q||'').replace(/ -[a-z0-9]{4}$/,'');
+const esMio=()=>TOM&&TOM.quien===yo().replace(/[^A-Za-z0-9 _.\-]/g,'').trim().slice(0,80);
+function toast(t,ms){const e=$('toast');e.textContent=t;e.hidden=false;clearTimeout(toast.t);toast.t=setTimeout(()=>e.hidden=true,ms||2600)}
+function sheet(h){close();const d=document.createElement('div');d.className='scrim';d.id='scrim';d.innerHTML=`<div class="sheet">${h}</div>`;d.onclick=e=>{if(e.target===d)close()};document.body.appendChild(d)}
+function close(){const s=$('scrim');if(s)s.remove()}
+const hdr=t=>`<div class="sh"><h2>${t}</h2><button class="x" onclick="close()">×</button></div>`;
+function pedirPin(){return new Promise(ok=>{sheet(hdr('PIN del depósito')+`<div class="mu">Poné el PIN del depósito (el mismo del armado). Se pide una sola vez en este celular.</div><input id="pinIn" inputmode="numeric" type="password" class="inp" style="text-align:center;font-size:22px"><button class="btn pri" id="pinOk" style="padding:14px">Guardar</button>`);
+  const f=()=>{const v=($('pinIn').value||'').trim();if(!v)return;lsSet('arm_pin',v);close();ok(v)};$('pinOk').onclick=f;$('pinIn').onkeydown=e=>{if(e.key==='Enter')f()}})}
+async function api(path,body){const r=await fetch(API+path,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:getPin(),...body})});let j={};try{j=await r.json()}catch(e){}if(r.status===403){lsSet('arm_pin','');throw new Error('PIN')}if(!r.ok)throw new Error(j.error||('HTTP '+r.status));return j}
+async function getJ(path){const r=await fetch(API+path,{cache:'no-store'});if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}
+
+/* ---- sonido y vibración ---- */
+let AC=null;function tono(f,ms,v){try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();const o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.type='square';g.gain.value=v||.08;o.connect(g);g.connect(AC.destination);o.start();o.stop(AC.currentTime+ms/1000)}catch(e){}}
+function senal(tipo){const col={ok:'rgba(47,122,63,.55)',bad:'rgba(179,38,30,.7)',wa:'rgba(154,100,0,.5)'}[tipo];const f=$('flash');f.style.background=col;f.style.opacity=1;setTimeout(()=>f.style.opacity=0,tipo==='bad'?900:350);
+  if(tipo==='ok'){tono(1046,110);setTimeout(()=>tono(1568,140),120);navigator.vibrate&&navigator.vibrate(120)}
+  else if(tipo==='bad'){tono(196,700,.12);navigator.vibrate&&navigator.vibrate([400,150,400,150,400])}
+  else{tono(440,250);navigator.vibrate&&navigator.vibrate([150,80,150])}}
+
+/* ---- datos ---- */
+let LIST=[],SAL=null,M={},CER=null,KEY='',syncTxt='';
+const sid=new URLSearchParams(location.search).get('s');
+const pals=()=>SAL?SAL.grupos.flatMap(g=>g.pallets.map(p=>({g,p,k:g.clave+'|'+p.p}))):[];
+const marcado=k=>!!(M[k]&&M[k].on);
+const nOk=()=>pals().filter(x=>marcado(x.k)).length;
+function guardar(){lsSet(KEY,JSON.stringify({M,CER}))}
+function mergeM(a,b){const o={...a};for(const [k,v] of Object.entries(b||{})){if(!o[k]||(v.at||0)>(o[k].at||0))o[k]=v}return o}
+function estadoVivo(){return{tipo:'salida',titulo:SAL.titulo,op:OP,m:M,cerrada:CER,lineas:pals().map(x=>({st:marcado(x.k)?'ok':'pend',q:1,s:marcado(x.k)?1:0}))}}
+let _pv=null,_pinAsk=false;
+function push(){if(!esMio()&&!CER)return;clearTimeout(_pv);_pv=setTimeout(async()=>{
+  if(!getPin()){if(!_pinAsk){_pinAsk=true;await pedirPin();_pinAsk=false}else return}
+  try{const r=await getJ('/progreso/'+encodeURIComponent(SAL.id));if(r){M=mergeM(M,r.m);if(r.cerrada&&!CER)CER=r.cerrada}
+    await api('/progreso/'+encodeURIComponent(SAL.id),{estado:estadoVivo()});guardar();syncTxt='☁️ Sincronizado '+new Date().toTimeString().slice(0,5);render(true)}
+  catch(e){syncTxt=e.message==='PIN'?'⚠️ PIN incorrecto':'⏳ Sin conexión: queda guardado en el celular y se sube solo';if(e.message==='PIN')toast('PIN incorrecto: volvé a ponerlo',4000);render(true)}},700)}
+async function verTomado(){try{const r=await getJ('/tablero?ids='+encodeURIComponent(SAL.id));const t=(r[SAL.id]||{}).tomado||null;const era=esMio();TOM=t;if(era&&!esMio()){toast('Otro celular tomó esta salida: quedaste solo mirando',5000);if(scanOn)stopScan()}}catch(e){}}
+async function tomar(forzar){if(!OP){toast('Poné tu nombre arriba');$('op').focus();return}if(!getPin())await pedirPin();
+  try{await api('/tomar/'+encodeURIComponent(SAL.id),{quien:yo(),forzar:!!forzar});await verTomado();render(true);toast('Listo, la salida es tuya')}
+  catch(e){if(e.message==='tomado'){await verTomado();render(true);toast('La tomó '+nomT(TOM&&TOM.quien),4000)}else toast(e.message==='PIN'?'PIN incorrecto':'No se pudo: '+e.message,4000)}}
+async function traer(){if(!SAL)return;if(!CER)await verTomado();try{const r=await getJ('/progreso/'+encodeURIComponent(SAL.id));if(!r)return;const antes=JSON.stringify(M);M=mergeM(M,r.m);if(r.cerrada&&!CER)CER=r.cerrada;
+  const pend=Object.entries(M).some(([k,v])=>!r.m||!r.m[k]||(r.m[k].at||0)<(v.at||0));guardar();if(pend)push();if(JSON.stringify(M)!==antes&&!scanOn)render(true)}catch(e){}}
+
+/* ---- marcar ---- */
+function marcar(x,via){if(!esMio())return;M[x.k]={on:true,at:Date.now(),op:OP,via};guardar();push()}
+function desmarcar(x){if(!esMio())return;M[x.k]={on:false,at:Date.now(),op:OP,via:'desmarcado'};guardar();push()}
+function buscar(txt){const t=String(txt||'').trim();const m=t.match(/^AST\|(.+)\|P(\d+)$/i);if(!m)return{err:'no'};
+  const k=m[1].toUpperCase(),p='P'+parseInt(m[2]);const g=SAL.grupos.find(g=>(g.alias||[g.clave]).map(a=>String(a).toUpperCase()).includes(k));
+  if(!g)return{err:'otro',k,p};const pa=g.pallets.find(z=>z.p===p);if(!pa)return{err:'otropal',g,k,p};return{x:{g,p:pa,k:g.clave+'|'+pa.p}}}
+
+/* ---- escaneo continuo ---- */
+let scan=null,scanOn=false,ultimo={t:'',at:0};
+function resScan(cls,txt,sub){const r=$('sres');if(!r)return;r.className='res '+cls;r.innerHTML=esc(txt)+(sub?`<small>${esc(sub)}</small>`:'');$('scnt').textContent=nOk()+' de '+pals().length+' pallets'}
+function leido(txt){const now=Date.now();if(txt===ultimo.t&&now-ultimo.at<3000)return;ultimo={t:txt,at:now};
+  if(CER){resScan('wa','Esta salida ya está cerrada');senal('wa');return}
+  if(!esMio()){resScan('bad','Esta salida la tiene otro celular');senal('bad');stopScan();return}
+  const r=buscar(txt);
+  if(r.err==='no'){resScan('wa','Eso no es una etiqueta de pallet','Apuntá al QR de la etiqueta grande');senal('wa');return}
+  if(r.err){resScan('bad','❌ NO VA EN ESTE CAMIÓN',r.k+' · '+r.p);senal('bad');return}
+  const x=r.x;if(marcado(x.k)){resScan('wa','Ya estaba marcado',x.g.nombre+' · '+x.p.p);senal('wa');return}
+  marcar(x,'qr');const n=nOk(),t=pals().length;resScan('ok','✅ '+x.g.nombre+' · '+x.p.p,n===t?'¡Están todos! ('+t+')':'Van '+n+' de '+t);senal('ok')}
+async function startScan(){scanOn=true;
+  const d=document.createElement('div');d.id='scan';d.innerHTML=`<video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="res" id="sres">Apuntá al QR de la etiqueta del pallet</div>
+  <div class="bot"><div class="c" id="scnt"></div><button class="btn" id="sman">Marcar a mano</button><button class="btn pri" id="soff">Listo</button></div>`;document.body.appendChild(d);
+  $('soff').onclick=stopScan;$('sman').onclick=()=>{stopScan()};$('scnt').textContent=nOk()+' de '+pals().length+' pallets';
+  const v=$('vid');
+  try{
+    if('BarcodeDetector' in window){const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);
+      if(fm.includes('qr_code')){const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280}},audio:false});
+        v.srcObject=st;await v.play();const bd=new BarcodeDetector({formats:['qr_code']});scan={stop:()=>st.getTracks().forEach(t=>t.stop())};let busy=false;
+        const loop=async()=>{if(!scan)return;if(!busy&&v.readyState>=2){busy=true;try{const r=await bd.detect(v);if(r.length&&scan)leido(r[0].rawValue)}catch(e){}busy=false}requestAnimationFrame(loop)};loop();return}}
+    await loadZX();const rd=new ZXingBrowser.BrowserQRCodeReader();
+    const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,(res)=>{if(res&&scan)leido(res.getText())});scan={stop:()=>ctl.stop()};
+  }catch(e){resScan('wa','No se pudo abrir la cámara','Permití la cámara o marcá los pallets a mano')}}
+function loadZX(){return window.ZXingBrowser?Promise.resolve():new Promise((ok,ko)=>{const s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)})}
+function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}scanOn=false;const d=$('scan');if(d)d.remove();render()}
+
+/* ---- fotos y cierre ---- */
+let FOTOS=[];
+function achicar(file){return new Promise((ok,ko)=>{const im=new Image();im.onload=()=>{const k=Math.min(1,1600/Math.max(im.width,im.height));const c=document.createElement('canvas');c.width=Math.round(im.width*k);c.height=Math.round(im.height*k);c.getContext('2d').drawImage(im,0,0,c.width,c.height);ok(c.toDataURL('image/jpeg',.75))};im.onerror=ko;im.src=URL.createObjectURL(file)})}
+$('cam').onchange=async e=>{const f=e.target.files[0];if(!f)return;try{FOTOS.push(await achicar(f));hojaCerrar()}catch(er){toast('No se pudo leer la foto')}};
+function hojaCerrar(){const falt=pals().filter(x=>!marcado(x.k));const mat=($('mat')||{}).value||lsGet(KEY+'_mat')||'',cho=($('cho')||{}).value||lsGet(KEY+'_cho')||'',mot=($('mot')||{}).value||'';
+  sheet(hdr('Cerrar salida')+`
+  ${falt.length?`<div class="alert bad">Faltan ${falt.length} pallet${falt.length>1?'s':''}: ${falt.map(x=>esc(x.g.nombre+' '+x.p.p)).join(', ')}</div>`:`<div class="alert ok">✅ Están los ${pals().length} pallets</div>`}
+  <label class="mu">Matrícula del camión (obligatoria)</label><input id="mat" class="inp" value="${esc(mat)}" placeholder="ej. ABC 1234" autocapitalize="characters">
+  <label class="mu">Chofer (opcional)</label><input id="cho" class="inp" value="${esc(cho)}">
+  ${falt.length?`<label class="mu">¿Por qué sale sin esos pallets? (obligatorio)</label><input id="mot" class="inp" value="${esc(mot)}">`:''}
+  <div class="mu">Foto del camión cargado (obligatoria)</div>
+  <div class="fotos">${FOTOS.map((f,i)=>`<img src="${f}" alt="foto ${i+1}">`).join('')}</div>
+  <button class="btn" id="bfoto">📷 ${FOTOS.length?'Agregar otra foto':'Sacar foto del camión'}</button>
+  <button class="btn ${falt.length?'bad':'ok'}" id="bcerrar" style="padding:15px">${falt.length?'Cerrar igual, falta mercadería':'Cerrar salida'}</button>`);
+  const sv=()=>{lsSet(KEY+'_mat',$('mat').value);lsSet(KEY+'_cho',$('cho').value)};$('mat').oninput=sv;$('cho').oninput=sv;
+  $('bfoto').onclick=()=>{sv();$('cam').value='';$('cam').click()};
+  $('bcerrar').onclick=()=>cerrar(falt)}
+async function cerrar(falt){const mat=$('mat').value.trim().toUpperCase(),cho=$('cho').value.trim(),mot=falt.length?$('mot').value.trim():'';
+  if(!mat){toast('Falta la matrícula');return}if(!FOTOS.length){toast('Falta la foto del camión');return}if(falt.length&&!mot){toast('Escribí por qué faltan pallets');return}
+  if(!getPin())await pedirPin();const b=$('bcerrar');b.disabled=true;b.textContent='Subiendo… no cierres la página';
+  const car='SALIDA-'+SAL.id,at=Date.now();
+  try{
+    for(let i=0;i<FOTOS.length;i++)await api('/foto',{carpeta:car,nombre:'camion_'+(i+1)+'.jpg',b64:FOTOS[i].split(',')[1]});
+    const datos={salida:SAL.id,titulo:SAL.titulo,nota:SAL.nota||'',matricula:mat,chofer:cho,op:OP,cerrada:new Date(at).toISOString(),motivo:mot,
+      total:pals().length,ok:nOk(),faltan:falt.map(x=>x.k),pallets:pals().map(x=>({k:x.k,grupo:x.g.nombre,p:x.p.p,bot:x.p.bot||0,...(M[x.k]||{on:false})})),fotos:FOTOS.map((f,i)=>'camion_'+(i+1)+'.jpg')};
+    const b64=btoa(unescape(encodeURIComponent(JSON.stringify(datos,null,1))));
+    await api('/foto',{carpeta:car,nombre:'datos.json',b64});await api('/listo',{carpeta:car});
+    CER={at,op:OP,matricula:mat,faltan:falt.length};guardar();try{await api('/progreso/'+encodeURIComponent(SAL.id),{estado:estadoVivo()})}catch(e){}try{await api('/soltar/'+encodeURIComponent(SAL.id),{})}catch(e){}TOM=null;FOTOS=[];close();toast('✅ Salida cerrada y enviada',4000);render()
+  }catch(e){b.disabled=false;b.textContent='Reintentar';toast(e.message==='PIN'?'PIN incorrecto':'No se pudo subir: '+e.message,5000)}}
+
+/* ---- pantallas ---- */
+const quien=()=>`<div class="who"><span class="mu">Quién carga:</span><input id="op" value="${esc(OP)}" placeholder="tu nombre"></div>`;
+function bindQuien(){const i=$('op');if(i)i.oninput=()=>{OP=i.value.trim();lsSet('arm_op',OP)}}
+async function lista(){
+  const ab=LIST.filter(s=>s.estado!=='cerrada');let prog={};
+  $('root').innerHTML=`<a href="../app/" class="mu">← Inicio</a><div class="eb">Astillero · Depósito</div><h1>🚚 Salida de mercadería</h1>${quien()}<div id="ls" class="grp"><div class="mu">Cargando…</div></div>`;bindQuien();
+  if(ab.length){try{prog=await getJ('/tablero?ids='+ab.map(s=>encodeURIComponent(s.id)).join(','))}catch(e){}}
+  const card=s=>{const tot=s.grupos.reduce((a,g)=>a+g.pallets.length,0),pr=(prog[s.id]||{}).prog,ok=pr?pr.ok:0;
+    return `<a class="card sal" href="?s=${encodeURIComponent(s.id)}"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:17px">${esc(s.titulo)}</b><span class="mu">${esc(s.fecha||'')}</span></div>
+    <div class="mu">${s.grupos.map(g=>esc(g.nombre)).join(' · ')}</div><div class="bar"><i style="width:${tot?100*ok/tot:0}%"></i></div><div class="mu"><b>${ok} de ${tot}</b> pallets cargados${(prog[s.id]||{}).tomado?' · 📱 '+esc(nomT(prog[s.id].tomado.quien)):pr&&pr.op?' · '+esc(pr.op):''}</div></a>`};
+  $('ls').innerHTML=ab.length?ab.map(card).join(''):`<div class="card mu">No hay salidas abiertas. Mario las crea desde el chat cuando sale un camión.</div>`}
+function render(soft){
+  if(!SAL){lista();return}
+  const y=window.scrollY,P=pals(),ok=nOk(),tot=P.length;
+  $('root').innerHTML=`<a href="salidas.html" class="mu">← Salidas</a><div class="eb">Salida de mercadería</div><h1>🚚 ${esc(SAL.titulo)}</h1>
+  ${SAL.nota?`<div class="mu">${esc(SAL.nota)}</div>`:''}${quien()}
+  ${CER?`<div class="alert ok">✅ Salida cerrada ${new Date(CER.at).toLocaleString('es-UY',{dateStyle:'short',timeStyle:'short'})}${CER.op?' por '+esc(CER.op):''}${CER.matricula?' · camión '+esc(CER.matricula):''}${CER.faltan?' · faltaron '+CER.faltan:''}</div>`:''}
+  <div class="card"><div class="cnt">${ok} <small>de ${tot} pallets</small></div><div class="bar" style="margin-top:8px"><i style="width:${tot?100*ok/tot:0}%"></i></div><div class="sync" style="margin-top:6px">${esc(syncTxt)}</div></div>
+  ${SAL.grupos.map((g,gi)=>{const gok=g.pallets.filter(p=>marcado(g.clave+'|'+p.p)).length;return `<div class="grp"><div class="gh"><h2>${esc(g.nombre)}</h2><span class="mu"><b>${gok}/${g.pallets.length}</b></span></div>
+    ${g.cliente?`<div class="mu" style="margin-top:-6px">${esc(g.cliente)}</div>`:''}
+    ${g.pallets.map((p,pi)=>{const k=g.clave+'|'+p.p,m=M[k],on=marcado(k);return `<button class="pal${on?' on':''}" data-g="${gi}" data-p="${pi}"><div class="ck">${on?'✓':''}</div>
+      <div><div class="pn">${esc(p.p)}</div><div class="mu">${p.bot?fmt(p.bot)+' bot · ':''}${(p.items||[]).length} artículo${(p.items||[]).length===1?'':'s'}${p.desc?' · '+esc(p.desc):''}</div></div>
+      <div class="r">${on?`${new Date(m.at).toTimeString().slice(0,5)}<br>${esc(m.op||'')}${m.via==='mano'?'<br>a mano':''}`:'falta'}</div></button>
+      ${(p.items||[]).length?`<div class="items"><button class="ver" data-ver="${gi}-${pi}">ver contenido</button><div id="v${gi}-${pi}" hidden>${p.items.map(i=>`${esc(i[0])} · ${esc(i[1])} · <b>${fmt(i[2])}</b>`).join('<br>')}</div></div>`:''}`}).join('')}</div>`}).join('')}
+  ${esMio()&&!CER?'<div class="mu">Para marcar a mano, tocá el pallet. Para desmarcarlo, tocalo dos veces.</div>':''}`;
+  if(!CER){const mio=esMio();
+    $('root').querySelector('.card').insertAdjacentHTML('beforebegin',mio?`<div class="alert ok">📱 Esta salida la cargás vos desde este celular. Nadie más puede escanearla.</div>`
+      :TOM?`<div class="alert wa">👀 La está cargando <b>${esc(nomT(TOM.quien))}</b> desde otro celular (${new Date(TOM.at).toTimeString().slice(0,5)}). Acá solo se mira.<br><button class="btn" id="bforzar" style="margin-top:8px">Tomarla yo (si el otro celular no sigue)</button></div>`
+      :`<div class="alert wa">Nadie la está cargando todavía. Una sola persona, desde un solo celular, escanea y cierra la salida.</div>`);
+    $('root').insertAdjacentHTML('beforeend',mio?`<div class="dock"><button class="big" id="bscan">📷 Escanear pallets</button><button class="big sec" id="bcer">Cerrar salida</button></div>`
+      :TOM?'':`<div class="dock"><button class="big" id="btomar">🙋 Empezar a cargar este camión</button></div>`)}
+  if($('btomar'))$('btomar').onclick=()=>tomar(false);
+  if($('bforzar'))$('bforzar').onclick=e=>{const b=e.target;if(b.dataset.sure){tomar(true);return}b.dataset.sure=1;b.textContent='¿Seguro? El otro celular deja de poder cargar. Tocá de nuevo';b.classList.add('bad')};
+  bindQuien();if($('bscan')){$('bscan').onclick=()=>{if(!OP){toast('Poné tu nombre arriba');$('op').focus();return}startScan()};$('bcer').onclick=()=>{if(!OP){toast('Poné tu nombre arriba');$('op').focus();return}hojaCerrar()}}
+  if(soft)window.scrollTo(0,y)}
+document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  if(b.dataset.ver){const d=$('v'+b.dataset.ver);d.hidden=!d.hidden;b.textContent=d.hidden?'ver contenido':'ocultar';return}
+  if(b.dataset.g!==undefined){if(CER){toast('La salida ya está cerrada');return}if(!esMio()){toast(TOM?'La está cargando '+nomT(TOM.quien)+' desde otro celular':'Primero tocá "Empezar a cargar este camión"',3500);return}if(!OP){toast('Poné tu nombre arriba');$('op').focus();return}
+    const g=SAL.grupos[+b.dataset.g],p=g.pallets[+b.dataset.p],x={g,p,k:g.clave+'|'+p.p};
+    if(!marcado(x.k)){marcar(x,'mano');senal('ok');render(true);return}
+    if(b.classList.contains('sure')){desmarcar(x);render(true);toast('Desmarcado '+g.nombre+' '+p.p);return}
+    b.classList.add('sure');b.querySelector('.r').innerHTML='<b style="color:var(--bad)">¿Desmarcar?<br>tocá de nuevo</b>';setTimeout(()=>{if(b.isConnected&&b.classList.contains('sure'))render(true)},3000)}});
+(async()=>{
+  try{const r=await fetch('salidas.json?t='+Date.now(),{cache:'no-store'});LIST=r.ok?await r.json():[]}catch(e){LIST=[]}
+  if(sid){SAL=LIST.find(s=>s.id===sid);if(!SAL){$('root').innerHTML='<a href="salidas.html">← Salidas</a><div class="alert bad">No encontré esa salida.</div>';return}
+    KEY='sal_'+SAL.id;try{const s=JSON.parse(lsGet(KEY)||'null');if(s){M=s.M||{};CER=s.CER||null}}catch(e){}
+    await verTomado();render();await traer();render(true);setInterval(traer,8000);window.addEventListener('online',push);document.addEventListener('visibilitychange',()=>{if(!document.hidden)traer()})}
+  else lista()})();
+</script>
+</body></html>
