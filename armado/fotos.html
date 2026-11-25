@@ -18,7 +18,7 @@ h1{font-size:23px;margin:0}.mu{color:var(--mu);font-size:13px}a{color:var(--ac)}
 <h1>📸 Fotos de productos</h1>
 <div class="mu">Fotos de etiqueta que sacan en el depósito (armado y ubicar). Buscá por código o nombre.</div>
 <input id="q" class="inp" placeholder="Ej: 1390 o Taylor" autocomplete="off">
-<div class="chips"><button class="chip" data-f="con" aria-pressed="true">Con fotos</button><button class="chip" data-f="sin" aria-pressed="false">Sin fotos (con stock)</button></div>
+<div class="chips"><button class="chip" data-f="con" aria-pressed="true">Con fotos</button><button class="chip" data-f="sin" aria-pressed="false">Les faltan fotos</button></div>
 <div id="res" style="display:flex;flex-direction:column;gap:8px"></div>
 </div>
 <script src="fotos_productos.js"></script><script src="movdata.js"></script>
@@ -27,11 +27,15 @@ const FP=window.FP||{},M=window.MOV||{productos:[]};const B='https://raw.githubu
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const P={};(M.productos||[]).forEach(p=>P[p.c]=p);Object.keys(FP).forEach(c=>{if(!P[c])P[c]={c,n:''}});
 let FL='con';
+const TIP=[['botella','🍾 Botella'],['codigo','▥ Código'],['caja','📦 Caja'],['otra','Otras']];
+const fo=c=>{let o=FP[c]||{};if(Array.isArray(o))o={otra:o};return o};const nf=c=>Object.values(fo(c)).reduce((a,x)=>a+x.length,0);
+const faltan=p=>['botella','codigo'].concat((p.u||1)>1?['caja']:[]).filter(t=>!(fo(p.c)[t]||[]).length);
 function render(){const q=document.getElementById('q').value.trim().toLowerCase();
   let L=Object.values(P).filter(p=>!q||p.c.includes(q)||(p.n||'').toLowerCase().includes(q));
-  L=L.filter(p=>FL==='con'?(FP[p.c]||[]).length:!(FP[p.c]||[]).length).sort((a,b)=>(a.n||'').localeCompare(b.n||''));
-  document.getElementById('res').innerHTML=(L.length?`<div class="mu">${L.length} producto${L.length===1?'':'s'}</div>`:'<div class="mu">Sin resultados.</div>')+L.slice(0,150).map(p=>{const f=FP[p.c]||[];
-    return `<div class="p"><b>${esc(p.c)}</b> ${esc(p.n)}${f.length?`<div class="g">${f.map(x=>`<a href="${B+encodeURIComponent(x)}" target="_blank"><img loading="lazy" src="${B+encodeURIComponent(x)}" alt="${esc(x)}"></a>`).join('')}</div>`:'<div class="sin">Sin foto de etiqueta: se pide la próxima vez que lo armen o ubiquen.</div>'}</div>`}).join('')}
+  L=L.filter(p=>FL==='con'?nf(p.c):faltan(p).length).sort((a,b)=>(a.n||'').localeCompare(b.n||''));
+  document.getElementById('res').innerHTML=(L.length?`<div class="mu">${L.length} producto${L.length===1?'':'s'}</div>`:'<div class="mu">Sin resultados.</div>')+L.slice(0,150).map(p=>{const o=fo(p.c),fl=faltan(p);
+    return `<div class="p"><b>${esc(p.c)}</b> ${esc(p.n)}${fl.length?`<div class="sin">Faltan: ${fl.map(t=>TIP.find(x=>x[0]===t)[1]).join(' · ')} (se piden al armar o ubicar)</div>`:''}
+    ${TIP.filter(t=>(o[t[0]]||[]).length).map(t=>`<div class="mu" style="margin-top:6px">${t[1]}</div><div class="g">${o[t[0]].map(x=>`<a href="${B+encodeURIComponent(x)}" target="_blank"><img loading="lazy" src="${B+encodeURIComponent(x)}" alt="${esc(x)}"></a>`).join('')}</div>`).join('')}</div>`}).join('')}
 document.getElementById('q').oninput=render;
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{FL=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 render();
