@@ -1695,16 +1695,6 @@
   "creado": "2026-11-23T21:07:48.205367+00:00"
  },
  {
-  "id": "S00359-LIVRAMENTO-rAVAfvBR",
-  "titulo": "Factura A2700 · Livramento",
-  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
-  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
-  "lineas": 14,
-  "botellas": 1811,
-  "creado": "2026-11-24T14:00:09.147479+00:00",
-  "clave": "S00359-LIVRAMENTO"
- },
- {
   "id": "A5566-hmNj0Io6",
   "titulo": "Factura A5566",
   "cliente": "PROMEDICO S.A.",
@@ -2319,5 +2309,14 @@
   "lineas": 10,
   "botellas": 456,
   "creado": "2026-11-25T13:20:41.619817+00:00"
+ },
+ {
+  "id": "S00359-LIVRAMENTO-rAVAfvBR",
+  "titulo": "Factura S00359-LIVRAMENTO",
+  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
+  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
+  "lineas": 13,
+  "botellas": 1211,
+  "creado": "2026-11-25T13:22:35.597603+00:00"
  }
 ]
