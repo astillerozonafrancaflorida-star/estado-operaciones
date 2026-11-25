@@ -1702,7 +1702,100 @@
   "lineas": 12,
   "botellas": 1188,
   "creado": "2026-11-24T13:50:41.740993+00:00",
-  "clave": "S00359-URUGUAIANA"
+  "clave": "S00359-URUGUAIANA",
+  "listo": {
+   "carpeta": "BRASIL-S00359-URUGUAIANA-25NOV26",
+   "armo": "Sebastian",
+   "fecha": "2026-11-25T12:49:31.200Z",
+   "ok": 11,
+   "n": 12,
+   "bot": 708,
+   "lin": [
+    [
+     "2519",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO AJO MARASCA 250 ML",
+     48,
+     48
+    ],
+    [
+     "2518",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO ALBAHACA MARASCA 250 ML",
+     48,
+     48
+    ],
+    [
+     "2520",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO CHILE MARASCA 250 ML",
+     48,
+     48
+    ],
+    [
+     "2522",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO LIMON MARASCA 250 ML",
+     48,
+     48
+    ],
+    [
+     "2516",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO TRUFA BLANCA MARASCA 250 ML",
+     48,
+     48
+    ],
+    [
+     "3174",
+     "CHAMPAGNE VEUVE CLICQUOT BRUT COFFRET ARROW SAO PAULO 750 ML",
+     12,
+     12
+    ],
+    [
+     "3273",
+     "LICOR SHERIDANS 700 ML",
+     480,
+     0
+    ],
+    [
+     "1104",
+     "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
+     96,
+     96
+    ],
+    [
+     "2224",
+     "DULCE DE LECHE LOS NIETITOS CON AVELLANAS 400 GRAMOS",
+     96,
+     96
+    ],
+    [
+     "942",
+     "DULCE DE LECHE LOS NIETITOS CON COCO 400 GRAMOS",
+     96,
+     96
+    ],
+    [
+     "941",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 780 GRAMOS",
+     48,
+     48
+    ],
+    [
+     "188",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
+     120,
+     120
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795605641826,
+   "fin": 1795608757045,
+   "activo_min": 23.3,
+   "lab_min": 51.9,
+   "lineas": 12,
+   "min_linea": 1.9,
+   "seg_bot": 2.0,
+   "inicio_txt": "25/11 08:20",
+   "fin_txt": "25/11 09:12",
+   "activo_txt": "23 min"
+  }
  },
  {
   "id": "S00359-SAO-BORJA-OgrV9WrW",
@@ -1732,7 +1825,94 @@
   "lineas": 11,
   "botellas": 576,
   "creado": "2026-11-24T13:56:12.787302+00:00",
-  "clave": "S00359-QUARAI"
+  "clave": "S00359-QUARAI",
+  "listo": {
+   "carpeta": "BRASIL-S00359-QUARAI-25NOV26",
+   "armo": "Gaston",
+   "fecha": "2026-11-25T12:59:43.956Z",
+   "ok": 10,
+   "n": 11,
+   "bot": 456,
+   "lin": [
+    [
+     "2519",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO AJO MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2518",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO ALBAHACA MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2520",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO CHILE MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2522",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO LIMON MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "2516",
+     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO TRUFA BLANCA MARASCA 250 ML",
+     24,
+     24
+    ],
+    [
+     "3273",
+     "LICOR SHERIDANS 700 ML",
+     120,
+     0
+    ],
+    [
+     "1104",
+     "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "2224",
+     "DULCE DE LECHE LOS NIETITOS CON AVELLANAS 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "942",
+     "DULCE DE LECHE LOS NIETITOS CON COCO 400 GRAMOS",
+     60,
+     60
+    ],
+    [
+     "941",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 780 GRAMOS",
+     36,
+     36
+    ],
+    [
+     "188",
+     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
+     120,
+     120
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795605530144,
+   "fin": 1795608650938,
+   "activo_min": 8.5,
+   "lab_min": 52.0,
+   "lineas": 11,
+   "min_linea": 0.8,
+   "seg_bot": 1.1,
+   "inicio_txt": "25/11 08:18",
+   "fin_txt": "25/11 09:10",
+   "activo_txt": "8 min"
+  }
  },
  {
   "id": "S00359-LIVRAMENTO-rAVAfvBR",
