@@ -2590,5 +2590,14 @@
   "botellas": 1211,
   "creado": "2026-11-24T14:00:09.147479+00:00",
   "clave": "S00359-LIVRAMENTO"
+ },
+ {
+  "id": "A5576-A5580-A5577-7uhCQ7fs",
+  "titulo": "Facturas A5576 · A5580 · A5577",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 7,
+  "botellas": 1380,
+  "creado": "2026-11-25T13:39:57.588527+00:00"
  }
 ]
