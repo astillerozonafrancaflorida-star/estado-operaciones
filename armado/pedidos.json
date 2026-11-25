@@ -3091,15 +3091,6 @@
   "creado": "2026-11-24T20:40:47.161321+00:00"
  },
  {
-  "id": "A5576-A5580-A5577-7uhCQ7fs",
-  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582",
-  "cliente": "HIPER T Y N SRL",
-  "entrega": "HIPER FREE SHOP",
-  "lineas": 10,
-  "botellas": 1660,
-  "creado": "2026-11-25T13:39:57.588527+00:00"
- },
- {
   "id": "S00359-ITAQUI-n0OwXyul",
   "titulo": "Factura A2707 · Itaqui",
   "cliente": "BRASIL FREE SHOP ITAQUI",
@@ -3304,5 +3295,14 @@
    "fin_txt": "25/11 12:36",
    "activo_txt": "38 min"
   }
+ },
+ {
+  "id": "A5576-A5580-A5577-7uhCQ7fs",
+  "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584",
+  "cliente": "HIPER T Y N SRL",
+  "entrega": "HIPER FREE SHOP",
+  "lineas": 13,
+  "botellas": 1818,
+  "creado": "2026-11-25T13:39:57.588527+00:00"
  }
 ]
