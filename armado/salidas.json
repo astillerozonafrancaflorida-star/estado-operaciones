@@ -168,7 +168,30 @@
    "ok": 3,
    "total": 3,
    "faltan": [],
-   "motivo": ""
+   "motivo": "",
+   "fotos": [
+    "camion_1.jpg"
+   ],
+   "m": {
+    "A5550-A5551|P1": {
+     "on": true,
+     "at": 1795616256565,
+     "op": "Natalia",
+     "via": "qr"
+    },
+    "A5550-A5551|P2": {
+     "on": true,
+     "at": 1795616405006,
+     "op": "Natalia",
+     "via": "qr"
+    },
+    "A5550-A5551|P3": {
+     "on": true,
+     "at": 1795615881292,
+     "op": "Natalia",
+     "via": "mano"
+    }
+   }
   }
  }
 ]

@@ -51,6 +51,7 @@ h1{font-size:23px;margin:0}h2{font-size:17px;margin:0}.eb{font-size:11px;letter-
 <input type="file" id="cam" accept="image/*" capture="environment" hidden>
 <script>
 const API='https://astillero-armado.astillerozonafrancaflorida.workers.dev';
+const FB='https://raw.githubusercontent.com/astillerozonafrancaflorida-star/armados-fotos/main/';
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const fmt=n=>Number(n||0).toLocaleString('es-UY');
@@ -174,13 +175,18 @@ async function lista(){
   const card=s=>{const tot=s.grupos.reduce((a,g)=>a+g.pallets.length,0),pr=(prog[s.id]||{}).prog,ok=pr?pr.ok:0;
     return `<a class="card sal" href="?s=${encodeURIComponent(s.id)}"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font-size:17px">${esc(s.titulo)}</b><span class="mu">${esc(s.fecha||'')}</span></div>
     <div class="mu">${s.grupos.map(g=>esc(g.nombre)).join(' · ')}</div><div class="bar"><i style="width:${tot?100*ok/tot:0}%"></i></div><div class="mu"><b>${ok} de ${tot}</b> pallets cargados${(prog[s.id]||{}).tomado?' · 📱 '+esc(nomT(prog[s.id].tomado.quien)):pr&&pr.op?' · '+esc(pr.op):''}</div></a>`};
-  $('ls').innerHTML=ab.length?ab.map(card).join(''):`<div class="card mu">No hay salidas abiertas. Mario las crea desde el chat cuando sale un camión.</div>`}
+  const ce=LIST.filter(s=>s.estado==='cerrada').sort((a,b)=>String(b.cerrada||'').localeCompare(String(a.cerrada||''))).slice(0,30);
+  const cardC=s=>{const r=s.resultado||{},tot=s.grupos.reduce((a,g)=>a+g.pallets.length,0);return `<a class="card sal" href="?s=${encodeURIComponent(s.id)}"><div style="display:flex;justify-content:space-between;gap:8px"><b>${r.faltan&&r.faltan.length?'⚠️':'✅'} ${esc(s.titulo)}</b><span class="mu">${s.cerrada?new Date(s.cerrada).toLocaleString('es-UY',{day:'2-digit',month:'2-digit',hour:'2-digit',minute:'2-digit'}):esc(s.fecha||'')}</span></div>
+    <div class="mu">${r.ok??'?'}/${tot} pallets · camión ${esc(r.matricula||'')}${r.chofer?' · '+esc(r.chofer):''} · cargó ${esc(r.op||'')}</div></a>`};
+  $('ls').innerHTML=(ab.length?ab.map(card).join(''):`<div class="card mu">No hay salidas abiertas. Mario las crea desde el chat cuando sale un camión.</div>`)
+    +(ce.length?`<h2 style="margin-top:14px">Salidas cerradas</h2>`+ce.map(cardC).join(''):'')}
 function render(soft){
   if(!SAL){lista();return}
   const y=window.scrollY,P=pals(),ok=nOk(),tot=P.length;
   $('root').innerHTML=`<a href="salidas.html" class="mu">← Salidas</a><div class="eb">Salida de mercadería</div><h1>🚚 ${esc(SAL.titulo)}</h1>
   ${SAL.nota?`<div class="mu">${esc(SAL.nota)}</div>`:''}${quien()}
   ${CER?`<div class="alert ok">✅ Salida cerrada ${new Date(CER.at).toLocaleString('es-UY',{dateStyle:'short',timeStyle:'short'})}${CER.op?' por '+esc(CER.op):''}${CER.matricula?' · camión '+esc(CER.matricula):''}${CER.faltan?' · faltaron '+CER.faltan:''}</div>`:''}
+  ${CER&&SAL.resultado&&(SAL.resultado.fotos||[]).length?`<div class="card"><div class="mu" style="margin-bottom:6px">Foto${SAL.resultado.fotos.length>1?'s':''} del camión${SAL.resultado.chofer?' · chofer '+esc(SAL.resultado.chofer):''}${SAL.resultado.motivo?' · motivo: '+esc(SAL.resultado.motivo):''}</div>${SAL.resultado.fotos.map(f=>`<a href="${FB}SALIDA-${SAL.id.toUpperCase()}/${f}" target="_blank"><img src="${FB}SALIDA-${SAL.id.toUpperCase()}/${f}" style="width:100%;border-radius:10px;margin-bottom:6px" alt="camión"></a>`).join('')}</div>`:''}
   <div class="card"><div class="cnt">${ok} <small>de ${tot} pallets</small></div><div class="bar" style="margin-top:8px"><i style="width:${tot?100*ok/tot:0}%"></i></div><div class="sync" style="margin-top:6px">${esc(syncTxt)}</div></div>
   ${SAL.grupos.map((g,gi)=>{const gok=g.pallets.filter(p=>marcado(g.clave+'|'+p.p)).length;return `<div class="grp"><div class="gh"><h2>${esc(g.nombre)}</h2><span class="mu"><b>${gok}/${g.pallets.length}</b></span></div>
     ${g.cliente?`<div class="mu" style="margin-top:-6px">${esc(g.cliente)}</div>`:''}
@@ -210,7 +216,9 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   try{const r=await fetch('salidas.json?t='+Date.now(),{cache:'no-store'});LIST=r.ok?await r.json():[]}catch(e){LIST=[]}
   if(sid){SAL=LIST.find(s=>s.id===sid);if(!SAL){$('root').innerHTML='<a href="salidas.html">← Salidas</a><div class="alert bad">No encontré esa salida.</div>';return}
     KEY='sal_'+SAL.id;try{const s=JSON.parse(lsGet(KEY)||'null');if(s){M=s.M||{};CER=s.CER||null}}catch(e){}
-    await verTomado();render();await traer();render(true);setInterval(traer,8000);window.addEventListener('online',push);document.addEventListener('visibilitychange',()=>{if(!document.hidden)traer()})}
+    await verTomado();if(SAL.estado==='cerrada'&&!CER&&SAL.resultado){const r=SAL.resultado;CER={at:Date.parse(SAL.cerrada)||Date.now(),op:r.op,matricula:r.matricula,faltan:(r.faltan||[]).length}}
+    if(SAL.estado==='cerrada'&&SAL.resultado&&SAL.resultado.m&&!Object.keys(M).length)M=SAL.resultado.m;
+    render();await traer();render(true);setInterval(traer,8000);window.addEventListener('online',push);document.addEventListener('visibilitychange',()=>{if(!document.hidden)traer()})}
   else lista()})();
 </script>
 </body></html>
