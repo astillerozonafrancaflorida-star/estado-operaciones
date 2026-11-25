@@ -128,7 +128,7 @@ td.r,th.r{text-align:right}
 
 <script src="catalogo.js"></script>
 <script>
-const D={"nombres": ["A5576-EF", "A5580-EF", "A5577-EF"], "so": false, "cliente": "HIPER T Y N SRL", "entrega": "HIPER FREE SHOP", "fecha": "24/11/2026", "pedidos": ["A5576-EF: S00171", "A5580-EF: S00405", "A5577-EF: S00400"], "lineas": [{"code": "2936", "name": "VINO ESPUMOSO DECOY SPARKLING BRUT CUVEE 750 ML", "qty": 300, "upc": 12, "eans": ["669576019184"], "ceans": [], "loc": "P11 115-1", "fac": "A5576"}, {"code": "746", "name": "CHAMPAGNE DELAMOTTE ROSE 750 ML", "qty": 30, "upc": 6, "eans": ["3418760000715"], "ceans": [], "loc": "P11 100-2 (30)", "fac": "A5580"}, {"code": "745", "name": "CHAMPAGNE DELAMOTTE BRUT 750 ML", "qty": 276, "upc": 6, "eans": ["3418760000654"], "ceans": [], "loc": "P11 106-1 (276)", "fac": "A5577, A5580"}, {"code": "3446", "name": "CHAMPAGNE DELAMOTTE BLANC DE BLANCS 750 ML", "qty": 54, "upc": 6, "eans": [], "ceans": [], "loc": "P11 100-2 (54)", "fac": "A5577"}, {"code": "3471", "name": "VINO OVERTURE 2022 750 ML", "qty": 120, "upc": 6, "eans": ["753604020225"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}, {"code": "3469", "name": "VINO DUCKHORN NAPA VALLEY CABERNET SAUVIGNON 2023 750 ML", "qty": 300, "upc": 6, "eans": ["669576019283"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}, {"code": "3470", "name": "VINO DUCKHORN NAPA VALLEY MERLOT 2022 750 ML", "qty": 300, "upc": 6, "eans": ["669576019283"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}], "id": "A5576-A5580-A5577-7uhCQ7fs"};
+const D={"nombres": ["A5576-EF", "A5580-EF", "A5577-EF"], "so": false, "cliente": "HIPER T Y N SRL", "entrega": "HIPER FREE SHOP", "fecha": "24/11/2026", "pedidos": ["A5576-EF: S00171", "A5580-EF: S00405", "A5577-EF: S00400"], "lineas": [{"code": "2936", "name": "VINO ESPUMOSO DECOY SPARKLING BRUT CUVEE 750 ML", "qty": 300, "upc": 12, "eans": ["669576019184"], "ceans": [], "loc": "P11 115-1", "fac": "A5576"}, {"code": "746", "name": "CHAMPAGNE DELAMOTTE ROSE 750 ML", "qty": 30, "upc": 6, "eans": ["3418760000715"], "ceans": [], "loc": "P11 100-2 (30)", "fac": "A5580"}, {"code": "745", "name": "CHAMPAGNE DELAMOTTE BRUT 750 ML", "qty": 276, "upc": 6, "eans": ["3418760000654"], "ceans": [], "loc": "P11 106-1 (276)", "fac": "A5577, A5580"}, {"code": "3446", "name": "CHAMPAGNE DELAMOTTE BLANC DE BLANCS 750 ML", "qty": 54, "upc": 6, "eans": [], "ceans": [], "loc": "P11 100-2 (54)", "fac": "A5577"}, {"code": "3471", "name": "VINO OVERTURE 2022 750 ML", "qty": 120, "upc": 6, "eans": ["753604020225"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}, {"code": "3469", "name": "VINO DUCKHORN NAPA VALLEY CABERNET SAUVIGNON 2023 750 ML", "qty": 300, "upc": 6, "eans": ["669576019283"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}, {"code": "3470", "name": "VINO DUCKHORN NAPA VALLEY MERLOT 2022 750 ML", "qty": 300, "upc": 6, "eans": ["669576019283"], "ceans": [], "loc": "SIN UBICACIÓN", "fac": "A5576"}], "id": "A5576-A5580-A5577-7uhCQ7fs", "ver": "8de63faa27"};
 const CAT=window.CAT||{map:{},hermanos:{}};
 const $=id=>document.getElementById(id);
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
@@ -690,6 +690,14 @@ render();
 if(S.openCode&&L.find(l=>l.code===S.openCode))setTimeout(()=>openLine(S.openCode,'lista'),300);
 verRemoto();setInterval(verRemoto,30000);
 if(getPin()&&S.ents.length)pushProg();
+/* ---- aviso de pedido actualizado (Mario 25/11): si Mario cambia el pedido, pedir recargar ---- */
+(function(){if(!D||!D.ver)return;let avisado=false;
+  async function chk(){if(avisado||document.hidden)return;try{const r=await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'});if(!r.ok)return;const t=await r.text();const m=t.match(/"ver":\s*"([0-9a-f]+)"/);
+    if(m&&m[1]!==D.ver){avisado=true;const b=document.createElement('button');b.id='verNueva';
+      b.style.cssText='position:fixed;left:10px;right:10px;top:calc(10px + env(safe-area-inset-top));z-index:99;background:#B3261E;color:#fff;border:0;border-radius:14px;padding:16px;font:800 17px system-ui;box-shadow:0 6px 20px rgba(0,0,0,.3)';
+      b.innerHTML='📢 Mario cambió este pedido<br><span style="font-weight:600;font-size:14px">Tocá acá para actualizar la lista. Lo que ya cargaste no se pierde.</span>';
+      b.onclick=()=>{try{save()}catch(e){}location.reload()};document.body.appendChild(b);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}catch(e){}}
+  setTimeout(chk,5000);setInterval(chk,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})})();
 </script>
 </body>
 </html>
