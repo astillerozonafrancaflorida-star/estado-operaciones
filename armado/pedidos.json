@@ -3293,7 +3293,118 @@
   "entrega": "HIPER FREE SHOP",
   "lineas": 15,
   "botellas": 2052,
-  "creado": "2026-11-25T13:39:57.588527+00:00"
+  "creado": "2026-11-25T13:39:57.588527+00:00",
+  "listo": {
+   "carpeta": "HIPER-A5576-A5580-A5577-A5581-25NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-25T20:55:31.067Z",
+   "ok": 15,
+   "n": 15,
+   "bot": 2052,
+   "lin": [
+    [
+     "2936",
+     "VINO ESPUMOSO DECOY SPARKLING BRUT CUVEE 750 ML",
+     300,
+     300
+    ],
+    [
+     "746",
+     "CHAMPAGNE DELAMOTTE ROSE 750 ML",
+     30,
+     30
+    ],
+    [
+     "745",
+     "CHAMPAGNE DELAMOTTE BRUT 750 ML",
+     276,
+     276
+    ],
+    [
+     "3446",
+     "CHAMPAGNE DELAMOTTE BLANC DE BLANCS 750 ML",
+     54,
+     54
+    ],
+    [
+     "2260",
+     "VINO ARGIANO BRUNELLO DI MONTALCINO DOCG 2020 1500 ML",
+     10,
+     10
+    ],
+    [
+     "3470",
+     "VINO DUCKHORN NAPA VALLEY MERLOT 2022 750 ML",
+     300,
+     300
+    ],
+    [
+     "2259",
+     "VINO ARGIANO BRUNELLO DI MONTALCINO DOCG 2020 750 ML",
+     240,
+     240
+    ],
+    [
+     "3291",
+     "VINO DOMAINE FAIVELEY MERCUREY VIEILLES VIGNES 2023 750 ML",
+     114,
+     114
+    ],
+    [
+     "3261",
+     "VINO CASTELLO DI AMA SAN LORENZO 2020 750 ML",
+     120,
+     120
+    ],
+    [
+     "2788",
+     "VINO PAGO DE CARRAOVEJAS 2023 750 ML",
+     30,
+     30
+    ],
+    [
+     "2849",
+     "VINO OPUS ONE 2022 750 ML",
+     30,
+     30
+    ],
+    [
+     "2097",
+     "VINO BELLE GLOS CLARK & TELEPHONE PINOT NOIR  2024 750 ML",
+     122,
+     122
+    ],
+    [
+     "3471",
+     "VINO OVERTURE 2022 750 ML",
+     120,
+     120
+    ],
+    [
+     "3469",
+     "VINO DUCKHORN NAPA VALLEY CABERNET SAUVIGNON 2023 750 ML",
+     300,
+     300
+    ],
+    [
+     "2850",
+     "VINO OPUS ONE 2022 1500 ML",
+     6,
+     6
+    ]
+   ],
+   "pal": 5,
+   "inicio": 1795616782196,
+   "fin": 1795639201833,
+   "activo_min": 61.5,
+   "lab_min": 313.7,
+   "lineas": 15,
+   "min_linea": 4.1,
+   "seg_bot": 1.8,
+   "inicio_txt": "25/11 11:26",
+   "fin_txt": "25/11 17:40",
+   "activo_txt": "1 h 02 min"
+  }
  },
  {
   "id": "ubicar-usa-26-00595-6RpXfRkH",
@@ -3301,8 +3412,8 @@
   "titulo": "📥 Ubicar · Ingreso contenedor USA 26/00595",
   "cliente": "ONE PARANA · Silver Oak · Opus One · Duckhorn · Paul Hobbs · Belle Glos",
   "entrega": "",
-  "lineas": 16,
-  "botellas": 4344,
+  "lineas": 15,
+  "botellas": 4194,
   "creado": "2026-11-24T13:18:09.389972+00:00"
  }
 ]
