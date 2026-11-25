@@ -2524,15 +2524,6 @@
   }
  },
  {
-  "id": "A5566-hmNj0Io6",
-  "titulo": "Factura A5566",
-  "cliente": "PROMEDICO S.A.",
-  "entrega": "BARAO FREE SHOP",
-  "lineas": 19,
-  "botellas": 2322,
-  "creado": "2026-11-24T14:40:19.555654+00:00"
- },
- {
   "id": "S00364-utx8zsrp",
   "titulo": "Pedido S00364",
   "cliente": "LETRA L SRL, LETRA L SRL",
@@ -3304,5 +3295,14 @@
    "fin_txt": "25/11 10:47",
    "activo_txt": "2 h 11 min"
   }
+ },
+ {
+  "id": "A5566-hmNj0Io6",
+  "titulo": "Factura A5566",
+  "cliente": "PROMEDICO S.A.",
+  "entrega": "BARAO FREE SHOP",
+  "lineas": 19,
+  "botellas": 2322,
+  "creado": "2026-11-24T14:40:19.555654+00:00"
  }
 ]
