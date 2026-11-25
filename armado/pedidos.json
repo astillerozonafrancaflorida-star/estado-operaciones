@@ -3073,16 +3073,6 @@
   }
  },
  {
-  "id": "S00359-LIVRAMENTO-rAVAfvBR",
-  "titulo": "Factura A2706 · Livramento",
-  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
-  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
-  "lineas": 13,
-  "botellas": 1211,
-  "creado": "2026-11-24T14:00:09.147479+00:00",
-  "clave": "S00359-LIVRAMENTO"
- },
- {
   "id": "A5576-A5580-A5577-7uhCQ7fs",
   "titulo": "Facturas A5576 · A5580 · A5577",
   "cliente": "HIPER T Y N SRL",
@@ -3118,5 +3108,15 @@
   "botellas": 540,
   "creado": "2026-11-24T13:54:24.391651+00:00",
   "clave": "S00359-ITAQUI"
+ },
+ {
+  "id": "S00359-LIVRAMENTO-rAVAfvBR",
+  "titulo": "Factura A2706 · Livramento",
+  "cliente": "BRASIL FREE SHOP LIVRAMENTO",
+  "entrega": "BRASIL FREE SHOP LIVRAMENTO",
+  "lineas": 13,
+  "botellas": 1211,
+  "creado": "2026-11-24T14:00:09.147479+00:00",
+  "clave": "S00359-LIVRAMENTO"
  }
 ]
