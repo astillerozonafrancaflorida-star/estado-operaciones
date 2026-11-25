@@ -1695,109 +1695,6 @@
   "creado": "2026-11-23T21:07:48.205367+00:00"
  },
  {
-  "id": "S00359-URUGUAIANA-7fwGARWs",
-  "titulo": "Factura A2696 · Uruguaiana",
-  "cliente": "BRASIL FREE SHOP SAO JOAO",
-  "entrega": "BRASIL FREE SHOP SAO JOAO (URUGUAIANA)",
-  "lineas": 12,
-  "botellas": 1188,
-  "creado": "2026-11-24T13:50:41.740993+00:00",
-  "clave": "S00359-URUGUAIANA",
-  "listo": {
-   "carpeta": "BRASIL-S00359-URUGUAIANA-25NOV26",
-   "armo": "Sebastian",
-   "fecha": "2026-11-25T12:49:31.200Z",
-   "ok": 11,
-   "n": 12,
-   "bot": 708,
-   "lin": [
-    [
-     "2519",
-     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO AJO MARASCA 250 ML",
-     48,
-     48
-    ],
-    [
-     "2518",
-     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO ALBAHACA MARASCA 250 ML",
-     48,
-     48
-    ],
-    [
-     "2520",
-     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO CHILE MARASCA 250 ML",
-     48,
-     48
-    ],
-    [
-     "2522",
-     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO LIMON MARASCA 250 ML",
-     48,
-     48
-    ],
-    [
-     "2516",
-     "ACEITE DE OLIVA EXTRA VIRGEN OLEOCAMPO TRUFA BLANCA MARASCA 250 ML",
-     48,
-     48
-    ],
-    [
-     "3174",
-     "CHAMPAGNE VEUVE CLICQUOT BRUT COFFRET ARROW SAO PAULO 750 ML",
-     12,
-     12
-    ],
-    [
-     "3273",
-     "LICOR SHERIDANS 700 ML",
-     480,
-     0
-    ],
-    [
-     "1104",
-     "DULCE DE LECHE LOS NIETITOS CHOCOLATE 400 GRAMOS",
-     96,
-     96
-    ],
-    [
-     "2224",
-     "DULCE DE LECHE LOS NIETITOS CON AVELLANAS 400 GRAMOS",
-     96,
-     96
-    ],
-    [
-     "942",
-     "DULCE DE LECHE LOS NIETITOS CON COCO 400 GRAMOS",
-     96,
-     96
-    ],
-    [
-     "941",
-     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 780 GRAMOS",
-     48,
-     48
-    ],
-    [
-     "188",
-     "DULCE DE LECHE LOS NIETITOS TRADICIONAL 400 GRAMOS",
-     120,
-     120
-    ]
-   ],
-   "pal": 1,
-   "inicio": 1795605641826,
-   "fin": 1795608757045,
-   "activo_min": 23.3,
-   "lab_min": 51.9,
-   "lineas": 12,
-   "min_linea": 1.9,
-   "seg_bot": 2.0,
-   "inicio_txt": "25/11 08:20",
-   "fin_txt": "25/11 09:12",
-   "activo_txt": "23 min"
-  }
- },
- {
   "id": "S00359-SAO-BORJA-OgrV9WrW",
   "titulo": "Factura A2697 · São Borja",
   "cliente": "BRASIL FREE SHOP SAO BORJA",
@@ -2503,5 +2400,14 @@
   "botellas": 2835,
   "creado": "2026-11-24T21:11:08.160887+00:00",
   "clave": "S00161"
+ },
+ {
+  "id": "S00359-URUGUAIANA-7fwGARWs",
+  "titulo": "Factura S00359-URUGUAIANA",
+  "cliente": "BRASIL FREE SHOP SAO JOAO",
+  "entrega": "BRASIL FREE SHOP SAO JOAO (URUGUAIANA)",
+  "lineas": 11,
+  "botellas": 708,
+  "creado": "2026-11-25T13:14:52.959448+00:00"
  }
 ]
