@@ -193,5 +193,36 @@
     }
    }
   }
+ },
+ {
+  "id": "SAL-RECAHO-2PLT-2611-dc70",
+  "titulo": "RECAHO 2PLT",
+  "nota": "Facturas A5592 · A5593 (S00422): Cointreau 600 + Limoncello 96",
+  "fecha": "26/11",
+  "creado": "2026-11-26T11:27-03:00",
+  "estado": "abierta",
+  "grupos": [
+   {
+    "clave": "A5592-A5593",
+    "alias": [
+     "A5592-A5593"
+    ],
+    "nombre": "RECAHO A5592 · A5593",
+    "cliente": "",
+    "pallets": [
+     {
+      "p": "P1",
+      "bot": 0,
+      "items": []
+     },
+     {
+      "p": "P2",
+      "bot": 0,
+      "items": []
+     }
+    ],
+    "manual": true
+   }
+  ]
  }
 ]
