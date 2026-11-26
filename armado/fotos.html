@@ -13,10 +13,19 @@ h1{font-size:23px;margin:0}.mu{color:var(--mu);font-size:13px}a{color:var(--ac)}
 .p b{font-size:15px}.g{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
 .g a img{width:130px;height:130px;object-fit:cover;border-radius:8px;border:1px solid var(--ln);background:#eee}
 .sin{color:var(--wa);font-weight:700;font-size:13px}
+#scan{position:fixed;inset:0;background:#000;z-index:50;display:flex;flex-direction:column}#scan video{flex:1;width:100%;object-fit:cover}
+#scan .msg{position:absolute;top:14px;left:10px;right:10px;color:#fff;text-align:center;font-weight:700;text-shadow:0 1px 3px #000}
+#scan .guide{position:absolute;left:12%;right:12%;top:38%;height:22%;border:3px solid #fff;border-radius:12px;box-shadow:0 0 0 2000px #0006}
+#scan .bot{display:flex;gap:6px;padding:10px;background:#111}#scan .bot input{flex:1;font-size:17px;padding:10px;border-radius:8px;border:0}
+.btn{border:1px solid var(--ln);background:var(--sf);border-radius:12px;padding:14px;font-size:16px;font-weight:700}.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
+.row{display:flex;gap:8px}.row .btn{flex:1}.hit{border:2px solid var(--ac)}.cand{display:block;width:100%;text-align:left;margin-top:6px}
 </style></head><body><div class="wrap">
 <a href="../app/" class="mu">← Inicio</a>
 <h1>📸 Fotos de productos</h1>
-<div class="mu">Fotos de etiqueta que sacan en el depósito (armado y ubicar). Buscá por código o nombre.</div>
+<div class="mu">Fotos de etiqueta que sacan en el depósito (armado y ubicar). Escaneá el código o sacale una foto a la etiqueta para saber qué producto es, o buscá por código o nombre.</div>
+<div class="row"><button class="btn pri" id="bScan">▥ Escanear código</button><button class="btn" id="bEtq">🏷️ Leer etiqueta</button></div>
+<input type="file" id="camE" accept="image/*" capture="environment" hidden>
+<div id="hit"></div>
 <input id="q" class="inp" placeholder="Ej: 1390 o Taylor" autocomplete="off">
 <div class="chips"><button class="chip" data-f="con" aria-pressed="true">Con fotos</button><button class="chip" data-f="sin" aria-pressed="false">Les faltan fotos</button></div>
 <div id="res" style="display:flex;flex-direction:column;gap:8px"></div>
@@ -39,4 +48,42 @@ function render(){const q=document.getElementById('q').value.trim().toLowerCase(
 document.getElementById('q').oninput=render;
 document.querySelectorAll('[data-f]').forEach(b=>b.onclick=()=>{FL=b.dataset.f;document.querySelectorAll('[data-f]').forEach(x=>x.setAttribute('aria-pressed',x===b));render()});
 render();
+
+// ===== Escanear código / leer etiqueta → qué producto es (pedido de Mario 26/11) =====
+const $=id=>document.getElementById(id);
+const dvok=c=>{const d=c.split('').map(Number),k=d.pop();let t=0;d.reverse().forEach((n,i)=>t+=n*(i%2?1:3));return (10-t%10)%10===k};
+const gs1=d=>{if(/^101\d{14}/.test(d)&&dvok(d.slice(3,17)))return d.slice(3,17);if(/^01\d{14}/.test(d)&&d.length>=16&&dvok(d.slice(2,16)))return d.slice(2,16);if(d.length===11&&dvok('0'+d))return '0'+d;return d};
+const norm=c=>gs1(String(c||'').replace(/\D/g,'')).replace(/^0+(?=\d{12,13}$)/,'');
+const same=(a,b)=>a===b||a.replace(/^0+/,'')===b.replace(/^0+/,'');
+function tarjeta(p,extra){const o=fo(p.c),fl=faltan(p);return `<div class="p hit">${extra||''}<b style="font-size:18px">${esc(p.c)}</b> ${esc(p.n)}<div class="mu">${(p.u||1)>1?'Caja x'+p.u+' · ':''}${p.l?'Ubicación: '+esc(p.l):'Sin ubicación cargada'}${p.s!=null?' · stock '+p.s:''}</div>${fl.length?`<div class="sin">Faltan fotos: ${fl.map(t=>TIP.find(x=>x[0]===t)[1]).join(' · ')}</div>`:''}
+  ${TIP.filter(t=>(o[t[0]]||[]).length).map(t=>`<div class="g">${o[t[0]].slice(0,3).map(x=>`<a href="${B+encodeURIComponent(x)}" target="_blank"><img loading="lazy" src="${B+encodeURIComponent(x)}"></a>`).join('')}</div>`).join('')}</div>`}
+function porCodigo(raw){const c=norm(raw);if(!c)return;const L=Object.values(P);
+  const h=L.filter(p=>(p.e||[]).some(e=>same(norm(e),c))||(p.ce||[]).some(e=>same(norm(e),c))||p.c===String(raw).trim());
+  const caja=h.length&&(h[0].ce||[]).some(e=>same(norm(e),c));
+  $('hit').innerHTML=h.length?h.map(p=>tarjeta(p,`<div class="mu">${caja?'📦 Código de CAJA':'🍾 Código de botella'} ${esc(c)}</div>`)).join(''):`<div class="p"><b>No encontré el código ${esc(c)}.</b><div class="mu">Puede ser un producto sin código cargado. Probá con 🏷️ Leer etiqueta o buscá por nombre.</div></div>`;
+  window.scrollTo(0,0)}
+let scan=null;
+async function startScan(){const d=document.createElement('div');d.id='scan';d.innerHTML='<video id="vid" playsinline muted autoplay></video><div class="guide"></div><div class="msg" id="smsg">Escaneá el código de la botella o de la caja</div><div class="bot"><input id="man" inputmode="numeric" placeholder="o escribí el código"><button class="btn pri" id="mok">OK</button><button class="btn" id="mx">Cerrar</button></div>';document.body.appendChild(d);
+  $('mx').onclick=stopScan;$('mok').onclick=()=>found($('man').value);
+  const v=$('vid');try{if('BarcodeDetector' in window){const fm=await BarcodeDetector.getSupportedFormats().catch(()=>[]);const want=['ean_13','ean_8','upc_a','upc_e','code_128','itf'].filter(f=>fm.includes(f));
+      if(want.length){const st=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'}},audio:false});v.srcObject=st;await v.play();const bd=new BarcodeDetector({formats:want});scan={stop:()=>st.getTracks().forEach(t=>t.stop())};
+        const loop=async()=>{if(!scan)return;try{const r=await bd.detect(v);if(r.length&&scan){found(r[0].rawValue);return}}catch(e){}requestAnimationFrame(loop)};loop();return}}
+    await new Promise((ok,ko)=>{if(window.ZXingBrowser)return ok();const s=document.createElement('script');s.src='zxing-browser.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
+    const rd=new ZXingBrowser.BrowserMultiFormatReader();const ctl=await rd.decodeFromConstraints({video:{facingMode:{ideal:'environment'}}},v,res=>{if(res&&scan)found(res.getText())});scan={stop:()=>ctl.stop()};
+  }catch(e){const m=$('smsg');if(m)m.textContent='No se pudo abrir la cámara. Escribí el código abajo.'}}
+function stopScan(){if(scan){try{scan.stop()}catch(e){}scan=null}const d=$('scan');if(d)d.remove()}
+function found(raw){stopScan();try{navigator.vibrate&&navigator.vibrate(80)}catch(e){}porCodigo(raw)}
+$('bScan').onclick=startScan;
+// Etiqueta: foto → lectura del texto (OCR en el celular) → productos con más palabras en común
+const STOP=new Set('VINO ML LT CON SIN DE DEL DELLA DI DA LA LE LES EL LOS THE AND ET Y E CAJA BOTELLA EST ESTUCHE'.split(' '));
+const tok=s=>String(s||'').toUpperCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/(\d)([A-Z])/g,'$1 $2').replace(/[^A-Z0-9]+/g,' ').split(' ').filter(w=>w.length>=3&&!STOP.has(w));
+let IDF=null;function idf(){if(IDF)return IDF;IDF={};const L=Object.values(P);L.forEach(p=>new Set(tok(p.n)).forEach(w=>IDF[w]=(IDF[w]||0)+1));for(const w in IDF)IDF[w]=Math.log(1+L.length/IDF[w]);return IDF}
+function porTexto(txt){const I=idf(),T=new Set(tok(txt));const R=Object.values(P).filter(p=>p.n).map(p=>{const W=[...new Set(tok(p.n))];let s=0,m=[];W.forEach(w=>{if(T.has(w)){s+=I[w]||1;m.push(w)}});return {p,s:s/Math.sqrt(W.length||1),m}}).filter(r=>r.m.length).sort((a,b)=>b.s-a.s).slice(0,5);
+  $('hit').innerHTML=R.length?`<div class="mu">Leí en la etiqueta: <i>${esc([...T].slice(0,25).join(' '))}</i></div><div class="mu" style="margin-top:6px"><b>¿Es alguno de estos?</b> (el primero es el más parecido)</div>`+R.map((r,i)=>i===0?tarjeta(r.p,`<div class="mu">Coincide: ${esc(r.m.join(', '))}</div>`):`<button class="btn cand" data-ver="${esc(r.p.c)}"><b>${esc(r.p.c)}</b> ${esc(r.p.n)}<div class="mu">Coincide: ${esc(r.m.join(', '))}</div></button>`).join(''):`<div class="p"><b>No pude reconocer el producto.</b><div class="mu">Sacá la foto más cerca, de frente y con buena luz, enfocando el nombre del vino.</div></div>`;window.scrollTo(0,0)}
+$('bEtq').onclick=()=>{$('camE').value='';$('camE').click()};
+$('camE').onchange=async e=>{const f=e.target.files[0];if(!f)return;$('hit').innerHTML='<div class="p"><b>Leyendo la etiqueta…</b><div class="mu">La primera vez tarda un poco más (descarga el lector).</div></div>';
+  try{await new Promise((ok,ko)=>{if(window.Tesseract)return ok();const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js';s.onload=ok;s.onerror=ko;document.head.appendChild(s)});
+    const img=await new Promise(ok=>{const i=new Image();i.onload=()=>ok(i);i.src=URL.createObjectURL(f)});const k=Math.min(1,1600/Math.max(img.width,img.height));const cv=document.createElement('canvas');cv.width=img.width*k;cv.height=img.height*k;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);
+    const r=await Tesseract.recognize(cv,'eng+spa');porTexto(r.data.text)}catch(err){$('hit').innerHTML='<div class="p"><b>No se pudo leer la etiqueta.</b><div class="mu">Revisá la conexión e intentá de nuevo, o escaneá el código.</div></div>'}};
+document.addEventListener('click',e=>{const b=e.target.closest('[data-ver]');if(!b)return;const p=P[b.dataset.ver];if(p){$('hit').innerHTML=tarjeta(p);window.scrollTo(0,0)}});
 </script></body></html>
