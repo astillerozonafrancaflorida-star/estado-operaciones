@@ -3460,15 +3460,6 @@
   "creado": "2026-11-24T20:40:47.161321+00:00"
  },
  {
-  "id": "A5566-hmNj0Io6",
-  "titulo": "Facturas A5591 · A5575 · A5566",
-  "cliente": "PROMEDICO S.A.",
-  "entrega": "BARAO FREE SHOP",
-  "lineas": 34,
-  "botellas": 3588,
-  "creado": "2026-11-24T14:40:19.555654+00:00"
- },
- {
   "id": "A5543-A5588-A5573-p3q8APm5",
   "titulo": "Facturas A5543 · A5588 · A5573",
   "cliente": "VESPA BERTONE Y AGUINSKY FERNANDEZ",
@@ -3485,5 +3476,14 @@
   "lineas": 6,
   "botellas": 462,
   "creado": "2026-11-26T17:34:35.099203+00:00"
+ },
+ {
+  "id": "A5566-hmNj0Io6",
+  "titulo": "Facturas A5591 · A5575 · A5566 · A5594",
+  "cliente": "PROMEDICO S.A.",
+  "entrega": "BARAO FREE SHOP",
+  "lineas": 38,
+  "botellas": 4002,
+  "creado": "2026-11-24T14:40:19.555654+00:00"
  }
 ]
