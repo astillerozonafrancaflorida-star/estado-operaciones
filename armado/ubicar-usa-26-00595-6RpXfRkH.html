@@ -261,10 +261,11 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
     case 'asigtipo':{const l=L.find(x=>x.c===b.dataset.code);registrar(b.dataset.ean,b.dataset.raw,l,b.dataset.tipo);break}}
 });
 
+/* VERSION_PAGINA=2611093 */
 // Aviso de versión nueva (25/11): si cambió la orden (cantidades), avisa y recarga. Lo ya hecho queda guardado en el celular.
-(function(){const firma=t=>{const m=[...t.matchAll(/"c": "([^"]+)"[^}]*?"q": (\d+)/g)].map(x=>x[1]+':'+x[2]).join(',');return m};
+(function(){const firma=t=>{const m=[...t.matchAll(/"c": "([^"]+)"[^}]*?"q": (\d+)/g)].map(x=>x[1]+':'+x[2]).join(',');const v=(t.match(/VERSION_PAGINA=(\d+)/)||[])[1]||'';const k=(t.match(/"(?:sinCodigo|conCaja)": \[[^\]]*\]/g)||[]).join('');return m?m+'|'+v+'|'+k:''};
 let base=null;async function chk(){try{const t=await (await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'})).text();const f=firma(t);if(!f)return;
 if(base===null){base=firma(document.documentElement.innerHTML)||f}
-if(f!==base&&!document.getElementById('avisoVer')){const b=document.createElement('div');b.id='avisoVer';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:9999;background:#1d3b2a;color:#fff;padding:14px;border-radius:12px;font-weight:700;text-align:center;box-shadow:0 4px 14px #0005';b.textContent='🔄 La orden cambió (cantidades nuevas). Tocá acá para actualizar — lo que ya ubicaste queda guardado.';b.onclick=()=>location.reload();document.body.appendChild(b)}}catch(e){}}
+if(f!==base&&!document.getElementById('avisoVer')){const b=document.createElement('div');b.id='avisoVer';b.style.cssText='position:fixed;left:8px;right:8px;top:8px;z-index:9999;background:#1d3b2a;color:#fff;padding:14px;border-radius:12px;font-weight:700;text-align:center;box-shadow:0 4px 14px #0005';b.textContent='🔄 Hay una versión nueva de la orden. Tocá acá para actualizar — lo que ya ubicaste queda guardado.';b.onclick=()=>location.replace(location.pathname+'?v='+Date.now());document.body.appendChild(b)}}catch(e){}}
 setTimeout(chk,5000);setInterval(chk,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})})();
 </script></body></html>

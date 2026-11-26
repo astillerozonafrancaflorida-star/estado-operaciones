@@ -72,4 +72,6 @@ document.addEventListener('click',async ev=>{const b=ev.target.closest('button')
   if(b.dataset.soltar){if(!confirm('¿Soltar este pedido para que lo tome otro?'))return;try{await post('/soltar/'+encodeURIComponent(b.dataset.soltar),{});await cargar()}catch(e){toast(e.message)}}
 });
 cargar();setInterval(cargar,10000);
-</script></body></html>
+</script><script>/* 26/11: si volvés a la app después de un rato, recarga para ver lo último */
+(function(){const t0=Date.now();const go=()=>{if(Date.now()-t0>60000)location.replace(location.pathname+'?v='+Date.now())};
+document.addEventListener('visibilitychange',()=>{if(!document.hidden)go()});addEventListener('pageshow',e=>{if(e.persisted)go()})})();</script></body></html>

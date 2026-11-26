@@ -20,4 +20,5 @@ Android (Chrome): menú ⋮ → <b>Agregar a pantalla principal</b> / <b>Instala
 iPhone (Safari): botón Compartir → <b>Agregar a inicio</b>.</div>
 </main>
 <script>if(window.matchMedia('(display-mode: standalone)').matches||navigator.standalone)document.getElementById('inst').hidden=true</script>
-</body></html>
+<script>/* 26/11: abrir siempre la versión más nueva (el celular guardaba copias viejas) */
+document.addEventListener('click',e=>{const a=e.target.closest('a[href^="../armado"]');if(!a)return;e.preventDefault();const h=a.getAttribute('href');location.href=h+(h.includes('?')?'&':'?')+'v='+Date.now()});</script></body></html>
