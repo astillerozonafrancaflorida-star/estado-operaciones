@@ -3397,16 +3397,6 @@
   "creado": "2026-11-24T14:40:19.555654+00:00"
  },
  {
-  "id": "ubicar-s00229-mwOYH2en",
-  "tipo": "ubicar",
-  "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
-  "cliente": "BOREMIX TRADE S.A. · ASTIL/IN/00111 + 00112 (reservado)",
-  "entrega": "",
-  "lineas": 74,
-  "botellas": 2274,
-  "creado": "2026-11-23T21:07:48.205367+00:00"
- },
- {
   "id": "ubicar-usa-26-00595-6RpXfRkH",
   "tipo": "ubicar",
   "titulo": "📥 Ubicar · Ingreso contenedor USA 26/00595",
@@ -3425,5 +3415,15 @@
   "lineas": 14,
   "botellas": 6455,
   "creado": "2026-11-26T11:15:11.114591+00:00"
+ },
+ {
+  "id": "ubicar-s00229-mwOYH2en",
+  "tipo": "ubicar",
+  "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
+  "cliente": "BOREMIX TRADE S.A. · ASTIL/IN/00111 + 00112 (reservado)",
+  "entrega": "",
+  "lineas": 74,
+  "botellas": 2274,
+  "creado": "2026-11-23T21:07:48.205367+00:00"
  }
 ]
