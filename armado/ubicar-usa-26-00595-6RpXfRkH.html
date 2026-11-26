@@ -139,7 +139,9 @@ const saveFN=()=>ls('ubi_fotos',JSON.stringify(FN));
 const TIPF=[['botella','🍾 Botella','de frente, que se lea la etiqueta'],['codigo','▥ Código de barras','de cerca, el código de la botella'],['caja','📦 Caja','con su etiqueta y código']];
 let SINC=new Set();try{SINC=new Set(JSON.parse(localStorage.getItem('ubi_sinc')||'[]'))}catch(e){}((D&&D.sinCodigo)||[]).forEach(c=>SINC.add(c));
 const sinCod=l=>SINC.has(l.c)&&!l.e.length;
-const tiposP=l=>TIPF.filter(t=>(t[0]!=='caja'||(l.u||1)>1)&&!(t[0]==='codigo'&&sinCod(l)));const faltanF=l=>tiposP(l).filter(t=>!FN[l.c+'|'+t[0]]);
+let CONC=new Set();try{CONC=new Set(JSON.parse(localStorage.getItem('ubi_conc')||'[]'))}catch(e){}((D&&D.conCaja)||[]).forEach(c=>CONC.add(c));
+const conCaja=l=>(l.u||1)>1||CONC.has(l.c);
+const tiposP=l=>TIPF.filter(t=>(t[0]!=='caja'||conCaja(l))&&!(t[0]==='codigo'&&sinCod(l)));const faltanF=l=>tiposP(l).filter(t=>!FN[l.c+'|'+t[0]]);
 const tipoDe=n=>{const p=String(n).replace(/\.jpg$/i,'').split('_');return p.length>2&&['botella','codigo','caja'].includes(p[1])?p[1]:'otra'};
 Object.entries(window.FP||{}).forEach(([c,o])=>{if(Array.isArray(o))o={otra:o};Object.entries(o).forEach(([t,a])=>{const k=c+'|'+t;if((FN[k]||0)<a.length)FN[k]=a.length})});
 /* fotos ya subidas (de cualquier celular): lista de la carpeta PRODUCTOS-FOTOS del repo, guardada 5 min */
@@ -151,6 +153,7 @@ function datosProd(l){const nf=FN[l.c]||0,u=l.u||1;
   return `<div class="card" style="display:flex;flex-direction:column;gap:8px"><div class="eb">Datos del producto</div>
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>🍾 Botella: ${l.e.length?'<b style="color:var(--ok)">✔ …'+esc(l.e[l.e.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="cbot">${l.e.length?'Otro código':'Escanear botella'}</button></div>
    ${!l.e.length?(sinCod(l)?`<div class="mu">🚫 Marcado: <b>no tiene código de barras</b> (no se pide la foto del código). <button class="btn" data-a="sincno" style="padding:6px 10px;font-size:13px">Deshacer</button></div>`:`<button class="btn" data-a="sincsi" style="padding:10px">🚫 Este producto no tiene código de barras</button>`):''}
+   ${(l.u||1)<=1?(CONC.has(l.c)?`<div class="mu">📦 Marcado: <b>viene en caja individual</b> (se pide la foto de la caja). <button class="btn" data-a="concno" style="padding:6px 10px;font-size:13px">Deshacer</button></div>`:`<button class="btn" data-a="concsi" style="padding:10px">📦 Viene en caja / estuche individual</button>`):''}
    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>📦 Caja${u>1?' x'+u:''}: ${l.ce.length?'<b style="color:var(--ok)">✔ …'+esc(l.ce[l.ce.length-1].slice(-6))+'</b>':'<b style="color:var(--wa)">sin código</b>'}</span><button class="btn" data-a="ccaja">${l.ce.length?'Otro código':'Escanear caja'}</button></div>
    <div class="eb" style="margin-top:4px">Fotos del producto ${faltanF(l).length?'<span style="color:var(--wa)">· faltan '+faltanF(l).length+' (obligatorias)</span>':'· ✔ completas'}</div>
    ${tiposP(l).map(t=>{const n=FN[l.c+'|'+t[0]]||0;return `<div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><span>${t[1]}: ${n?'<b style="color:var(--ok)">✔ '+n+'</b>':'<b style="color:var(--wa)">falta</b> <span class="mu">'+t[2]+'</span>'}</span><span style="display:flex;gap:6px"><button class="btn ${n?'':'pri'}" data-a="fprod" data-tipo="${t[0]}">📷</button><button class="btn" data-a="fgal" data-tipo="${t[0]}" title="Galería">🖼</button></span></div>`}).join('')}</div>`}
@@ -248,6 +251,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
     case 'cbot':MODO={l:F.l,tipo:'bot'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la BOTELLA de '+MODO.l.c},300);break;
     case 'ccaja':MODO={l:F.l,tipo:'caja'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la CAJA de '+MODO.l.c},300);break;
     case 'fprod':camFoto(F.l,b.dataset.tipo);break;
+    case 'concsi':case 'concno':{b.dataset.a==='concsi'?CONC.add(F.l.c):CONC.delete(F.l.c);try{localStorage.setItem('ubi_conc',JSON.stringify([...CONC]))}catch(e){}dibujar();break}
     case 'sincsi':case 'sincno':{b.dataset.a==='sincsi'?SINC.add(F.l.c):SINC.delete(F.l.c);try{localStorage.setItem('ubi_sinc',JSON.stringify([...SINC]))}catch(e){}
       if(b.dataset.a==='sincsi'){const cc=F.l.c;(async()=>{try{await fetch(API+'/foto',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({pin:await pin(),carpeta:'SIN-CODIGO',nombre:cc+'_'+Date.now()+'.txt',b64:btoa('SIN CODIGO '+cc)})})}catch(e){}})();}
       dibujar();break}
