@@ -3425,5 +3425,14 @@
   "lineas": 74,
   "botellas": 2274,
   "creado": "2026-11-23T21:07:48.205367+00:00"
+ },
+ {
+  "id": "A5592-A5593-f2MygdSK",
+  "titulo": "Facturas A5592 · A5593",
+  "cliente": "RECAHO SAS",
+  "entrega": "RECAHO SAS",
+  "lineas": 2,
+  "botellas": 696,
+  "creado": "2026-11-26T14:30:20.117881+00:00"
  }
 ]
