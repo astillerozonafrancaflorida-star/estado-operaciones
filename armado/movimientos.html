@@ -130,10 +130,11 @@ function dibujar(){const p=F.p,L=locs(p),tot=F.cajas*p.u+F.sueltas,d=L.find(x=>x
 async function guardar(){const p=F.p,tot=F.cajas*p.u+F.sueltas,hacia=nUb(F.hacia);
   if(!($('op').value||'').trim()){toast('Poné tu nombre arriba ("Soy:")');return}
   if(!F.desde){toast('Elegí "Desde"');return}if(!tot){toast('Poné la cantidad');return}if(!hacia){toast('Escribí "Hacia"');return}
-  if(hacia===F.desde){toast('Desde y hacia son iguales');return}
-  const d=locs(p).find(x=>x.u===F.desde);if(d&&d.q!=null&&tot>d.q&&!confirm(`En ${d.u} figuran ${d.q} y vas a mover ${tot}. ¿Seguro?`))return;
-  const mv={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),tipo:modo==='L'?'ubicar':'reubicar',code:p.c,nombre:p.n,cant:tot,cajas:F.cajas,sueltas:F.sueltas,upc:p.u,desde:F.desde,hacia,quien:$('op').value.trim(),at:new Date().toISOString(),hacia_en_mapa:UBS.includes(hacia)};
-  H.unshift({...mv,env:false});saveH();close();render();enviar();
+  const _nk=u=>String(u||'').toUpperCase().replace(/\((\d{2,3}-\d)\)/g,'$1').replace(/\b0+(\d)/g,'$1').replace(/\s*-\s*/g,'-').replace(/\s+/g,' ').trim();
+  const conteo=_nk(hacia)===_nk(F.desde);  // 26/11 Mario: mismo lugar = carga de la cantidad contada (conteo), no mueve stock
+  const d=locs(p).find(x=>x.u===F.desde);if(!conteo&&d&&d.q!=null&&tot>d.q&&!confirm(`En ${d.u} figuran ${d.q} y vas a mover ${tot}. ¿Seguro?`))return;
+  const mv={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),tipo:conteo?'conteo':(modo==='L'?'ubicar':'reubicar'),code:p.c,nombre:p.n,cant:tot,cajas:F.cajas,sueltas:F.sueltas,upc:p.u,desde:F.desde,hacia,quien:$('op').value.trim(),at:new Date().toISOString(),hacia_en_mapa:UBS.includes(hacia)};
+  H.unshift({...mv,env:false});saveH();close();render();enviar();if(conteo)toast('🔢 Conteo cargado: '+p.c+' · '+tot+' en '+hacia,3500);
 }
 async function pin(){let p=ls('arm_pin');if(!p){p=(prompt('PIN del depósito (se pide una sola vez en este celular):')||'').trim();if(p)ls('arm_pin',p)}return p}
 let enviando=false;

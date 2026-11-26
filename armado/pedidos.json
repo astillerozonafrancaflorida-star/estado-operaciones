@@ -3456,7 +3456,58 @@
   "entrega": "LE CARROUSSEL FREE SHOP",
   "lineas": 5,
   "botellas": 112,
-  "creado": "2026-11-26T15:31:25.744946+00:00"
+  "creado": "2026-11-26T15:31:25.744946+00:00",
+  "listo": {
+   "carpeta": "VESPA-A5543-A5588-A5573-26NOV26",
+   "armo": "Denis Pecora",
+   "fecha": "2026-11-26T06:08:46.068Z",
+   "ok": 5,
+   "n": 5,
+   "bot": 112,
+   "lin": [
+    [
+     "3171",
+     "VINO VEGA SICILIA UNICO 2014 1500 ML",
+     14,
+     14
+    ],
+    [
+     "2335",
+     "VINO CASANOVA DI NERI BRUNELLO DI MONTALCINO 2020 1500 ML",
+     3,
+     3
+    ],
+    [
+     "2976",
+     "VINO ALION 2022 1500 ML",
+     30,
+     30
+    ],
+    [
+     "2833",
+     "VINO VEGA SICILIA UNICO 2016 750 ML",
+     60,
+     60
+    ],
+    [
+     "684",
+     "VINO CASANOVA DI NERI BRUNELLO DI MONTALCINO 2019 1500 ML",
+     5,
+     5
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795663037351,
+   "fin": 1795664812601,
+   "activo_min": 0.0,
+   "lab_min": 0.0,
+   "lineas": 5,
+   "min_linea": 0.0,
+   "seg_bot": 0.0,
+   "inicio_txt": "26/11 00:17",
+   "fin_txt": "26/11 00:46",
+   "activo_txt": "0 min"
+  }
  },
  {
   "id": "A5579-jyW5Nr04",
@@ -3465,7 +3516,64 @@
   "entrega": "MARIO FREE SHOP",
   "lineas": 6,
   "botellas": 462,
-  "creado": "2026-11-26T17:34:35.099203+00:00"
+  "creado": "2026-11-26T17:34:35.099203+00:00",
+  "listo": {
+   "carpeta": "MARIO-A5579-A5553-26NOV26",
+   "armo": "Brian",
+   "fecha": "2026-11-26T20:07:38.680Z",
+   "ok": 6,
+   "n": 6,
+   "bot": 462,
+   "lin": [
+    [
+     "3475",
+     "VINO SILVER OAK NAPA VALLEY CABERNET SAUVIGNON 2021 750 ML ",
+     6,
+     6
+    ],
+    [
+     "3480",
+     "VINO BELLE GLOS DAIRYMAN PINOT NOIR 2024 750 ML ",
+     120,
+     120
+    ],
+    [
+     "3472",
+     "VINO BELLE GLOS LAS ALTURAS PINOT NOIR 2024 750 ML",
+     120,
+     120
+    ],
+    [
+     "3474",
+     "VINO SILVER OAK ALEXANDER VALLEY CABERNET SAUVIGNON 2021 750 ML ",
+     30,
+     30
+    ],
+    [
+     "2783",
+     "CHAMPAGNE DOM PERIGNON BLANC 2015 LUMINOSA 750 ML",
+     114,
+     114
+    ],
+    [
+     "3173",
+     "CHAMPAGNE DOM PERIGNON BLANC 2017 CON ESTUCHE 750 ML",
+     72,
+     72
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795721460189,
+   "fin": 1795723179108,
+   "activo_min": 28.6,
+   "lab_min": 28.6,
+   "lineas": 6,
+   "min_linea": 4.8,
+   "seg_bot": 3.7,
+   "inicio_txt": "26/11 16:31",
+   "fin_txt": "26/11 16:59",
+   "activo_txt": "29 min"
+  }
  },
  {
   "id": "A5566-hmNj0Io6",
