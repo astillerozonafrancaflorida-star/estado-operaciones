@@ -3397,16 +3397,6 @@
   "creado": "2026-11-24T14:40:19.555654+00:00"
  },
  {
-  "id": "ubicar-italia-26-00862-hywYSmXt",
-  "tipo": "ubicar",
-  "titulo": "📥 Ubicar · Ingreso contenedor ITALIA 26/00862",
-  "cliente": "PARANA EXPRESS · Argiano · Dal Forno · Varvaglione · Bottega (solo Brunello)",
-  "entrega": "",
-  "lineas": 14,
-  "botellas": 6455,
-  "creado": "2026-11-26T11:15:11.114591+00:00"
- },
- {
   "id": "ubicar-s00229-mwOYH2en",
   "tipo": "ubicar",
   "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
@@ -3425,5 +3415,15 @@
   "lineas": 15,
   "botellas": 4194,
   "creado": "2026-11-24T13:18:09.389972+00:00"
+ },
+ {
+  "id": "ubicar-italia-26-00862-hywYSmXt",
+  "tipo": "ubicar",
+  "titulo": "📥 Ubicar · Ingreso contenedor ITALIA 26/00862",
+  "cliente": "PARANA EXPRESS · Argiano · Dal Forno · Varvaglione · Bottega (solo Brunello)",
+  "entrega": "",
+  "lineas": 14,
+  "botellas": 6455,
+  "creado": "2026-11-26T11:15:11.114591+00:00"
  }
 ]

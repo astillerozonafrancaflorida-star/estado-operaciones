@@ -31,7 +31,7 @@ h1{font-size:23px;margin:0}.eb{font-size:11px;letter-spacing:.12em;text-transfor
 .ctl input{width:70px;height:48px;text-align:center;font-size:22px;font-weight:800;border:1px solid var(--ln);border-radius:10px;background:var(--sf)}
 .tot{font-size:26px;font-weight:800;text-align:center}
 .inp{border:1px solid var(--ln);border-radius:10px;padding:12px;font-size:18px;background:var(--sf);width:100%}
-.alert{border-radius:10px;padding:10px 12px;font-weight:600}.alert.bad{background:var(--bads);color:var(--bad)}.alert.wa{background:var(--was);color:var(--wa)}.alert.ok{background:var(--oks);color:var(--ok)}
+.alert{border-radius:10px;padding:10px 12px;font-weight:600}.btn.bad{background:var(--bad);color:#fff;border-color:var(--bad)}.alert.bad{background:var(--bads);color:var(--bad)}.alert.wa{background:var(--was);color:var(--wa)}.alert.ok{background:var(--oks);color:var(--ok)}
 .ln{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;background:var(--sf);border:1px solid var(--ln);border-left:6px solid var(--wa);border-radius:10px;padding:10px 12px;text-align:left;width:100%}
 .ln.ok{border-left-color:var(--ok);opacity:.7}.ln.par{border-left-color:var(--ac)}.ln .q{font-weight:800;white-space:nowrap}
 .ln .loc{font-size:15px;padding:4px 8px}
@@ -191,10 +191,15 @@ let envF=false;async function subirFotos(){if(envF)return;envF=true;try{while(FQ
     if(r.status===403){ls('arm_pin','');toast('PIN incorrecto');break}if(!r.ok)break;FQ.shift();FOK[q.code]=(FOK[q.code]||0)+1;const cm=$('cmsg');if(cm)cm.textContent=`✅ ${FOK[q.code]} foto${FOK[q.code]>1?'s':''} de ${q.code} subida${FOK[q.code]>1?'s':''}`+(FQ.length?` · subiendo ${FQ.length}…`:' · podés sacar otra o tocar Listo')}}catch(e){}envF=false;if(FQ.length)setTimeout(subirFotos,8000)}
 enviarCods();setInterval(enviarCods,30000);
 window.addEventListener('beforeunload',e=>{if(FQ.length){e.preventDefault();e.returnValue=''}});
-function guardar(){if(faltanF(F.l).length){toast('Faltan fotos del producto');return}const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
+function guardar(forzar){if(faltanF(F.l).length){toast('Faltan fotos del producto');return}const l=F.l,u=l.u||1,tot=F.cajas*u+F.sueltas,hacia=nUb(F.hacia);
   if(!($('op').value||'').trim()){toast('Poné tu nombre arriba ("Soy:")');close();$('op').focus();return}
   if(!tot){toast('Poné la cantidad');return}if(!hacia){toast('Elegí la ubicación');return}
-  const p=pend(l);if(tot>p&&!confirm(p?`Faltan ${p} de este producto y vas a ubicar ${tot}. ¿Seguro?`:`Este producto ya estaba todo ubicado. ¿Registrar ${tot} más igual?`))return;
+  const p=pend(l);if(tot>p&&!forzar){const prev=MV.filter(m=>m.code===l.c&&!m.anulado);
+    sheet(hdr('⚠️ Ojo: es más de lo que llegó')+`<div class="alert bad" style="font-size:16px"><b>${esc(l.c)} ${esc(l.n)}</b><br>Llegaron <b>${fmt(l.q)}</b>. Ya se ubicaron <b>${fmt(hecho(l.c))}</b>${p?` (faltan ${fmt(p)})`:''}.<br>Con estas ${fmt(tot)} serían <b>${fmt(hecho(l.c)+tot)}</b>.</div>
+      ${prev.length?`<div class="mu" style="margin-top:8px">Ya registrado:</div>${prev.map(m=>`<div class="card" style="padding:8px 10px">${fmt(m.cant)} → <b>${esc(m.hacia)}</b> · ${esc(m.quien||'')} ${new Date(m.at).toLocaleTimeString('es-UY',{hour:'2-digit',minute:'2-digit'})}</div>`).join('')}`:''}
+      <div class="mu" style="margin-top:8px">Si lo que pasó es que <b>te equivocaste de lugar</b> o <b>lo moviste</b>, NO lo registres de nuevo: avisale a Mario o usá <b>Movimientos de mercadería</b> para pasarlo de un lugar al otro.</div>
+      <button class="btn" data-a="volverF" style="padding:14px;margin-top:10px">← Volver sin registrar</button>
+      <button class="btn bad" data-a="guardarF" style="padding:14px;margin-top:6px">Llegó más: registrar ${fmt(tot)} igual</button>`);return}
   const mv={id:Date.now().toString(36)+Math.random().toString(36).slice(2,6),tipo:'ubicar',origen:D.titulo,orden:D.id,code:l.c,nombre:l.n,cant:tot,cajas:F.cajas,sueltas:F.sueltas,upc:u,desde:'LLEGADA',hacia,quien:$('op').value.trim(),at:new Date().toISOString(),hacia_en_mapa:UBS.includes(hacia),sugerida:l.loc_m||l.loc};
   MV.push({...mv,local:true,env:false});saveMV();close();render();toast(`✔ ${l.c} · ${fmt(tot)} → ${hacia}`);enviar();sync();
   setTimeout(()=>{if(!F&&!$('scan'))startScan()},700)}
@@ -247,7 +252,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
   if(b.dataset.hacia){F.hacia=nUb(b.dataset.hacia);F.otra=false;dibujar();return}
   if(b.dataset.q){const k=b.dataset.q[0]==='c'?'cajas':'sueltas';F[k]=Math.max(0,F[k]+(b.dataset.q[1]==='+'?1:-1));dibujar();return}
   switch(b.dataset.a){case 'close':close();break;case 'scanoff':stopScan();close();break;case 'mango':found($('man').value);break;
-    case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break;
+    case 'scan':startScan();break;case 'otra':F.otra=true;dibujar();break;case 'guardar':guardar();break;case 'guardarF':guardar(true);break;case 'volverF':dibujar();break;
     case 'cbot':MODO={l:F.l,tipo:'bot'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la BOTELLA de '+MODO.l.c},300);break;
     case 'ccaja':MODO={l:F.l,tipo:'caja'};startScan();setTimeout(()=>{const m=$('smsg');if(m&&MODO)m.textContent='Escaneá el código de la CAJA de '+MODO.l.c},300);break;
     case 'fprod':camFoto(F.l,b.dataset.tipo);break;
@@ -261,7 +266,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('button');if(!b)r
     case 'asigtipo':{const l=L.find(x=>x.c===b.dataset.code);registrar(b.dataset.ean,b.dataset.raw,l,b.dataset.tipo);break}}
 });
 
-/* VERSION_PAGINA=2611093 */
+/* VERSION_PAGINA=2611101 */
 // Aviso de versión nueva (25/11): si cambió la orden (cantidades), avisa y recarga. Lo ya hecho queda guardado en el celular.
 (function(){const firma=t=>{const m=[...t.matchAll(/"c": "([^"]+)"[^}]*?"q": (\d+)/g)].map(x=>x[1]+':'+x[2]).join(',');const v=(t.match(/VERSION_PAGINA=(\d+)/)||[])[1]||'';const k=(t.match(/"(?:sinCodigo|conCaja)": \[[^\]]*\]/g)||[]).join('');return m?m+'|'+v+'|'+k:''};
 let base=null;async function chk(){try{const t=await (await fetch(location.pathname+'?v='+Date.now(),{cache:'no-store'})).text();const f=firma(t);if(!f)return;
