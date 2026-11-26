@@ -631,7 +631,7 @@ document.addEventListener('click',async e=>{
   if(b.dataset.zcode){PZ=null;palSheet(b.dataset.zcode);return}
   if(b.dataset.zpal){PZ.pallet=b.dataset.zpal;palSheet(PZ.code);return}
   if(b.dataset.z){const k=b.dataset.z[0]==='c'?'cajas':'sueltas';PZ[k]=Math.max(0,PZ[k]+(b.dataset.z[1]==='+'?1:-1));palSheet(PZ.code);return}
-  if(b.dataset.palfoto){camFor='pal:'+b.dataset.palfoto+'|'+(b.dataset.cara||0);$('cam').value='';$('cam').click();return}
+  if(b.dataset.palfoto){camFor='pal:'+b.dataset.palfoto+'|'+(b.dataset.cara||0);$('cam').value='';tomarFoto('cam');return}
   if(b.dataset.edit){const e=S.ents.find(x=>x.id===b.dataset.edit);if(!e)return;const l=L.find(x=>x.code===e.code);const back=F?F.code:null;
     sheet(hdr('Corregir cantidad')+`<div class="card"><div style="font-weight:800">${esc(l?l.name:e.code)}</div><div class="mu">${esc(e.pallet)} · la foto se mantiene</div></div>
       <div class="stp"><b>Cajas${l&&l.upc>1?' (x'+l.upc+')':''}</b><input id="edC" type="number" inputmode="numeric" min="0" value="${e.cajas||0}" style="font-size:22px;width:110px;padding:8px;border:1px solid var(--ln);border-radius:8px"></div>
@@ -654,11 +654,11 @@ document.addEventListener('click',async e=>{
     case 'areasuelto':{const b2=document.querySelector('[data-a=areasuelto]');if(b2&&!b2.dataset.sure){b2.dataset.sure=1;b2.textContent='¿Seguro? Todo lo del ÁREA DE ARMADO pasa a SUELTO. Tocá de nuevo';break}let k=0;S.ents.forEach(e=>{if(e.pallet===SINPAL){e.pallet=SUELTO;k++}});S.last=SUELTO;save();render();renderP();pushProg();toast('📦 '+k+(k===1?' carga pasada':' cargas pasadas')+' a SUELTO');break}
     case 'zsave':palSave();break;
     case 'newpal':{F.pallet=nuevoNom('P');showQ();break}
-    case 'foto':camFor='line';$('cam').value='';$('cam').click();break;
-    case 'fprod':camFor='fprod:'+(b.dataset.tipo||'botella');$('cam').value='';$('cam').click();break;
-    case 'lote':camFor='lote';$('cam').value='';$('cam').click();break;
+    case 'foto':camFor='line';$('cam').value='';tomarFoto('cam');break;
+    case 'fprod':camFor='fprod:'+(b.dataset.tipo||'botella');$('cam').value='';tomarFoto('cam');break;
+    case 'lote':camFor='lote';$('cam').value='';tomarFoto('cam');break;
     case 'verif':case 'verifbot':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;MODO={verif:c,bot:b.dataset.a==='verifbot'};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent=MODO&&MODO.bot?'Apuntá al código de la BOTELLA':'Apuntá al código de barras de la CAJA'},300);break}
-    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');if(F&&F.code===c&&!F.foto){camFor='line';$('cam').value='';$('cam').click()}break}
+    case 'verifman':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.verif=S.verif||{};S.verif[c]='foto';save();render();openLine(c,'lista');if(F&&F.code===c&&!F.foto){camFor='line';$('cam').value='';tomarFoto('cam')}break}
     case 'verifreg':{const c=(document.querySelector('.sheet .card .mono')||{}).textContent;S.cajasN=S.cajasN||{};S.cajasN[b.dataset.ean]=c;S.verif=S.verif||{};S.verif[c]='caja';save();render();pushProg();toast('📦 Código registrado y producto confirmado');openLine(c,'caja');break}
     case 'save':saveE();break;
     case 'bajarfotos':bajarFotos();break;
@@ -666,7 +666,7 @@ document.addEventListener('click',async e=>{
     case 'subir':subirRespaldo();break;
     case 'traer':traerRemoto();break;
     case 'misfotos':subirRespaldo(true);break;
-    case 'etq':$('camEtq').value='';$('camEtq').click();break;
+    case 'etq':$('camEtq').value='';tomarFoto('camEtq');break;
     case 'lista':pickList();break;
     case 'asignar':pickList(b.dataset.ean);break;
     case 'botcod':MODO={botn:F.code};close();startScan();setTimeout(()=>{const m=$('smsg');if(m)m.textContent='Apuntá al código de barras de la BOTELLA'},300);break;
@@ -691,7 +691,7 @@ $('cam').addEventListener('change',async e=>{
 document.addEventListener('input',e=>{if(e.target&&e.target.id==='zipNom'){ZIPF=null;clearTimeout(window._zt);window._zt=setTimeout(()=>armarZip().catch(()=>{}),600)}});
 $('bScan').addEventListener('click',startScan);
 $('bLista').addEventListener('click',()=>pickList());
-$('bEtq').addEventListener('click',()=>{$('camEtq').value='';$('camEtq').click();tess().catch(()=>{})});
+$('bEtq').addEventListener('click',()=>{$('camEtq').value='';tomarFoto('camEtq');tess().catch(()=>{})});
 $('camEtq').addEventListener('change',e=>onEtq(e.target.files[0]));
 $('op').value=S.op;$('op').addEventListener('input',e=>{S.op=e.target.value.trim();lsSet('arm_op',S.op);save();pushProg()});
 function setTab(t){tab=t;[['L','tL','vL'],['P','tP','vP'],['F','tF','vF']].forEach(([k,b,v])=>{$(b).setAttribute('aria-selected',k===t);$(v).hidden=k!==t});render()}
@@ -708,6 +708,24 @@ if(getPin()&&S.ents.length)pushProg();
       b.innerHTML='📢 Mario cambió este pedido<br><span style="font-weight:600;font-size:14px">Tocá acá para actualizar la lista. Lo que ya cargaste no se pierde.</span>';
       b.onclick=()=>{try{save()}catch(e){}location.reload()};document.body.appendChild(b);try{navigator.vibrate&&navigator.vibrate([200,100,200])}catch(e){}}}catch(e){}}
   setTimeout(chk,5000);setInterval(chk,120000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)chk()})})();
+
+/* 26/11: cámara DENTRO de la página. La app de cámara de Android cerraba el navegador ("memoria insuficiente")
+   y se perdía la foto. Ahora se saca con getUserMedia y se entrega al mismo manejador del input. */
+let _camS=null;
+function _camCerrar(){if(_camS){_camS.getTracks().forEach(t=>t.stop());_camS=null}const o=document.getElementById('camOv');if(o)o.remove()}
+async function tomarFoto(id){const inp=document.getElementById(id);
+  if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia){inp.click();return}
+  _camCerrar();const o=document.createElement('div');o.id='camOv';o.style.cssText='position:fixed;inset:0;background:#000;z-index:99999;display:flex;flex-direction:column';
+  o.innerHTML='<video id="camV" playsinline muted autoplay style="flex:1;width:100%;object-fit:cover"></video><div id="camM" style="position:absolute;top:12px;left:10px;right:10px;color:#fff;text-align:center;font-weight:700;text-shadow:0 1px 3px #000">Sacá la foto</div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px;background:#111"><button id="camG" style="padding:12px 14px;border-radius:10px;border:0;font-size:15px">🖼 Galería</button><button id="camD" style="width:76px;height:76px;border-radius:50%;border:5px solid #fff;background:#B3261E"></button><button id="camX" style="padding:12px 14px;border-radius:10px;border:0;font-size:15px">Cancelar</button></div>';
+  document.body.appendChild(o);
+  document.getElementById('camX').onclick=_camCerrar;
+  document.getElementById('camG').onclick=()=>{_camCerrar();const c=inp.getAttribute('capture');inp.removeAttribute('capture');inp.click();setTimeout(()=>{if(c)inp.setAttribute('capture',c)},1500)};
+  try{_camS=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1920},height:{ideal:1080}},audio:false});const v=document.getElementById('camV');v.srcObject=_camS;await v.play()}
+  catch(e){document.getElementById('camM').textContent='No se pudo abrir la cámara: usá Galería';return}
+  document.getElementById('camD').onclick=()=>{const v=document.getElementById('camV');if(!v||!v.videoWidth)return;const k=Math.min(1,1600/Math.max(v.videoWidth,v.videoHeight));const c=document.createElement('canvas');c.width=Math.round(v.videoWidth*k);c.height=Math.round(v.videoHeight*k);c.getContext('2d').drawImage(v,0,0,c.width,c.height);
+    c.toBlob(bl=>{_camCerrar();if(!bl)return;const f=new File([bl],'foto_'+Date.now()+'.jpg',{type:'image/jpeg'});try{const dt=new DataTransfer();dt.items.add(f);inp.files=dt.files}catch(e){}
+      try{navigator.vibrate&&navigator.vibrate(60)}catch(e){}
+      if(inp.files&&inp.files.length)inp.dispatchEvent(new Event('change',{bubbles:true}));else{inp.click()}},'image/jpeg',.85)}}
 </script>
 </body>
 </html>

@@ -3259,15 +3259,6 @@
   }
  },
  {
-  "id": "S00364-utx8zsrp",
-  "titulo": "Pedido S00364",
-  "cliente": "LETRA L SRL, LETRA L SRL",
-  "entrega": "LETRA L SRL",
-  "lineas": 18,
-  "botellas": 1687,
-  "creado": "2026-11-24T20:40:47.161321+00:00"
- },
- {
   "id": "A5576-A5580-A5577-7uhCQ7fs",
   "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583 · A5585",
   "cliente": "HIPER T Y N SRL",
@@ -3476,5 +3467,14 @@
   "lineas": 5,
   "botellas": 112,
   "creado": "2026-11-26T15:31:25.744946+00:00"
+ },
+ {
+  "id": "S00364-utx8zsrp",
+  "titulo": "Pedido S00364",
+  "cliente": "LETRA L SRL, LETRA L SRL",
+  "entrega": "LETRA L SRL",
+  "lineas": 18,
+  "botellas": 1687,
+  "creado": "2026-11-24T20:40:47.161321+00:00"
  }
 ]
