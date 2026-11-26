@@ -3451,15 +3451,6 @@
   }
  },
  {
-  "id": "A5543-A5588-A5573-p3q8APm5",
-  "titulo": "Facturas A5543 · A5588 · A5573",
-  "cliente": "VESPA BERTONE Y AGUINSKY FERNANDEZ",
-  "entrega": "LE CARROUSSEL FREE SHOP",
-  "lineas": 5,
-  "botellas": 112,
-  "creado": "2026-11-26T15:31:25.744946+00:00"
- },
- {
   "id": "S00364-utx8zsrp",
   "titulo": "Pedido S00364",
   "cliente": "LETRA L SRL, LETRA L SRL",
@@ -3476,5 +3467,14 @@
   "lineas": 34,
   "botellas": 3588,
   "creado": "2026-11-24T14:40:19.555654+00:00"
+ },
+ {
+  "id": "A5543-A5588-A5573-p3q8APm5",
+  "titulo": "Facturas A5543 · A5588 · A5573",
+  "cliente": "VESPA BERTONE Y AGUINSKY FERNANDEZ",
+  "entrega": "LE CARROUSSEL FREE SHOP",
+  "lineas": 5,
+  "botellas": 112,
+  "creado": "2026-11-26T15:31:25.744946+00:00"
  }
 ]
