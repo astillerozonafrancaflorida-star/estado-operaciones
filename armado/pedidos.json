@@ -3268,16 +3268,6 @@
   "creado": "2026-11-24T20:40:47.161321+00:00"
  },
  {
-  "id": "ubicar-s00229-mwOYH2en",
-  "tipo": "ubicar",
-  "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
-  "cliente": "BOREMIX TRADE S.A. · ASTIL/IN/00111 + 00112 (reservado)",
-  "entrega": "",
-  "lineas": 74,
-  "botellas": 2274,
-  "creado": "2026-11-23T21:07:48.205367+00:00"
- },
- {
   "id": "A5576-A5580-A5577-7uhCQ7fs",
   "titulo": "Facturas A5576 · A5580 · A5577 · A5581 · A5582 · A5584 · A5583 · A5585",
   "cliente": "HIPER T Y N SRL",
@@ -3425,5 +3415,15 @@
   "lineas": 14,
   "botellas": 6455,
   "creado": "2026-11-26T11:15:11.114591+00:00"
+ },
+ {
+  "id": "ubicar-s00229-mwOYH2en",
+  "tipo": "ubicar",
+  "titulo": "📥 Ubicar · Devolución S00229 · BOREMIX",
+  "cliente": "BOREMIX TRADE S.A. · ASTIL/IN/00111 + 00112 (reservado)",
+  "entrega": "",
+  "lineas": 74,
+  "botellas": 2274,
+  "creado": "2026-11-23T21:07:48.205367+00:00"
  }
 ]
