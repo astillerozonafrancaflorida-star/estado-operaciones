@@ -3433,6 +3433,48 @@
   "entrega": "RECAHO SAS",
   "lineas": 2,
   "botellas": 696,
-  "creado": "2026-11-26T14:30:20.117881+00:00"
+  "creado": "2026-11-26T14:30:20.117881+00:00",
+  "listo": {
+   "carpeta": "RECAHO-A5592-A5593-26NOV26",
+   "armo": "Gaston",
+   "fecha": "2026-11-26T15:20:19.361Z",
+   "ok": 2,
+   "n": 2,
+   "bot": 696,
+   "lin": [
+    [
+     "966",
+     "LICOR COINTREAU 700 ML",
+     600,
+     600
+    ],
+    [
+     "75",
+     "LICOR BOTTEGA LIMONCELLO 500 ML",
+     96,
+     96
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795704672277,
+   "fin": 1795705406583,
+   "activo_min": 12.2,
+   "lab_min": 12.2,
+   "lineas": 2,
+   "min_linea": 6.1,
+   "seg_bot": 1.1,
+   "inicio_txt": "26/11 11:51",
+   "fin_txt": "26/11 12:03",
+   "activo_txt": "12 min"
+  }
+ },
+ {
+  "id": "A5543-A5588-A5573-p3q8APm5",
+  "titulo": "Facturas A5543 · A5588 · A5573",
+  "cliente": "VESPA BERTONE Y AGUINSKY FERNANDEZ",
+  "entrega": "LE CARROUSSEL FREE SHOP",
+  "lineas": 5,
+  "botellas": 112,
+  "creado": "2026-11-26T15:31:25.744946+00:00"
  }
 ]
