@@ -3576,15 +3576,6 @@
   }
  },
  {
-  "id": "A5566-hmNj0Io6",
-  "titulo": "Facturas A5591 · A5575 · A5566 · A5594 · A5596",
-  "cliente": "PROMEDICO S.A.",
-  "entrega": "BARAO FREE SHOP",
-  "lineas": 40,
-  "botellas": 4152,
-  "creado": "2026-11-24T14:40:19.555654+00:00"
- },
- {
   "id": "ubicar-italia-26-00862-hywYSmXt",
   "tipo": "ubicar",
   "titulo": "📥 Ubicar · Ingreso contenedor ITALIA 26/00862",
@@ -3644,5 +3635,14 @@
   "lineas": 36,
   "botellas": 2707,
   "creado": "2026-11-27T14:48:32.353927+00:00"
+ },
+ {
+  "id": "A5566-hmNj0Io6",
+  "titulo": "Facturas A5591 · A5575 · A5566 · A5594 · A5596",
+  "cliente": "PROMEDICO S.A.",
+  "entrega": "BARAO FREE SHOP",
+  "lineas": 40,
+  "botellas": 4212,
+  "creado": "2026-11-24T14:40:19.555654+00:00"
  }
 ]
