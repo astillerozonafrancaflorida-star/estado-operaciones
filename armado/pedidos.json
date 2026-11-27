@@ -3601,7 +3601,40 @@
   "entrega": "LE CARROUSSEL FREE SHOP",
   "lineas": 2,
   "botellas": 156,
-  "creado": "2026-11-27T12:54:23.305716+00:00"
+  "creado": "2026-11-27T12:54:23.305716+00:00",
+  "listo": {
+   "carpeta": "VESPA-A5597-27NOV26",
+   "armo": "Denis Pecora",
+   "fecha": "2026-11-27T01:50:58.412Z",
+   "ok": 2,
+   "n": 2,
+   "bot": 156,
+   "lin": [
+    [
+     "3022",
+     "VINO SOLDERA CASE BASSE 2021 750 ML",
+     24,
+     24
+    ],
+    [
+     "2553",
+     "VINO VIÑA GRAVONIA CRIANZA  BLANCO 2017 750 ML",
+     132,
+     132
+    ]
+   ],
+   "pal": 1,
+   "inicio": 1795743649848,
+   "fin": 1795743966795,
+   "activo_min": 0.0,
+   "lab_min": 0.0,
+   "lineas": 2,
+   "min_linea": 0.0,
+   "seg_bot": 0.0,
+   "inicio_txt": "26/11 22:40",
+   "fin_txt": "26/11 22:46",
+   "activo_txt": "0 min"
+  }
  },
  {
   "id": "S00428-QzzTbiM9",
