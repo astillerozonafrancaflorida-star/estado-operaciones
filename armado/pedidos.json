@@ -3602,5 +3602,14 @@
   "lineas": 2,
   "botellas": 156,
   "creado": "2026-11-27T12:54:23.305716+00:00"
+ },
+ {
+  "id": "S00428-QzzTbiM9",
+  "titulo": "Pedido S00428",
+  "cliente": "BOREMIX TRADE S.A.",
+  "entrega": "DFA",
+  "lineas": 36,
+  "botellas": 2707,
+  "creado": "2026-11-27T14:48:32.353927+00:00"
  }
 ]
